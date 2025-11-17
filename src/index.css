@@ -38,10 +38,10 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
-    --status-arrived: 142 70% 45%;
-    --status-waiting: 45 95% 60%;
-    --status-late: 25 95% 55%;
-    --status-cancelled: 215 10% 60%;
+    --status-arrived: 142 76% 36%; /* Green */
+    --status-waiting: 45 93% 58%; /* Yellow */
+    --status-late: 25 95% 53%; /* Orange */
+    --status-cancelled: 215 16% 47%; /* Grey */
     
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -82,10 +82,10 @@ All colors MUST be HSL.
     --input: 215 20% 22%;
     --ring: 180 60% 50%;
 
-    --status-arrived: 142 65% 40%;
-    --status-waiting: 45 90% 55%;
-    --status-late: 25 90% 50%;
-    --status-cancelled: 215 10% 50%;
+    --status-arrived: 142 70% 35%; /* Green - dark mode */
+    --status-waiting: 45 88% 55%; /* Yellow - dark mode */
+    --status-late: 25 90% 50%; /* Orange - dark mode */
+    --status-cancelled: 215 12% 45%; /* Grey - dark mode */
     
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
