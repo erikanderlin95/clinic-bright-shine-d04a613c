@@ -35,6 +35,23 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
             <p className="text-2xl font-bold text-foreground">{entry.queueNumber}</p>
           </div>
 
+          {entry.name && (
+            <div>
+              <Label className="text-xs text-muted-foreground">Name</Label>
+              <p className="text-sm font-medium text-foreground">{entry.name}</p>
+            </div>
+          )}
+
+          <div>
+            <Label className="text-xs text-muted-foreground">Mobile Number</Label>
+            <p className="text-sm font-medium text-foreground">{entry.mobile}</p>
+          </div>
+
+          <div>
+            <Label className="text-xs text-muted-foreground">Queue Source</Label>
+            <p className="text-sm font-medium text-foreground">{entry.queueSource}</p>
+          </div>
+
           <div>
             <Label className="text-xs text-muted-foreground">Joined At</Label>
             <p className="text-sm font-medium text-foreground">{entry.joinedAt}</p>
@@ -50,7 +67,7 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
           <div>
             <Label className="text-xs text-muted-foreground">Notes (Optional)</Label>
             <Textarea
-              placeholder="e.g., walk-in, follow-up"
+              placeholder="Internal notes only"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               onBlur={handleSaveNotes}

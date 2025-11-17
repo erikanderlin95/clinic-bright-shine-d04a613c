@@ -7,11 +7,15 @@ import { PatientDetailPanel } from "@/components/PatientDetailPanel";
 import { MessagingPanel } from "@/components/MessagingPanel";
 import { Phase1Notice } from "@/components/Phase1Notice";
 import { VisitLogSection } from "@/components/VisitLogSection";
+import { AddToQueueDialog } from "@/components/AddToQueueDialog";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import type { QueueEntry, DailySummary as DailySummaryType } from "@/types/queue";
 
 const Index = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<QueueEntry | null>(null);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
   
   const [queueEntries, setQueueEntries] = useState<QueueEntry[]>([
     {
@@ -19,6 +23,8 @@ const Index = () => {
       queueNumber: "A103",
       status: "late",
       joinedAt: "10:05",
+      mobile: "+65 9123 4567",
+      queueSource: "Walk-in",
       notes: "Walk-in patient",
     },
     {
@@ -26,6 +32,9 @@ const Index = () => {
       queueNumber: "A104",
       status: "arrived",
       joinedAt: "10:12",
+      name: "John Doe",
+      mobile: "+65 9234 5678",
+      queueSource: "Phone Booking",
       notes: "Follow-up appointment",
     },
     {
@@ -33,24 +42,32 @@ const Index = () => {
       queueNumber: "A105",
       status: "waiting",
       joinedAt: "10:20",
+      mobile: "+65 9345 6789",
+      queueSource: "Walk-in",
     },
     {
       id: "4",
       queueNumber: "A106",
       status: "cancelled",
       joinedAt: "10:20",
+      mobile: "+65 9456 7890",
+      queueSource: "Other",
     },
     {
       id: "5",
       queueNumber: "A107",
       status: "waiting",
       joinedAt: "10:30",
+      mobile: "+65 9567 8901",
+      queueSource: "Walk-in",
     },
     {
       id: "6",
       queueNumber: "A108",
       status: "waiting",
       joinedAt: "10:35",
+      mobile: "+65 9678 9012",
+      queueSource: "Phone Booking",
     },
   ]);
 
@@ -72,6 +89,27 @@ const Index = () => {
     setQueueEntries((prev) =>
       prev.map((entry) => (entry.id === id ? { ...entry, notes } : entry))
     );
+  };
+
+  const handleAddToQueue = (data: {
+    name?: string;
+    mobile: string;
+    queueSource: "Walk-in" | "Phone Booking" | "Other";
+    notes?: string;
+  }) => {
+    const nextNumber = queueEntries.length + 101;
+    const newEntry: QueueEntry = {
+      id: Date.now().toString(),
+      queueNumber: `A${nextNumber}`,
+      status: "waiting",
+      joinedAt: new Date().toLocaleTimeString("en-US", { 
+        hour: "2-digit", 
+        minute: "2-digit",
+        hour12: false 
+      }),
+      ...data,
+    };
+    setQueueEntries((prev) => [...prev, newEntry]);
   };
 
   return (
@@ -96,7 +134,13 @@ const Index = () => {
             <DailySummary summary={dailySummary} />
 
             <div>
-              <h3 className="mb-4 text-lg font-semibold text-foreground">Live Queue View</h3>
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-foreground">Live Queue View</h3>
+                <Button onClick={() => setAddDialogOpen(true)} className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Add to Queue
+                </Button>
+              </div>
               <QueueTable
                 entries={queueEntries}
                 onSelectEntry={setSelectedEntry}
@@ -121,6 +165,12 @@ const Index = () => {
           </aside>
         )}
       </div>
+
+      <AddToQueueDialog
+        open={addDialogOpen}
+        onOpenChange={setAddDialogOpen}
+        onAddToQueue={handleAddToQueue}
+      />
     </div>
   );
 };
