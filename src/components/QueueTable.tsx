@@ -2,16 +2,17 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
-import { CheckCircle, XCircle, UserX } from "lucide-react";
+import { CheckCircle, XCircle, UserX, RotateCcw } from "lucide-react";
 
 interface QueueTableProps {
   entries: QueueEntry[];
   onSelectEntry: (entry: QueueEntry) => void;
   selectedEntry: QueueEntry | null;
   onUpdateStatus: (id: string, status: QueueEntry["status"]) => void;
+  onRevertStatus: (id: string) => void;
 }
 
-export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus }: QueueTableProps) => {
+export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus }: QueueTableProps) => {
   const getActions = (entry: QueueEntry) => {
     if (entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show") {
       return null;
@@ -36,6 +37,20 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
 
     return (
       <div className="flex gap-2">
+        {entry.previousStatus && (
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={(e) => {
+              e.stopPropagation();
+              onRevertStatus(entry.id);
+            }}
+            className="gap-2"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Revert
+          </Button>
+        )}
         <Button
           size="sm"
           variant="outline"

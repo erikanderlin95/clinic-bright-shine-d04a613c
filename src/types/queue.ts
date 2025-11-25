@@ -4,6 +4,7 @@ export interface QueueEntry {
   id: string;
   queueNumber: string;
   status: QueueStatus;
+  previousStatus?: QueueStatus;
   joinedAt: string;
   name?: string;
   mobile: string;
