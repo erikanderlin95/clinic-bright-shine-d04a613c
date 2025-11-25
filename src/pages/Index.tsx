@@ -81,7 +81,22 @@ const Index = () => {
 
   const handleUpdateStatus = (id: string, status: QueueEntry["status"]) => {
     setQueueEntries((prev) =>
-      prev.map((entry) => (entry.id === id ? { ...entry, status } : entry))
+      prev.map((entry) => 
+        entry.id === id 
+          ? { ...entry, previousStatus: entry.status, status } 
+          : entry
+      )
+    );
+  };
+
+  const handleRevertStatus = (id: string) => {
+    setQueueEntries((prev) =>
+      prev.map((entry) => {
+        if (entry.id === id && entry.previousStatus) {
+          return { ...entry, status: entry.previousStatus, previousStatus: undefined };
+        }
+        return entry;
+      })
     );
   };
 
@@ -146,6 +161,7 @@ const Index = () => {
                 onSelectEntry={setSelectedEntry}
                 selectedEntry={selectedEntry}
                 onUpdateStatus={handleUpdateStatus}
+                onRevertStatus={handleRevertStatus}
               />
             </div>
 
