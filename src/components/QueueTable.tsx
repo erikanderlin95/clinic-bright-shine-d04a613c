@@ -37,20 +37,6 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
 
     return (
       <div className="flex gap-2">
-        {entry.previousStatus && (
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={(e) => {
-              e.stopPropagation();
-              onRevertStatus(entry.id);
-            }}
-            className="gap-2"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Revert
-          </Button>
-        )}
         <Button
           size="sm"
           variant="outline"
@@ -100,6 +86,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
             <TableHead className="w-[140px]">Status</TableHead>
             <TableHead className="w-[120px]">Queue Joined</TableHead>
             <TableHead>Actions</TableHead>
+            <TableHead className="w-[100px]"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -116,6 +103,22 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
               </TableCell>
               <TableCell className="text-muted-foreground">{entry.joinedAt}</TableCell>
               <TableCell>{getActions(entry)}</TableCell>
+              <TableCell>
+                {entry.previousStatus && (
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRevertStatus(entry.id);
+                    }}
+                    className="gap-2"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                    Undo
+                  </Button>
+                )}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
