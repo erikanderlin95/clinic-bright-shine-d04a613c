@@ -50,17 +50,19 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[120px]">Queue No</TableHead>
-                  <TableHead className="w-[120px]">Joined Q</TableHead>
-                  <TableHead className="w-[120px]">Arrived</TableHead>
-                  <TableHead className="w-[120px]">Completed</TableHead>
+                  <TableHead className="w-[100px]">Queue No</TableHead>
+                  <TableHead className="w-[100px]">Joined Q</TableHead>
+                  <TableHead className="w-[100px]">Completed</TableHead>
+                  <TableHead className="w-[100px]">Duration</TableHead>
+                  <TableHead className="w-[140px]">Visit Category</TableHead>
+                  <TableHead className="w-[180px]">Email</TableHead>
                   <TableHead>Notes</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {completedEntries.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center text-muted-foreground">
                       No completed visits yet
                     </TableCell>
                   </TableRow>
@@ -70,10 +72,16 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                       <TableCell className="font-medium">{entry.queueNumber}</TableCell>
                       <TableCell className="text-muted-foreground">{entry.joinedAt}</TableCell>
                       <TableCell className="text-muted-foreground">
-                        {entry.status === "arrived" || entry.status === "completed" ? entry.joinedAt : "-"}
+                        {entry.status === "completed" ? entry.joinedAt : "-"}
                       </TableCell>
                       <TableCell className="text-muted-foreground">
-                        {entry.status === "completed" ? entry.joinedAt : "-"}
+                        {entry.duration ? `${entry.duration} mins` : "-"}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {entry.visitCategory || "-"}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {entry.email || "-"}
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {entry.notes || "-"}
