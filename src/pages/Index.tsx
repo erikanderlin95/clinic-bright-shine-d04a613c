@@ -189,6 +189,10 @@ const Index = () => {
     addAutomationLog(`Operational broadcast sent to active patients: "${message}"`);
   };
 
+  const handleSendRecentCustomersBroadcast = (message: string) => {
+    addAutomationLog(`Operational broadcast sent to recent customers (last 60 days): "${message}"`);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <QueueHeader />
@@ -251,6 +255,7 @@ const Index = () => {
                   onToggleDelayAlerts={handleToggleDelayAlerts}
                   onToggleVisitCompletion={handleToggleVisitCompletion}
                   onSendBroadcast={handleSendBroadcast}
+                  onSendRecentCustomersBroadcast={handleSendRecentCustomersBroadcast}
                 />
               </TabsContent>
             </Tabs>
