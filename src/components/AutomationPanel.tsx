@@ -3,8 +3,9 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Megaphone } from "lucide-react";
+import { Megaphone, Users } from "lucide-react";
 import { OperationalBroadcastDialog } from "@/components/OperationalBroadcastDialog";
+import { RecentCustomersBroadcastDialog } from "@/components/RecentCustomersBroadcastDialog";
 import { useState } from "react";
 
 interface AutomationLog {
@@ -24,6 +25,7 @@ interface AutomationPanelProps {
   onToggleDelayAlerts: (checked: boolean) => void;
   onToggleVisitCompletion: (checked: boolean) => void;
   onSendBroadcast: (message: string) => void;
+  onSendRecentCustomersBroadcast: (message: string) => void;
 }
 
 export const AutomationPanel = ({
@@ -37,8 +39,10 @@ export const AutomationPanel = ({
   onToggleDelayAlerts,
   onToggleVisitCompletion,
   onSendBroadcast,
+  onSendRecentCustomersBroadcast,
 }: AutomationPanelProps) => {
   const [broadcastDialogOpen, setBroadcastDialogOpen] = useState(false);
+  const [recentCustomersDialogOpen, setRecentCustomersDialogOpen] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -109,15 +113,24 @@ export const AutomationPanel = ({
       <Card>
         <CardHeader>
           <CardTitle>Operational Broadcast</CardTitle>
-          <CardDescription>Send generic announcements to active queue patients</CardDescription>
+          <CardDescription>Send generic announcements to patients</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-3">
           <Button 
             onClick={() => setBroadcastDialogOpen(true)}
             className="w-full gap-2"
+            variant="default"
           >
             <Megaphone className="h-4 w-4" />
-            Send Operational Announcement
+            Active Queue Patients
+          </Button>
+          <Button 
+            onClick={() => setRecentCustomersDialogOpen(true)}
+            className="w-full gap-2"
+            variant="secondary"
+          >
+            <Users className="h-4 w-4" />
+            Recent Customers (60 Days)
           </Button>
         </CardContent>
       </Card>
@@ -151,6 +164,12 @@ export const AutomationPanel = ({
         open={broadcastDialogOpen}
         onOpenChange={setBroadcastDialogOpen}
         onSendBroadcast={onSendBroadcast}
+      />
+
+      <RecentCustomersBroadcastDialog
+        open={recentCustomersDialogOpen}
+        onOpenChange={setRecentCustomersDialogOpen}
+        onSendBroadcast={onSendRecentCustomersBroadcast}
       />
     </div>
   );
