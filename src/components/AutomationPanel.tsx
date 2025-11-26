@@ -3,6 +3,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Megaphone, Users } from "lucide-react";
 import { OperationalBroadcastDialog } from "@/components/OperationalBroadcastDialog";
 import { RecentCustomersBroadcastDialog } from "@/components/RecentCustomersBroadcastDialog";
@@ -15,6 +16,8 @@ interface AutomationLog {
 }
 
 interface AutomationPanelProps {
+  businessType: "healthcare" | "wellness";
+  onBusinessTypeChange: (type: "healthcare" | "wellness") => void;
   autoArrivalCheckEnabled: boolean;
   yourTurnSoonEnabled: boolean;
   delayAlertsEnabled: boolean;
@@ -24,11 +27,13 @@ interface AutomationPanelProps {
   onToggleYourTurnSoon: (checked: boolean) => void;
   onToggleDelayAlerts: (checked: boolean) => void;
   onToggleVisitCompletion: (checked: boolean) => void;
-  onSendBroadcast: (message: string) => void;
-  onSendRecentCustomersBroadcast: (message: string) => void;
+  onSendBroadcast: (message: string, isMarketing?: boolean) => void;
+  onSendRecentCustomersBroadcast: (message: string, isMarketing?: boolean) => void;
 }
 
 export const AutomationPanel = ({
+  businessType,
+  onBusinessTypeChange,
   autoArrivalCheckEnabled,
   yourTurnSoonEnabled,
   delayAlertsEnabled,
@@ -46,6 +51,41 @@ export const AutomationPanel = ({
 
   return (
     <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Business Type</CardTitle>
+          <CardDescription>Configure your business type for appropriate messaging rules</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <RadioGroup value={businessType} onValueChange={onBusinessTypeChange}>
+            <div className="flex items-start space-x-3 space-y-0">
+              <RadioGroupItem value="healthcare" id="healthcare" className="mt-1" />
+              <Label
+                htmlFor="healthcare"
+                className="font-normal cursor-pointer leading-relaxed"
+              >
+                <div className="font-medium">Healthcare / Medical Clinic</div>
+                <div className="text-sm text-muted-foreground">
+                  Strict mode - Only operational announcements allowed
+                </div>
+              </Label>
+            </div>
+            <div className="flex items-start space-x-3 space-y-0 mt-3">
+              <RadioGroupItem value="wellness" id="wellness" className="mt-1" />
+              <Label
+                htmlFor="wellness"
+                className="font-normal cursor-pointer leading-relaxed"
+              >
+                <div className="font-medium">Wellness / Spa / Fitness</div>
+                <div className="text-sm text-muted-foreground">
+                  Marketing mode - Allows marketing messages with consent
+                </div>
+              </Label>
+            </div>
+          </RadioGroup>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Automation Settings</CardTitle>
@@ -164,12 +204,14 @@ export const AutomationPanel = ({
         open={broadcastDialogOpen}
         onOpenChange={setBroadcastDialogOpen}
         onSendBroadcast={onSendBroadcast}
+        businessType={businessType}
       />
 
       <RecentCustomersBroadcastDialog
         open={recentCustomersDialogOpen}
         onOpenChange={setRecentCustomersDialogOpen}
         onSendBroadcast={onSendRecentCustomersBroadcast}
+        businessType={businessType}
       />
     </div>
   );

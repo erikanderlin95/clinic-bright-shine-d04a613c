@@ -11,39 +11,52 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { AlertCircle, AlertTriangle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface RecentCustomersBroadcastDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSendBroadcast: (message: string) => void;
+  onSendBroadcast: (message: string, isMarketing?: boolean) => void;
+  businessType: "healthcare" | "wellness";
 }
 
 const RECENT_CUSTOMER_TEMPLATES = [
   {
     id: "clinic-closed",
     message: "Clinic will be closed next week.",
+    isMarketing: false,
   },
   {
     id: "doctor-leave",
     message: "Doctor will be away on leave.",
+    isMarketing: false,
   },
   {
     id: "check-hours",
     message: "Please check operating hours before walking in.",
+    isMarketing: false,
   },
   {
     id: "holiday-closure",
     message: "Clinic will be closed for public holidays. Please plan accordingly.",
+    isMarketing: false,
   },
   {
     id: "schedule-change",
     message: "Clinic operating hours have changed. Please check updated schedule.",
+    isMarketing: false,
   },
   {
     id: "custom",
     message: "",
+    isMarketing: false,
+  },
+  {
+    id: "custom-marketing",
+    message: "",
+    isMarketing: true,
   },
 ];
 
@@ -85,39 +98,54 @@ export const RecentCustomersBroadcastDialog = ({
   open,
   onOpenChange,
   onSendBroadcast,
+  businessType,
 }: RecentCustomersBroadcastDialogProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState(RECENT_CUSTOMER_TEMPLATES[0].id);
   const [customMessage, setCustomMessage] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [marketingConsent, setMarketingConsent] = useState(false);
 
   const handleSend = () => {
     const template = RECENT_CUSTOMER_TEMPLATES.find((t) => t.id === selectedTemplate);
     if (!template) return;
 
-    const messageToSend = selectedTemplate === "custom" ? customMessage.trim() : template.message;
+    const isCustom = selectedTemplate === "custom" || selectedTemplate === "custom-marketing";
+    const messageToSend = isCustom ? customMessage.trim() : template.message;
     
-    if (selectedTemplate === "custom") {
+    if (isCustom) {
       if (!messageToSend) {
         setValidationError("Please enter a message.");
         return;
       }
       
-      const error = validateMessage(messageToSend);
-      if (error) {
-        setValidationError(error);
-        return;
+      // For healthcare mode, always validate
+      // For wellness mode with marketing template, skip validation
+      if (businessType === "healthcare" || selectedTemplate === "custom") {
+        const error = validateMessage(messageToSend);
+        if (error) {
+          setValidationError(error);
+          return;
+        }
       }
     }
 
-    onSendBroadcast(messageToSend);
+    // Check marketing consent for marketing messages
+    if (template.isMarketing && !marketingConsent) {
+      setValidationError("You must confirm marketing consent to send this message.");
+      return;
+    }
+
+    onSendBroadcast(messageToSend, template.isMarketing);
     setCustomMessage("");
     setValidationError(null);
+    setMarketingConsent(false);
     onOpenChange(false);
   };
 
   const handleTemplateChange = (value: string) => {
     setSelectedTemplate(value);
     setValidationError(null);
+    setMarketingConsent(false);
   };
 
   const handleCustomMessageChange = (value: string) => {
@@ -155,20 +183,30 @@ export const RecentCustomersBroadcastDialog = ({
         <div className="space-y-4 py-4">
           <Label className="text-sm font-medium">Select Announcement Template</Label>
           <RadioGroup value={selectedTemplate} onValueChange={handleTemplateChange}>
-            {RECENT_CUSTOMER_TEMPLATES.map((template) => (
+            {RECENT_CUSTOMER_TEMPLATES.filter((template) => {
+              // Filter templates based on business type
+              if (businessType === "healthcare") {
+                return !template.isMarketing;
+              }
+              return true;
+            }).map((template) => (
               <div key={template.id} className="flex items-start space-x-3 space-y-0">
                 <RadioGroupItem value={template.id} id={template.id} className="mt-1" />
                 <Label
                   htmlFor={template.id}
                   className="font-normal cursor-pointer leading-relaxed"
                 >
-                  {template.id === "custom" ? "Custom Operational Message" : template.message}
+                  {template.id === "custom" 
+                    ? "Custom Operational Message" 
+                    : template.id === "custom-marketing"
+                    ? "Custom Marketing Message"
+                    : template.message}
                 </Label>
               </div>
             ))}
           </RadioGroup>
 
-          {selectedTemplate === "custom" && (
+          {(selectedTemplate === "custom" || selectedTemplate === "custom-marketing") && (
             <div className="space-y-2 mt-4">
               <div className="flex justify-between items-center">
                 <Label htmlFor="custom-message" className="text-sm font-medium">
@@ -182,12 +220,41 @@ export const RecentCustomersBroadcastDialog = ({
                 id="custom-message"
                 value={customMessage}
                 onChange={(e) => handleCustomMessageChange(e.target.value)}
-                placeholder="Enter operational notice (e.g., clinic hours, closure notices, schedule changes)"
+                placeholder={
+                  selectedTemplate === "custom-marketing"
+                    ? "Enter your marketing message (e.g., special offers, promotions, packages)"
+                    : "Enter operational notice (e.g., clinic hours, closure notices, schedule changes)"
+                }
                 className="min-h-[100px]"
               />
-              <p className="text-xs text-muted-foreground">
-                Only operational notices are allowed. Marketing, promotions, and medical advice are prohibited.
-              </p>
+              {selectedTemplate === "custom" && (
+                <p className="text-xs text-muted-foreground">
+                  Only operational notices are allowed. Marketing, promotions, and medical advice are prohibited.
+                </p>
+              )}
+              {selectedTemplate === "custom-marketing" && (
+                <div className="space-y-3 mt-3">
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      Marketing messages can only be sent to users who have provided consent.
+                    </AlertDescription>
+                  </Alert>
+                  <div className="flex items-start space-x-2">
+                    <Checkbox
+                      id="marketing-consent"
+                      checked={marketingConsent}
+                      onCheckedChange={(checked) => setMarketingConsent(checked as boolean)}
+                    />
+                    <Label
+                      htmlFor="marketing-consent"
+                      className="text-sm font-normal leading-relaxed cursor-pointer"
+                    >
+                      I confirm this announcement is only sent to users who provided marketing consent.
+                    </Label>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
