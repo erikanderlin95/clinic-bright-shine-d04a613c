@@ -10,7 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { AlertCircle } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { AlertCircle, AlertTriangle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface RecentCustomersBroadcastDialogProps {
@@ -40,7 +41,45 @@ const RECENT_CUSTOMER_TEMPLATES = [
     id: "schedule-change",
     message: "Clinic operating hours have changed. Please check updated schedule.",
   },
+  {
+    id: "custom",
+    message: "",
+  },
 ];
+
+const RESTRICTED_WORDS = [
+  "promo",
+  "discount",
+  "package",
+  "deal",
+  "offer",
+  "treatment advice",
+  "supplement",
+  "medicine",
+  "medication",
+  "prescription",
+  "diagnosis",
+  "cure",
+  "sale",
+  "promotion",
+  "special",
+  "buy",
+  "price",
+  "cheap",
+  "free gift",
+];
+
+const validateMessage = (message: string): string | null => {
+  const lowerMessage = message.toLowerCase();
+  
+  for (const word of RESTRICTED_WORDS) {
+    if (lowerMessage.includes(word)) {
+      return "Marketing or medical content is not allowed. Only operational notices are permitted.";
+    }
+  }
+  
+  return null;
+};
 
 export const RecentCustomersBroadcastDialog = ({
   open,
@@ -48,12 +87,43 @@ export const RecentCustomersBroadcastDialog = ({
   onSendBroadcast,
 }: RecentCustomersBroadcastDialogProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState(RECENT_CUSTOMER_TEMPLATES[0].id);
+  const [customMessage, setCustomMessage] = useState("");
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleSend = () => {
     const template = RECENT_CUSTOMER_TEMPLATES.find((t) => t.id === selectedTemplate);
-    if (template) {
-      onSendBroadcast(template.message);
-      onOpenChange(false);
+    if (!template) return;
+
+    const messageToSend = selectedTemplate === "custom" ? customMessage.trim() : template.message;
+    
+    if (selectedTemplate === "custom") {
+      if (!messageToSend) {
+        setValidationError("Please enter a message.");
+        return;
+      }
+      
+      const error = validateMessage(messageToSend);
+      if (error) {
+        setValidationError(error);
+        return;
+      }
+    }
+
+    onSendBroadcast(messageToSend);
+    setCustomMessage("");
+    setValidationError(null);
+    onOpenChange(false);
+  };
+
+  const handleTemplateChange = (value: string) => {
+    setSelectedTemplate(value);
+    setValidationError(null);
+  };
+
+  const handleCustomMessageChange = (value: string) => {
+    if (value.length <= 200) {
+      setCustomMessage(value);
+      setValidationError(null);
     }
   };
 
@@ -75,9 +145,16 @@ export const RecentCustomersBroadcastDialog = ({
           </AlertDescription>
         </Alert>
 
+        {validationError && (
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>{validationError}</AlertDescription>
+          </Alert>
+        )}
+
         <div className="space-y-4 py-4">
           <Label className="text-sm font-medium">Select Announcement Template</Label>
-          <RadioGroup value={selectedTemplate} onValueChange={setSelectedTemplate}>
+          <RadioGroup value={selectedTemplate} onValueChange={handleTemplateChange}>
             {RECENT_CUSTOMER_TEMPLATES.map((template) => (
               <div key={template.id} className="flex items-start space-x-3 space-y-0">
                 <RadioGroupItem value={template.id} id={template.id} className="mt-1" />
@@ -85,11 +162,34 @@ export const RecentCustomersBroadcastDialog = ({
                   htmlFor={template.id}
                   className="font-normal cursor-pointer leading-relaxed"
                 >
-                  {template.message}
+                  {template.id === "custom" ? "Custom Operational Message" : template.message}
                 </Label>
               </div>
             ))}
           </RadioGroup>
+
+          {selectedTemplate === "custom" && (
+            <div className="space-y-2 mt-4">
+              <div className="flex justify-between items-center">
+                <Label htmlFor="custom-message" className="text-sm font-medium">
+                  Your Message
+                </Label>
+                <span className="text-xs text-muted-foreground">
+                  {customMessage.length}/200
+                </span>
+              </div>
+              <Textarea
+                id="custom-message"
+                value={customMessage}
+                onChange={(e) => handleCustomMessageChange(e.target.value)}
+                placeholder="Enter operational notice (e.g., clinic hours, closure notices, schedule changes)"
+                className="min-h-[100px]"
+              />
+              <p className="text-xs text-muted-foreground">
+                Only operational notices are allowed. Marketing, promotions, and medical advice are prohibited.
+              </p>
+            </div>
+          )}
         </div>
 
         <DialogFooter>
