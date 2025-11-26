@@ -14,10 +14,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
 import type { QueueEntry, DailySummary as DailySummaryType } from "@/types/queue";
 
+interface AutomationLog {
+  id: string;
+  time: string;
+  action: string;
+}
+
 const Index = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<QueueEntry | null>(null);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  
+  // Automation state
+  const [autoArrivalCheckEnabled, setAutoArrivalCheckEnabled] = useState(false);
+  const [yourTurnSoonEnabled, setYourTurnSoonEnabled] = useState(false);
+  const [delayAlertsEnabled, setDelayAlertsEnabled] = useState(false);
+  const [visitCompletionEnabled, setVisitCompletionEnabled] = useState(false);
+  
+  // Automation log
+  const [automationLog, setAutomationLog] = useState<AutomationLog[]>([
+    { id: "1", time: "10:32", action: 'Sent "Your turn soon"' },
+    { id: "2", time: "10:40", action: "Patient marked Arrived" },
+    { id: "3", time: "11:10", action: "Delay alert sent" },
+  ]);
   
   const [queueEntries, setQueueEntries] = useState<QueueEntry[]>([
     {
@@ -129,6 +148,43 @@ const Index = () => {
     setQueueEntries((prev) => [...prev, newEntry]);
   };
 
+  const addAutomationLog = (action: string) => {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    
+    const newLog: AutomationLog = {
+      id: Date.now().toString(),
+      time: timeString,
+      action,
+    };
+    
+    setAutomationLog((prev) => [newLog, ...prev]);
+  };
+
+  const handleToggleAutoArrivalCheck = (checked: boolean) => {
+    setAutoArrivalCheckEnabled(checked);
+    addAutomationLog(`Auto Arrival Check turned ${checked ? "ON" : "OFF"}`);
+  };
+
+  const handleToggleYourTurnSoon = (checked: boolean) => {
+    setYourTurnSoonEnabled(checked);
+    addAutomationLog(`"Your Turn Soon" Message turned ${checked ? "ON" : "OFF"}`);
+  };
+
+  const handleToggleDelayAlerts = (checked: boolean) => {
+    setDelayAlertsEnabled(checked);
+    addAutomationLog(`Delay Alerts Broadcast turned ${checked ? "ON" : "OFF"}`);
+  };
+
+  const handleToggleVisitCompletion = (checked: boolean) => {
+    setVisitCompletionEnabled(checked);
+    addAutomationLog(`Visit Completion Message turned ${checked ? "ON" : "OFF"}`);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <QueueHeader />
@@ -180,7 +236,17 @@ const Index = () => {
               </TabsContent>
               
               <TabsContent value="automation" className="mt-6">
-                <AutomationPanel />
+                <AutomationPanel
+                  autoArrivalCheckEnabled={autoArrivalCheckEnabled}
+                  yourTurnSoonEnabled={yourTurnSoonEnabled}
+                  delayAlertsEnabled={delayAlertsEnabled}
+                  visitCompletionEnabled={visitCompletionEnabled}
+                  automationLog={automationLog}
+                  onToggleAutoArrivalCheck={handleToggleAutoArrivalCheck}
+                  onToggleYourTurnSoon={handleToggleYourTurnSoon}
+                  onToggleDelayAlerts={handleToggleDelayAlerts}
+                  onToggleVisitCompletion={handleToggleVisitCompletion}
+                />
               </TabsContent>
             </Tabs>
           </div>
