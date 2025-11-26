@@ -1,7 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Megaphone } from "lucide-react";
+import { OperationalBroadcastDialog } from "@/components/OperationalBroadcastDialog";
+import { useState } from "react";
 
 interface AutomationLog {
   id: string;
@@ -19,6 +23,7 @@ interface AutomationPanelProps {
   onToggleYourTurnSoon: (checked: boolean) => void;
   onToggleDelayAlerts: (checked: boolean) => void;
   onToggleVisitCompletion: (checked: boolean) => void;
+  onSendBroadcast: (message: string) => void;
 }
 
 export const AutomationPanel = ({
@@ -31,7 +36,10 @@ export const AutomationPanel = ({
   onToggleYourTurnSoon,
   onToggleDelayAlerts,
   onToggleVisitCompletion,
+  onSendBroadcast,
 }: AutomationPanelProps) => {
+  const [broadcastDialogOpen, setBroadcastDialogOpen] = useState(false);
+
   return (
     <div className="space-y-6">
       <Card>
@@ -100,6 +108,22 @@ export const AutomationPanel = ({
 
       <Card>
         <CardHeader>
+          <CardTitle>Operational Broadcast</CardTitle>
+          <CardDescription>Send generic announcements to active queue patients</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button 
+            onClick={() => setBroadcastDialogOpen(true)}
+            className="w-full gap-2"
+          >
+            <Megaphone className="h-4 w-4" />
+            Send Operational Announcement
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Automation Log</CardTitle>
           <CardDescription>Recent automated actions</CardDescription>
         </CardHeader>
@@ -122,6 +146,12 @@ export const AutomationPanel = ({
           </Table>
         </CardContent>
       </Card>
+
+      <OperationalBroadcastDialog
+        open={broadcastDialogOpen}
+        onOpenChange={setBroadcastDialogOpen}
+        onSendBroadcast={onSendBroadcast}
+      />
     </div>
   );
 };

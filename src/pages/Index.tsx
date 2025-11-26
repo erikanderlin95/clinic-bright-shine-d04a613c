@@ -185,6 +185,10 @@ const Index = () => {
     addAutomationLog(`Visit Completion Message turned ${checked ? "ON" : "OFF"}`);
   };
 
+  const handleSendBroadcast = (message: string) => {
+    addAutomationLog(`Operational broadcast sent to active patients: "${message}"`);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <QueueHeader />
@@ -246,6 +250,7 @@ const Index = () => {
                   onToggleYourTurnSoon={handleToggleYourTurnSoon}
                   onToggleDelayAlerts={handleToggleDelayAlerts}
                   onToggleVisitCompletion={handleToggleVisitCompletion}
+                  onSendBroadcast={handleSendBroadcast}
                 />
               </TabsContent>
             </Tabs>
