@@ -25,7 +25,8 @@ const Index = () => {
   const [selectedEntry, setSelectedEntry] = useState<QueueEntry | null>(null);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   
-  // Automation state
+  // Business type and automation state
+  const [businessType, setBusinessType] = useState<"healthcare" | "wellness">("healthcare");
   const [autoArrivalCheckEnabled, setAutoArrivalCheckEnabled] = useState(false);
   const [yourTurnSoonEnabled, setYourTurnSoonEnabled] = useState(false);
   const [delayAlertsEnabled, setDelayAlertsEnabled] = useState(false);
@@ -185,12 +186,20 @@ const Index = () => {
     addAutomationLog(`Visit Completion Message turned ${checked ? "ON" : "OFF"}`);
   };
 
-  const handleSendBroadcast = (message: string) => {
-    addAutomationLog(`Operational broadcast sent to active patients: "${message}"`);
+  const handleSendBroadcast = (message: string, isMarketing: boolean = false) => {
+    if (isMarketing) {
+      addAutomationLog(`Marketing broadcast sent (consented users only): "${message}"`);
+    } else {
+      addAutomationLog(`Operational broadcast sent to active patients: "${message}"`);
+    }
   };
 
-  const handleSendRecentCustomersBroadcast = (message: string) => {
-    addAutomationLog(`Operational broadcast sent to recent customers (last 60 days): "${message}"`);
+  const handleSendRecentCustomersBroadcast = (message: string, isMarketing: boolean = false) => {
+    if (isMarketing) {
+      addAutomationLog(`Marketing broadcast sent to recent customers (consented users only): "${message}"`);
+    } else {
+      addAutomationLog(`Operational broadcast sent to recent customers (last 60 days): "${message}"`);
+    }
   };
 
   return (
@@ -245,6 +254,8 @@ const Index = () => {
               
               <TabsContent value="automation" className="mt-6">
                 <AutomationPanel
+                  businessType={businessType}
+                  onBusinessTypeChange={setBusinessType}
                   autoArrivalCheckEnabled={autoArrivalCheckEnabled}
                   yourTurnSoonEnabled={yourTurnSoonEnabled}
                   delayAlertsEnabled={delayAlertsEnabled}
