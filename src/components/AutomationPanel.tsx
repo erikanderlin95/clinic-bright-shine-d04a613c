@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useState } from "react";
 
 interface AutomationLog {
   id: string;
@@ -10,19 +9,29 @@ interface AutomationLog {
   action: string;
 }
 
-export const AutomationPanel = () => {
-  const [autoArrivalCheck, setAutoArrivalCheck] = useState(false);
-  const [yourTurnSoon, setYourTurnSoon] = useState(false);
-  const [delayAlerts, setDelayAlerts] = useState(false);
-  const [visitCompletion, setVisitCompletion] = useState(false);
+interface AutomationPanelProps {
+  autoArrivalCheckEnabled: boolean;
+  yourTurnSoonEnabled: boolean;
+  delayAlertsEnabled: boolean;
+  visitCompletionEnabled: boolean;
+  automationLog: AutomationLog[];
+  onToggleAutoArrivalCheck: (checked: boolean) => void;
+  onToggleYourTurnSoon: (checked: boolean) => void;
+  onToggleDelayAlerts: (checked: boolean) => void;
+  onToggleVisitCompletion: (checked: boolean) => void;
+}
 
-  // Sample automation log entries (UI-only)
-  const [automationLog] = useState<AutomationLog[]>([
-    { id: "1", time: "10:32", action: 'Sent "Your turn soon"' },
-    { id: "2", time: "10:40", action: "Patient marked Arrived" },
-    { id: "3", time: "11:10", action: "Delay alert sent" },
-  ]);
-
+export const AutomationPanel = ({
+  autoArrivalCheckEnabled,
+  yourTurnSoonEnabled,
+  delayAlertsEnabled,
+  visitCompletionEnabled,
+  automationLog,
+  onToggleAutoArrivalCheck,
+  onToggleYourTurnSoon,
+  onToggleDelayAlerts,
+  onToggleVisitCompletion,
+}: AutomationPanelProps) => {
   return (
     <div className="space-y-6">
       <Card>
@@ -40,8 +49,8 @@ export const AutomationPanel = () => {
             </div>
             <Switch
               id="auto-arrival"
-              checked={autoArrivalCheck}
-              onCheckedChange={setAutoArrivalCheck}
+              checked={autoArrivalCheckEnabled}
+              onCheckedChange={onToggleAutoArrivalCheck}
             />
           </div>
 
@@ -54,8 +63,8 @@ export const AutomationPanel = () => {
             </div>
             <Switch
               id="turn-soon"
-              checked={yourTurnSoon}
-              onCheckedChange={setYourTurnSoon}
+              checked={yourTurnSoonEnabled}
+              onCheckedChange={onToggleYourTurnSoon}
             />
           </div>
 
@@ -68,8 +77,8 @@ export const AutomationPanel = () => {
             </div>
             <Switch
               id="delay-alerts"
-              checked={delayAlerts}
-              onCheckedChange={setDelayAlerts}
+              checked={delayAlertsEnabled}
+              onCheckedChange={onToggleDelayAlerts}
             />
           </div>
 
@@ -82,8 +91,8 @@ export const AutomationPanel = () => {
             </div>
             <Switch
               id="visit-completion"
-              checked={visitCompletion}
-              onCheckedChange={setVisitCompletion}
+              checked={visitCompletionEnabled}
+              onCheckedChange={onToggleVisitCompletion}
             />
           </div>
         </CardContent>
