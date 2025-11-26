@@ -8,7 +8,9 @@ import { MessagingPanel } from "@/components/MessagingPanel";
 import { Phase1Notice } from "@/components/Phase1Notice";
 import { VisitLogSection } from "@/components/VisitLogSection";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
+import { AutomationPanel } from "@/components/AutomationPanel";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
 import type { QueueEntry, DailySummary as DailySummaryType } from "@/types/queue";
 
@@ -136,38 +138,51 @@ const Index = () => {
           <div className="space-y-6">
             <Phase1Notice />
             
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-foreground">Queue Management</h2>
-              <QueueControls
-                isPaused={isPaused}
-                onTogglePause={() => setIsPaused(!isPaused)}
-                onClose={() => console.log("Close queue")}
-                onReopen={() => console.log("Reopen queue")}
-              />
-            </div>
+            <Tabs defaultValue="queue" className="w-full">
+              <TabsList>
+                <TabsTrigger value="queue">Queue Management</TabsTrigger>
+                <TabsTrigger value="automation">Automation</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="queue" className="space-y-6 mt-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold text-foreground">Queue Management</h2>
+                  <QueueControls
+                    isPaused={isPaused}
+                    onTogglePause={() => setIsPaused(!isPaused)}
+                    onClose={() => console.log("Close queue")}
+                    onReopen={() => console.log("Reopen queue")}
+                  />
+                </div>
 
-            <DailySummary summary={dailySummary} />
+                <DailySummary summary={dailySummary} />
 
-            <div>
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-foreground">Live Queue View</h3>
-                <Button onClick={() => setAddDialogOpen(true)} className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add to Queue
-                </Button>
-              </div>
-              <QueueTable
-                entries={queueEntries}
-                onSelectEntry={setSelectedEntry}
-                selectedEntry={selectedEntry}
-                onUpdateStatus={handleUpdateStatus}
-                onRevertStatus={handleRevertStatus}
-              />
-            </div>
+                <div>
+                  <div className="mb-4 flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-foreground">Live Queue View</h3>
+                    <Button onClick={() => setAddDialogOpen(true)} className="gap-2">
+                      <Plus className="h-4 w-4" />
+                      Add to Queue
+                    </Button>
+                  </div>
+                  <QueueTable
+                    entries={queueEntries}
+                    onSelectEntry={setSelectedEntry}
+                    selectedEntry={selectedEntry}
+                    onUpdateStatus={handleUpdateStatus}
+                    onRevertStatus={handleRevertStatus}
+                  />
+                </div>
 
-            <MessagingPanel />
-            
-            <VisitLogSection entries={queueEntries} />
+                <MessagingPanel />
+                
+                <VisitLogSection entries={queueEntries} />
+              </TabsContent>
+              
+              <TabsContent value="automation" className="mt-6">
+                <AutomationPanel />
+              </TabsContent>
+            </Tabs>
           </div>
         </main>
 
