@@ -47,10 +47,31 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
             <p className="text-sm font-medium text-foreground">{entry.mobile}</p>
           </div>
 
+          {entry.email && (
+            <div>
+              <Label className="text-xs text-muted-foreground">Email</Label>
+              <p className="text-sm font-medium text-foreground">{entry.email}</p>
+            </div>
+          )}
+
           <div>
             <Label className="text-xs text-muted-foreground">Queue Source</Label>
             <p className="text-sm font-medium text-foreground">{entry.queueSource}</p>
           </div>
+
+          {entry.visitCategory && (
+            <div>
+              <Label className="text-xs text-muted-foreground">Visit Category</Label>
+              <p className="text-sm font-medium text-foreground">{entry.visitCategory}</p>
+            </div>
+          )}
+
+          {entry.duration && (
+            <div>
+              <Label className="text-xs text-muted-foreground">Duration</Label>
+              <p className="text-sm font-medium text-foreground">{entry.duration} minutes</p>
+            </div>
+          )}
 
           <div>
             <Label className="text-xs text-muted-foreground">Joined At</Label>

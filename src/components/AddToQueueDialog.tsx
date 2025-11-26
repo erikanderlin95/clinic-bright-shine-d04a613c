@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import type { VisitCategory } from "@/types/queue";
 
 interface AddToQueueDialogProps {
   open: boolean;
@@ -13,8 +14,11 @@ interface AddToQueueDialogProps {
   onAddToQueue: (data: {
     name?: string;
     mobile: string;
+    email?: string;
     queueSource: "Walk-in" | "Phone Booking" | "Other";
     notes?: string;
+    duration?: number;
+    visitCategory?: VisitCategory;
   }) => void;
 }
 
@@ -22,8 +26,11 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
   const { toast } = useToast();
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
+  const [email, setEmail] = useState("");
   const [queueSource, setQueueSource] = useState<"Walk-in" | "Phone Booking" | "Other">("Walk-in");
   const [notes, setNotes] = useState("");
+  const [duration, setDuration] = useState("");
+  const [visitCategory, setVisitCategory] = useState<VisitCategory | "">("Consultation");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,18 +44,26 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
       return;
     }
 
+    const durationValue = duration.trim() ? parseInt(duration.trim()) : undefined;
+    
     onAddToQueue({
       name: name.trim() || undefined,
       mobile: mobile.trim(),
+      email: email.trim() || undefined,
       queueSource,
       notes: notes.trim() || undefined,
+      duration: durationValue,
+      visitCategory: visitCategory || undefined,
     });
 
     // Reset form
     setName("");
     setMobile("");
+    setEmail("");
     setQueueSource("Walk-in");
     setNotes("");
+    setDuration("");
+    setVisitCategory("Consultation");
     onOpenChange(false);
 
     toast({
@@ -92,6 +107,17 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="email">Email (Optional)</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="Enter email for contact"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="source">
               Queue Source <span className="text-destructive">*</span>
             </Label>
@@ -105,6 +131,33 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
                 <SelectItem value="Other">Other</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="visit-category">Visit Category (Optional)</Label>
+            <Select value={visitCategory} onValueChange={(value: VisitCategory | "") => setVisitCategory(value)}>
+              <SelectTrigger id="visit-category">
+                <SelectValue placeholder="Select visit category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Consultation">Consultation</SelectItem>
+                <SelectItem value="Follow-up">Follow-up</SelectItem>
+                <SelectItem value="General Treatment">General Treatment</SelectItem>
+                <SelectItem value="Standard Visit">Standard Visit</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="duration">Duration (Optional)</Label>
+            <Input
+              id="duration"
+              type="number"
+              placeholder="Enter duration in minutes"
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
+              min="1"
+            />
           </div>
 
           <div className="space-y-2">

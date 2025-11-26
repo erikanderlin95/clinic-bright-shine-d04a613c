@@ -1,5 +1,7 @@
 export type QueueStatus = "waiting" | "arrived" | "late" | "cancelled" | "no-show" | "completed";
 
+export type VisitCategory = "Consultation" | "Follow-up" | "General Treatment" | "Standard Visit";
+
 export interface QueueEntry {
   id: string;
   queueNumber: string;
@@ -8,8 +10,11 @@ export interface QueueEntry {
   joinedAt: string;
   name?: string;
   mobile: string;
+  email?: string;
   queueSource: "Walk-in" | "Phone Booking" | "Other";
   notes?: string;
+  duration?: number;
+  visitCategory?: VisitCategory;
 }
 
 export interface DailySummary {
