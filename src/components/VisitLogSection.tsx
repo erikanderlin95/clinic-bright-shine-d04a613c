@@ -56,13 +56,14 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                   <TableHead className="w-[100px]">Duration</TableHead>
                   <TableHead className="w-[140px]">Visit Category</TableHead>
                   <TableHead className="w-[180px]">Email</TableHead>
+                  <TableHead className="w-[200px]">Appointment Time (External Calendar)</TableHead>
                   <TableHead>Notes</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {completedEntries.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground">
+                    <TableCell colSpan={8} className="text-center text-muted-foreground">
                       No completed visits yet
                     </TableCell>
                   </TableRow>
@@ -72,7 +73,12 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                       <TableCell className="font-medium">
                         {entry.status === "booked" ? "-" : entry.queueNumber}
                       </TableCell>
-                      <TableCell className="text-muted-foreground">{entry.joinedAt}</TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {entry.status === "booked" 
+                          ? `Booking Time – ${entry.joinedAt}`
+                          : `Joined Q – ${entry.joinedAt}`
+                        }
+                      </TableCell>
                       <TableCell className="text-muted-foreground">
                         {entry.status === "completed" && entry.joinedAt ? entry.joinedAt : "-"}
                       </TableCell>
@@ -84,6 +90,9 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {entry.email || "-"}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground italic">
+                        From clinic's booking system
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {entry.notes || "-"}
