@@ -55,7 +55,7 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                   <TableHead className="w-[100px]">Completed</TableHead>
                   <TableHead className="w-[100px]">Duration</TableHead>
                   <TableHead className="w-[140px]">Visit Category</TableHead>
-                  <TableHead className="w-[180px]">Email</TableHead>
+                  <TableHead className="w-[180px]">Email / Mobile</TableHead>
                   <TableHead className="w-[200px]">Appointment Time (External Calendar)</TableHead>
                   <TableHead>Notes</TableHead>
                 </TableRow>
@@ -91,7 +91,7 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                           {entry.visitCategory || "-"}
                         </TableCell>
                         <TableCell className="text-sm text-muted-foreground">
-                          {entry.email || "-"}
+                          {isBookingEntry ? (entry.email || "-") : (entry.mobile || "-")}
                         </TableCell>
                         <TableCell className="text-sm text-muted-foreground italic">
                           {isBookingEntry ? "From clinic's booking system" : "-"}
