@@ -69,7 +69,7 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                   </TableRow>
                 ) : (
                   completedEntries.map((entry) => {
-                    const isBookingEntry = entry.notes?.includes("Book Appointment – ClynicQ");
+                    const isBookingEntry = !entry.queueNumber && entry.notes?.includes("Book Appointment – ClynicQ");
                     return (
                       <TableRow key={entry.id}>
                         <TableCell className="font-medium">
