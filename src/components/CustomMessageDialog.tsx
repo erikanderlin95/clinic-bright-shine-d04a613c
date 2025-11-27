@@ -102,7 +102,7 @@ export const CustomMessageDialog = ({ open, onOpenChange }: CustomMessageDialogP
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Compose Custom Message</DialogTitle>
+          <DialogTitle>General Announcement</DialogTitle>
           <DialogDescription>
             Phase 1: Manual messaging only. Compose and send via WhatsApp.
           </DialogDescription>
