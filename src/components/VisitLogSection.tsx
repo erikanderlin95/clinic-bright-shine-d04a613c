@@ -76,10 +76,7 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                           {isBookingEntry ? "-" : entry.queueNumber}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
-                          {isBookingEntry 
-                            ? `Booking Time – ${entry.joinedAt}`
-                            : `Joined Q – ${entry.joinedAt}`
-                          }
+                          {isBookingEntry ? "-" : `Joined Q – ${entry.joinedAt}`}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
                           {entry.status === "completed" && entry.joinedAt ? entry.joinedAt : "-"}
@@ -93,8 +90,8 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                         <TableCell className="text-sm text-muted-foreground">
                           {isBookingEntry ? (entry.email || "-") : (entry.mobile || "-")}
                         </TableCell>
-                        <TableCell className="text-sm text-muted-foreground italic">
-                          {isBookingEntry ? "From clinic's booking system" : "-"}
+                        <TableCell className="text-sm text-muted-foreground">
+                          {isBookingEntry ? entry.joinedAt : "-"}
                         </TableCell>
                         <TableCell className="text-sm text-muted-foreground">
                           {entry.notes || "-"}
