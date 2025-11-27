@@ -22,8 +22,8 @@ export const MessagingPanel = () => {
       type: "return" as const,
     },
     {
-      title: "Announcement",
-      description: "Your turn soon",
+      title: "General Operation Announcement",
+      description: "General clinic announcements",
       icon: Info,
       type: "announcement" as const,
     },
