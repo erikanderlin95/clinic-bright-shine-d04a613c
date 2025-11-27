@@ -72,7 +72,7 @@ const Index = () => {
     },
     {
       id: "7",
-      queueNumber: "B201",
+      queueNumber: "",
       status: "booked",
       joinedAt: "14:00",
       name: "Sarah Chen",
@@ -84,7 +84,7 @@ const Index = () => {
     },
     {
       id: "8",
-      queueNumber: "B202",
+      queueNumber: "",
       status: "booked",
       joinedAt: "15:30",
       name: "Michael Tan",
