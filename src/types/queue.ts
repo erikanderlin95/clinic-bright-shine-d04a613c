@@ -1,4 +1,4 @@
-export type QueueStatus = "waiting" | "arrived" | "late" | "cancelled" | "no-show" | "completed";
+export type QueueStatus = "waiting" | "arrived" | "late" | "cancelled" | "no-show" | "completed" | "booked";
 
 export type VisitCategory = "Consultation" | "Follow-up" | "General Treatment" | "Standard Visit";
 

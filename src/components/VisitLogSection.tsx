@@ -13,7 +13,7 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const completedEntries = entries.filter(
-    (entry) => entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show"
+    (entry) => entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show" || entry.status === "booked"
   );
 
   return (
