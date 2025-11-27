@@ -14,7 +14,7 @@ interface QueueTableProps {
 
 export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus }: QueueTableProps) => {
   const getActions = (entry: QueueEntry) => {
-    if (entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show") {
+    if (entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show" || entry.status === "booked") {
       return null;
     }
 
