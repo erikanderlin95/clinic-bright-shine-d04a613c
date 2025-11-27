@@ -69,10 +69,12 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                 ) : (
                   completedEntries.map((entry) => (
                     <TableRow key={entry.id}>
-                      <TableCell className="font-medium">{entry.queueNumber}</TableCell>
+                      <TableCell className="font-medium">
+                        {entry.status === "booked" ? "-" : entry.queueNumber}
+                      </TableCell>
                       <TableCell className="text-muted-foreground">{entry.joinedAt}</TableCell>
                       <TableCell className="text-muted-foreground">
-                        {entry.status === "completed" ? entry.joinedAt : "-"}
+                        {entry.status === "completed" && entry.joinedAt ? entry.joinedAt : "-"}
                       </TableCell>
                       <TableCell className="text-muted-foreground">
                         {entry.duration ? `${entry.duration} mins` : "-"}
