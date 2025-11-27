@@ -239,7 +239,12 @@ const Index = () => {
                     </Button>
                   </div>
                   <QueueTable
-                    entries={queueEntries}
+                    entries={queueEntries.filter(
+                      (entry) => entry.status !== "completed" && 
+                                 entry.status !== "cancelled" && 
+                                 entry.status !== "no-show" &&
+                                 entry.status !== "booked"
+                    )}
                     onSelectEntry={setSelectedEntry}
                     selectedEntry={selectedEntry}
                     onUpdateStatus={handleUpdateStatus}
