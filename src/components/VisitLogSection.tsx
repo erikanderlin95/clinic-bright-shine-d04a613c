@@ -68,43 +68,46 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  completedEntries.map((entry) => (
-                    <TableRow key={entry.id}>
-                      <TableCell className="font-medium">
-                        {entry.status === "booked" ? "-" : entry.queueNumber}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {entry.status === "booked" 
-                          ? `Booking Time – ${entry.joinedAt}`
-                          : `Joined Q – ${entry.joinedAt}`
-                        }
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {entry.status === "completed" && entry.joinedAt ? entry.joinedAt : "-"}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {entry.duration ? `${entry.duration} mins` : "-"}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {entry.visitCategory || "-"}
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {entry.email || "-"}
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground italic">
-                        From clinic's booking system
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {entry.notes || "-"}
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  completedEntries.map((entry) => {
+                    const isBookingEntry = entry.notes?.includes("Book Appointment – ClynicQ");
+                    return (
+                      <TableRow key={entry.id}>
+                        <TableCell className="font-medium">
+                          {isBookingEntry ? "-" : entry.queueNumber}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {isBookingEntry 
+                            ? `Booking Time – ${entry.joinedAt}`
+                            : `Joined Q – ${entry.joinedAt}`
+                          }
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {entry.status === "completed" && entry.joinedAt ? entry.joinedAt : "-"}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {entry.duration ? `${entry.duration} mins` : "-"}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {entry.visitCategory || "-"}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {entry.email || "-"}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground italic">
+                          {isBookingEntry ? "From clinic's booking system" : "-"}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {entry.notes || "-"}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
                 )}
               </TableBody>
             </Table>
           </div>
           <p className="text-xs text-muted-foreground mt-3">
-            Note: No medical records, billing, or diagnosis stored. Queue tracking only.
+            Note: No medical records, billing, or diagnosis stored. Queue and booking tracking only.
           </p>
         </CardContent>
       )}
