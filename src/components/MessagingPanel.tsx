@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, AlertCircle, Info } from "lucide-react";
+import { MessageSquare, AlertCircle, Info, PenSquare } from "lucide-react";
 import { MessageTemplateDialog } from "./MessageTemplateDialog";
+import { CustomMessageDialog } from "./CustomMessageDialog";
 
 export const MessagingPanel = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [customDialogOpen, setCustomDialogOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<"delay" | "return" | "announcement" | null>(null);
 
   const messageTemplates = [
@@ -44,7 +46,7 @@ export const MessagingPanel = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-3 md:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-4">
             {messageTemplates.map((template) => (
               <Button
                 key={template.title}
@@ -59,6 +61,17 @@ export const MessagingPanel = () => {
                 </div>
               </Button>
             ))}
+            <Button
+              variant="outline"
+              className="h-auto flex-col gap-2 p-4 border-dashed"
+              onClick={() => setCustomDialogOpen(true)}
+            >
+              <PenSquare className="h-5 w-5 text-primary" />
+              <div className="text-center">
+                <div className="font-semibold">Custom Message</div>
+                <div className="text-xs text-muted-foreground">Compose your own</div>
+              </div>
+            </Button>
           </div>
           <p className="text-xs text-muted-foreground mt-3">
             Phase 1: Messages sent manually via WhatsApp/SMS (no patient names)
@@ -70,6 +83,11 @@ export const MessagingPanel = () => {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         templateType={selectedTemplate}
+      />
+      
+      <CustomMessageDialog
+        open={customDialogOpen}
+        onOpenChange={setCustomDialogOpen}
       />
     </>
   );
