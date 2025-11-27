@@ -22,7 +22,7 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
     <Card className="border-primary/20 bg-gradient-to-br from-card to-card/50">
       <CardHeader className="border-b border-border/50 bg-muted/30">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-primary">
+          <CardTitle className="flex items-center gap-2 text-foreground">
             <FileText className="h-5 w-5" />
             Visit Log (Optional)
           </CardTitle>
@@ -85,57 +85,57 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
                       >
                         <TableCell className="font-medium">
                           {isBookingEntry ? (
-                            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
+                            <Badge variant="outline" className="bg-primary/10 text-foreground border-primary/30">
                               <Calendar className="h-3 w-3 mr-1" />
                               Appt
                             </Badge>
                           ) : (
-                            <span className="text-accent font-bold">{entry.queueNumber}</span>
+                            <span className="text-foreground font-bold">{entry.queueNumber}</span>
                           )}
                         </TableCell>
-                        <TableCell className="text-muted-foreground">
+                        <TableCell className="text-foreground">
                           {isBookingEntry ? (
-                            <span className="text-muted-foreground/60">-</span>
+                            <span className="text-foreground/60">-</span>
                           ) : (
-                            <div className="flex items-center gap-1 text-accent">
+                            <div className="flex items-center gap-1 text-foreground">
                               <Clock className="h-3 w-3" />
                               {entry.joinedAt}
                             </div>
                           )}
                         </TableCell>
-                        <TableCell className="text-muted-foreground">
+                        <TableCell className="text-foreground">
                           {entry.status === "completed" && entry.joinedAt ? (
-                            <span className="text-status-arrived">{entry.joinedAt}</span>
+                            <span className="text-foreground">{entry.joinedAt}</span>
                           ) : "-"}
                         </TableCell>
-                        <TableCell className="text-muted-foreground font-medium">
+                        <TableCell className="text-foreground font-medium">
                           {entry.duration ? `${entry.duration} mins` : "-"}
                         </TableCell>
                         <TableCell>
                           {entry.visitCategory ? (
-                            <Badge variant="secondary" className="bg-secondary/20">
+                            <Badge variant="secondary" className="bg-secondary/20 text-foreground">
                               {entry.visitCategory}
                             </Badge>
                           ) : "-"}
                         </TableCell>
                         <TableCell className="text-sm font-medium">
                           {isBookingEntry ? (
-                            <span className="text-primary">{entry.email || "-"}</span>
+                            <span className="text-foreground">{entry.email || "-"}</span>
                           ) : (
-                            <span className="text-accent">{entry.mobile || "-"}</span>
+                            <span className="text-foreground">{entry.mobile || "-"}</span>
                           )}
                         </TableCell>
                         <TableCell className="text-sm">
                           {isBookingEntry ? (
-                            <div className="flex items-center gap-1 text-primary font-medium">
+                            <div className="flex items-center gap-1 text-foreground font-medium">
                               <Calendar className="h-3 w-3" />
                               {entry.joinedAt}
                             </div>
                           ) : (
-                            <span className="text-muted-foreground/60">-</span>
+                            <span className="text-foreground/60">-</span>
                           )}
                         </TableCell>
-                        <TableCell className="text-sm text-muted-foreground italic">
+                        <TableCell className="text-sm text-foreground italic">
                           {entry.notes || "-"}
                         </TableCell>
                       </TableRow>
@@ -148,14 +148,14 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
           <div className="flex items-center gap-4 mt-4 text-xs">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded border-2 border-primary bg-primary/10"></div>
-              <span className="text-muted-foreground">Appointment Bookings</span>
+              <span className="text-foreground">Appointment Bookings</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded border-2 border-accent bg-accent/10"></div>
-              <span className="text-muted-foreground">Queue Visits</span>
+              <span className="text-foreground">Queue Visits</span>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground/70 mt-3 italic">
+          <p className="text-xs text-foreground/70 mt-3 italic">
             Note: No medical records, billing, or diagnosis stored. Queue and booking tracking only.
           </p>
         </CardContent>
