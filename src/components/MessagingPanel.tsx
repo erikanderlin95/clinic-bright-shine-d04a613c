@@ -23,12 +23,6 @@ export const MessagingPanel = () => {
       icon: MessageSquare,
       type: "return" as const,
     },
-    {
-      title: "General Operation Announcement",
-      description: "General clinic announcements",
-      icon: Info,
-      type: "announcement" as const,
-    },
   ];
 
   const handleOpenTemplate = (type: "delay" | "return" | "announcement") => {
@@ -46,7 +40,7 @@ export const MessagingPanel = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-3 md:grid-cols-4">
+          <div className="grid gap-3 md:grid-cols-3">
             {messageTemplates.map((template) => (
               <Button
                 key={template.title}
@@ -63,12 +57,12 @@ export const MessagingPanel = () => {
             ))}
             <Button
               variant="outline"
-              className="h-auto flex-col gap-2 p-4 border-dashed"
+              className="h-auto flex-col gap-2 p-4"
               onClick={() => setCustomDialogOpen(true)}
             >
-              <PenSquare className="h-5 w-5 text-primary" />
+              <Info className="h-5 w-5 text-primary" />
               <div className="text-center">
-                <div className="font-semibold">Custom Message</div>
+                <div className="font-semibold">General Announcement</div>
                 <div className="text-xs text-muted-foreground">Compose your own</div>
               </div>
             </Button>
