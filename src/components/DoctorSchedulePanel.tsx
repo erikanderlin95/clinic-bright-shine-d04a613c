@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -20,18 +22,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, Calendar, Clock, User, Eye, X, CalendarDays, List } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Plus, Pencil, Trash2, Calendar, Clock, User, Eye, CalendarDays, List, ChevronDown } from "lucide-react";
+import { useDoctorShifts, DoctorShift } from "@/hooks/useDoctorShifts";
+import { useDoctorProfiles } from "@/hooks/useDoctorProfiles";
 import { WeeklyCalendarView } from "./WeeklyCalendarView";
-
-interface DoctorShift {
-  id: string;
-  doctorNames: string[];
-  dayOfWeek: string;
-  startTime: string;
-  endTime: string;
-  serviceType?: string;
-}
 
 const DAYS_OF_WEEK = [
   "Monday",
@@ -51,131 +50,65 @@ const SERVICE_TYPES = [
   "Health Screening",
 ];
 
+// Transform DB shift to calendar format
+const transformShiftForCalendar = (shift: DoctorShift) => ({
+  id: shift.id,
+  doctorNames: shift.doctors.map((d) => d.name),
+  dayOfWeek: shift.day_of_week,
+  startTime: shift.start_time.slice(0, 5), // "HH:MM:SS" -> "HH:MM"
+  endTime: shift.end_time.slice(0, 5),
+  serviceType: shift.service_type || undefined,
+});
+
 export const DoctorSchedulePanel = () => {
-  const { toast } = useToast();
-  const [shifts, setShifts] = useState<DoctorShift[]>([
-    {
-      id: "1",
-      doctorNames: ["Dr Tan", "Dr Wong"],
-      dayOfWeek: "Monday",
-      startTime: "09:00",
-      endTime: "17:00",
-      serviceType: "General Consultation",
-    },
-    {
-      id: "2",
-      doctorNames: ["Dr Tan"],
-      dayOfWeek: "Thursday",
-      startTime: "12:00",
-      endTime: "20:00",
-      serviceType: "Specialist Consultation",
-    },
-    {
-      id: "3",
-      doctorNames: ["Dr Lim", "Dr Chen"],
-      dayOfWeek: "Tuesday",
-      startTime: "10:00",
-      endTime: "18:00",
-      serviceType: "General Consultation",
-    },
-    {
-      id: "4",
-      doctorNames: ["Dr Wong"],
-      dayOfWeek: "Wednesday",
-      startTime: "08:00",
-      endTime: "14:00",
-      serviceType: "Health Screening",
-    },
-  ]);
+  const { shifts, isLoading: shiftsLoading, createShift, updateShift, deleteShift, moveShift } = useDoctorShifts();
+  const { profiles, isLoading: profilesLoading } = useDoctorProfiles();
 
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [doctorInput, setDoctorInput] = useState("");
-  const [formData, setFormData] = useState<Omit<DoctorShift, "id">>({
-    doctorNames: [],
+  const [selectedDoctorIds, setSelectedDoctorIds] = useState<string[]>([]);
+  const [formData, setFormData] = useState({
     dayOfWeek: "",
     startTime: "",
     endTime: "",
     serviceType: "",
   });
 
+  const isLoading = shiftsLoading || profilesLoading;
+
   const resetForm = () => {
     setFormData({
-      doctorNames: [],
       dayOfWeek: "",
       startTime: "",
       endTime: "",
       serviceType: "",
     });
-    setDoctorInput("");
+    setSelectedDoctorIds([]);
     setEditingId(null);
   };
 
-  const handleAddDoctor = () => {
-    const trimmed = doctorInput.trim();
-    if (trimmed && !formData.doctorNames.includes(trimmed)) {
-      setFormData((prev) => ({
-        ...prev,
-        doctorNames: [...prev.doctorNames, trimmed],
-      }));
-      setDoctorInput("");
-    }
-  };
-
-  const handleRemoveDoctor = (name: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      doctorNames: prev.doctorNames.filter((n) => n !== name),
-    }));
-  };
-
-  const handleDoctorKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddDoctor();
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.doctorNames.length === 0 || !formData.dayOfWeek || !formData.startTime || !formData.endTime) {
-      toast({
-        title: "Missing fields",
-        description: "Please fill in all required fields including at least one doctor.",
-        variant: "destructive",
-      });
+    if (selectedDoctorIds.length === 0 || !formData.dayOfWeek || !formData.startTime || !formData.endTime) {
       return;
     }
 
     if (formData.startTime >= formData.endTime) {
-      toast({
-        title: "Invalid time range",
-        description: "End time must be after start time.",
-        variant: "destructive",
-      });
       return;
     }
 
+    const payload = {
+      day_of_week: formData.dayOfWeek,
+      start_time: formData.startTime,
+      end_time: formData.endTime,
+      service_type: formData.serviceType || null,
+      doctor_ids: selectedDoctorIds,
+    };
+
     if (editingId) {
-      setShifts((prev) =>
-        prev.map((shift) =>
-          shift.id === editingId ? { ...formData, id: editingId } : shift
-        )
-      );
-      toast({
-        title: "Shift updated",
-        description: `Updated shift for ${formData.doctorNames.join(", ")}.`,
-      });
+      await updateShift.mutateAsync({ id: editingId, data: payload });
     } else {
-      const newShift: DoctorShift = {
-        ...formData,
-        id: Date.now().toString(),
-      };
-      setShifts((prev) => [...prev, newShift]);
-      toast({
-        title: "Shift added",
-        description: `Added new shift for ${formData.doctorNames.join(", ")}.`,
-      });
+      await createShift.mutateAsync(payload);
     }
 
     resetForm();
@@ -183,63 +116,55 @@ export const DoctorSchedulePanel = () => {
 
   const handleEdit = (shift: DoctorShift) => {
     setFormData({
-      doctorNames: [...shift.doctorNames],
-      dayOfWeek: shift.dayOfWeek,
-      startTime: shift.startTime,
-      endTime: shift.endTime,
-      serviceType: shift.serviceType || "",
+      dayOfWeek: shift.day_of_week,
+      startTime: shift.start_time.slice(0, 5),
+      endTime: shift.end_time.slice(0, 5),
+      serviceType: shift.service_type || "",
     });
-    setDoctorInput("");
+    setSelectedDoctorIds(shift.doctors.map((d) => d.id));
     setEditingId(shift.id);
   };
 
-  const handleDelete = (id: string) => {
-    const shift = shifts.find((s) => s.id === id);
-    setShifts((prev) => prev.filter((s) => s.id !== id));
-    toast({
-      title: "Shift deleted",
-      description: `Removed shift for ${shift?.doctorNames.join(", ")}.`,
-    });
+  const handleDelete = async (id: string) => {
+    await deleteShift.mutateAsync(id);
   };
 
-  const handleShiftMove = (shiftId: string, newDay: string) => {
-    setShifts((prev) =>
-      prev.map((shift) =>
-        shift.id === shiftId ? { ...shift, dayOfWeek: newDay } : shift
-      )
+  const handleShiftMove = async (shiftId: string, newDay: string) => {
+    await moveShift.mutateAsync({ id: shiftId, day_of_week: newDay });
+  };
+
+  const handleCalendarShiftClick = (calShift: any) => {
+    const dbShift = shifts.find((s) => s.id === calShift.id);
+    if (dbShift) handleEdit(dbShift);
+  };
+
+  const toggleDoctor = (doctorId: string) => {
+    setSelectedDoctorIds((prev) =>
+      prev.includes(doctorId)
+        ? prev.filter((id) => id !== doctorId)
+        : [...prev, doctorId]
     );
-    const shift = shifts.find((s) => s.id === shiftId);
-    toast({
-      title: "Shift moved",
-      description: `Moved ${shift?.doctorNames.join(", ")} to ${newDay}.`,
-    });
   };
 
-  // Get all shifts for today
+  // Get today's shifts for marketplace preview
   const getTodayShifts = () => {
     const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
-    return shifts.filter((shift) => shift.dayOfWeek === today);
+    return shifts.filter((shift) => shift.day_of_week === today);
   };
 
-  // Get next availability if no shift today
   const getNextAvailability = () => {
     const today = new Date();
     const todayIndex = today.getDay();
     const dayIndexMap: Record<string, number> = {
-      Sunday: 0,
-      Monday: 1,
-      Tuesday: 2,
-      Wednesday: 3,
-      Thursday: 4,
-      Friday: 5,
-      Saturday: 6,
+      Sunday: 0, Monday: 1, Tuesday: 2, Wednesday: 3,
+      Thursday: 4, Friday: 5, Saturday: 6,
     };
 
     let nextShift: DoctorShift | null = null;
     let minDaysAway = 8;
 
     shifts.forEach((shift) => {
-      const shiftDayIndex = dayIndexMap[shift.dayOfWeek];
+      const shiftDayIndex = dayIndexMap[shift.day_of_week];
       let daysAway = shiftDayIndex - todayIndex;
       if (daysAway <= 0) daysAway += 7;
 
@@ -255,20 +180,19 @@ export const DoctorSchedulePanel = () => {
   const todayShifts = getTodayShifts();
   const nextShift = todayShifts.length === 0 ? getNextAvailability() : null;
 
-  // Combine all doctors on shift today with their times
   const getTodayDoctorsDisplay = () => {
     if (todayShifts.length === 0) return [];
     
     const doctorTimeMap: Record<string, string[]> = {};
     
     todayShifts.forEach((shift) => {
-      const timeSlot = `${shift.startTime}–${shift.endTime}`;
-      shift.doctorNames.forEach((name) => {
-        if (!doctorTimeMap[name]) {
-          doctorTimeMap[name] = [];
+      const timeSlot = `${shift.start_time.slice(0, 5)}–${shift.end_time.slice(0, 5)}`;
+      shift.doctors.forEach((doc) => {
+        if (!doctorTimeMap[doc.name]) {
+          doctorTimeMap[doc.name] = [];
         }
-        if (!doctorTimeMap[name].includes(timeSlot)) {
-          doctorTimeMap[name].push(timeSlot);
+        if (!doctorTimeMap[doc.name].includes(timeSlot)) {
+          doctorTimeMap[doc.name].push(timeSlot);
         }
       });
     });
@@ -281,9 +205,20 @@ export const DoctorSchedulePanel = () => {
 
   const todayDoctors = getTodayDoctorsDisplay();
 
+  // Transform shifts for calendar view
+  const calendarShifts = shifts.map(transformShiftForCalendar);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-10 w-48" />
+        <Skeleton className="h-96" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {/* View Toggle Tabs */}
       <Tabs defaultValue="calendar" className="w-full">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-foreground">Doctor Schedule</h2>
@@ -302,9 +237,9 @@ export const DoctorSchedulePanel = () => {
         {/* Calendar View */}
         <TabsContent value="calendar" className="space-y-6 mt-0">
           <WeeklyCalendarView
-            shifts={shifts}
+            shifts={calendarShifts}
             onShiftMove={handleShiftMove}
-            onShiftClick={handleEdit}
+            onShiftClick={handleCalendarShiftClick}
           />
           
           {/* Compact Add Form */}
@@ -318,31 +253,55 @@ export const DoctorSchedulePanel = () => {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-3">
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+                  {/* Doctor Multi-Select */}
                   <div className="space-y-1.5 lg:col-span-2">
-                    <Label htmlFor="doctorNameCal" className="text-xs">Doctors</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="doctorNameCal"
-                        placeholder="e.g. Dr Tan"
-                        value={doctorInput}
-                        onChange={(e) => setDoctorInput(e.target.value)}
-                        onKeyDown={handleDoctorKeyDown}
-                        className="h-9"
-                      />
-                      <Button type="button" variant="secondary" size="sm" onClick={handleAddDoctor}>
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    {formData.doctorNames.length > 0 && (
+                    <Label className="text-xs">Doctors</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="w-full justify-between h-9 font-normal">
+                          {selectedDoctorIds.length === 0 ? (
+                            <span className="text-muted-foreground">Select doctors...</span>
+                          ) : (
+                            <span className="truncate">
+                              {selectedDoctorIds.length} doctor(s) selected
+                            </span>
+                          )}
+                          <ChevronDown className="h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-64 p-2" align="start">
+                        {profiles.length === 0 ? (
+                          <p className="text-sm text-muted-foreground p-2">
+                            No doctors found. Add profiles first.
+                          </p>
+                        ) : (
+                          <div className="space-y-1 max-h-48 overflow-y-auto">
+                            {profiles.map((doc) => (
+                              <label
+                                key={doc.id}
+                                className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer"
+                              >
+                                <Checkbox
+                                  checked={selectedDoctorIds.includes(doc.id)}
+                                  onCheckedChange={() => toggleDoctor(doc.id)}
+                                />
+                                <span className="text-sm">{doc.name}</span>
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </PopoverContent>
+                    </Popover>
+                    {selectedDoctorIds.length > 0 && (
                       <div className="flex flex-wrap gap-1">
-                        {formData.doctorNames.map((name) => (
-                          <Badge key={name} variant="secondary" className="gap-1 pr-1 text-xs">
-                            {name}
-                            <button type="button" onClick={() => handleRemoveDoctor(name)} className="ml-0.5 rounded-full p-0.5 hover:bg-muted">
-                              <X className="h-2.5 w-2.5" />
-                            </button>
-                          </Badge>
-                        ))}
+                        {selectedDoctorIds.map((id) => {
+                          const doc = profiles.find((p) => p.id === id);
+                          return doc ? (
+                            <Badge key={id} variant="secondary" className="text-xs">
+                              {doc.name}
+                            </Badge>
+                          ) : null;
+                        })}
                       </div>
                     )}
                   </div>
@@ -374,7 +333,7 @@ export const DoctorSchedulePanel = () => {
                   <div className="space-y-1.5">
                     <Label className="text-xs">&nbsp;</Label>
                     <div className="flex gap-2">
-                      <Button type="submit" size="sm" className="h-9">
+                      <Button type="submit" size="sm" className="h-9" disabled={createShift.isPending || updateShift.isPending}>
                         {editingId ? "Update" : "Add"}
                       </Button>
                       {editingId && (
@@ -392,7 +351,6 @@ export const DoctorSchedulePanel = () => {
 
         {/* List View */}
         <TabsContent value="list" className="space-y-6 mt-0">
-          {/* Form Section */}
           <Card className="shadow-md">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-lg">
@@ -403,30 +361,62 @@ export const DoctorSchedulePanel = () => {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                  {/* Doctor Multi-Select */}
                   <div className="space-y-2 lg:col-span-2">
-                    <Label htmlFor="doctorName">Doctors *</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="doctorName"
-                        placeholder="e.g. Dr Tan"
-                        value={doctorInput}
-                        onChange={(e) => setDoctorInput(e.target.value)}
-                        onKeyDown={handleDoctorKeyDown}
-                      />
-                      <Button type="button" variant="secondary" onClick={handleAddDoctor}>
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    {formData.doctorNames.length > 0 && (
+                    <Label>Doctors *</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="w-full justify-between font-normal">
+                          {selectedDoctorIds.length === 0 ? (
+                            <span className="text-muted-foreground">Select doctors...</span>
+                          ) : (
+                            <span className="truncate">
+                              {selectedDoctorIds.length} doctor(s) selected
+                            </span>
+                          )}
+                          <ChevronDown className="h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-72 p-2" align="start">
+                        {profiles.length === 0 ? (
+                          <p className="text-sm text-muted-foreground p-2">
+                            No doctors found. Add profiles in the Doctor Profiles tab first.
+                          </p>
+                        ) : (
+                          <div className="space-y-1 max-h-64 overflow-y-auto">
+                            {profiles.map((doc) => (
+                              <label
+                                key={doc.id}
+                                className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer"
+                              >
+                                <Checkbox
+                                  checked={selectedDoctorIds.includes(doc.id)}
+                                  onCheckedChange={() => toggleDoctor(doc.id)}
+                                />
+                                <div>
+                                  <span className="text-sm font-medium">{doc.name}</span>
+                                  {doc.specialization && (
+                                    <span className="text-xs text-muted-foreground ml-2">
+                                      ({doc.specialization})
+                                    </span>
+                                  )}
+                                </div>
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </PopoverContent>
+                    </Popover>
+                    {selectedDoctorIds.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 pt-1">
-                        {formData.doctorNames.map((name) => (
-                          <Badge key={name} variant="secondary" className="gap-1 pr-1">
-                            {name}
-                            <button type="button" onClick={() => handleRemoveDoctor(name)} className="ml-1 rounded-full p-0.5 hover:bg-muted">
-                              <X className="h-3 w-3" />
-                            </button>
-                          </Badge>
-                        ))}
+                        {selectedDoctorIds.map((id) => {
+                          const doc = profiles.find((p) => p.id === id);
+                          return doc ? (
+                            <Badge key={id} variant="secondary" className="gap-1">
+                              {doc.name}
+                            </Badge>
+                          ) : null;
+                        })}
                       </div>
                     )}
                   </div>
@@ -473,7 +463,7 @@ export const DoctorSchedulePanel = () => {
                 </div>
 
                 <div className="flex gap-2 pt-2">
-                  <Button type="submit" className="gap-2">
+                  <Button type="submit" className="gap-2" disabled={createShift.isPending || updateShift.isPending}>
                     <Plus className="h-4 w-4" />
                     {editingId ? "Update Shift" : "Add Shift"}
                   </Button>
@@ -518,16 +508,19 @@ export const DoctorSchedulePanel = () => {
                         <TableRow key={shift.id}>
                           <TableCell>
                             <div className="flex flex-wrap gap-1">
-                              {shift.doctorNames.map((name) => (
-                                <Badge key={name} variant="outline" className="font-medium">{name}</Badge>
+                              {shift.doctors.map((doc) => (
+                                <Badge key={doc.id} variant="outline" className="font-medium">{doc.name}</Badge>
                               ))}
+                              {shift.doctors.length === 0 && (
+                                <span className="text-muted-foreground text-sm">No doctors assigned</span>
+                              )}
                             </div>
                           </TableCell>
-                          <TableCell>{shift.dayOfWeek}</TableCell>
-                          <TableCell>{shift.startTime}</TableCell>
-                          <TableCell>{shift.endTime}</TableCell>
+                          <TableCell>{shift.day_of_week}</TableCell>
+                          <TableCell>{shift.start_time.slice(0, 5)}</TableCell>
+                          <TableCell>{shift.end_time.slice(0, 5)}</TableCell>
                           <TableCell>
-                            <span className="text-muted-foreground">{shift.serviceType || "—"}</span>
+                            <span className="text-muted-foreground">{shift.service_type || "—"}</span>
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end gap-1">
@@ -584,9 +577,11 @@ export const DoctorSchedulePanel = () => {
                     <>
                       <p className="text-sm font-semibold text-foreground">Next Availability</p>
                       <p className="text-sm text-muted-foreground">
-                        {nextShift.dayOfWeek.slice(0, 3)} {nextShift.startTime}–{nextShift.endTime}
+                        {nextShift.day_of_week.slice(0, 3)} {nextShift.start_time.slice(0, 5)}–{nextShift.end_time.slice(0, 5)}
                       </p>
-                      <p className="text-sm text-muted-foreground">{nextShift.doctorNames.join(", ")}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {nextShift.doctors.map((d) => d.name).join(", ") || "No doctors assigned"}
+                      </p>
                     </>
                   ) : (
                     <>
