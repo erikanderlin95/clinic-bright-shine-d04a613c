@@ -9,6 +9,7 @@ import { Phase1Notice } from "@/components/Phase1Notice";
 import { VisitLogSection } from "@/components/VisitLogSection";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { AutomationPanel } from "@/components/AutomationPanel";
+import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
@@ -218,6 +219,7 @@ const Index = () => {
               <TabsList>
                 <TabsTrigger value="queue">Queue Management</TabsTrigger>
                 <TabsTrigger value="automation">Automation</TabsTrigger>
+                <TabsTrigger value="schedule">Doctor Schedule</TabsTrigger>
               </TabsList>
               
               <TabsContent value="queue" className="space-y-6 mt-6">
@@ -276,6 +278,10 @@ const Index = () => {
                   onSendBroadcast={handleSendBroadcast}
                   onSendRecentCustomersBroadcast={handleSendRecentCustomersBroadcast}
                 />
+              </TabsContent>
+
+              <TabsContent value="schedule" className="mt-6">
+                <DoctorSchedulePanel />
               </TabsContent>
             </Tabs>
           </div>
