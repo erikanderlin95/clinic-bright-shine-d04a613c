@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -18,12 +19,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, Calendar, Clock, User, Eye } from "lucide-react";
+import { Plus, Pencil, Trash2, Calendar, Clock, User, Eye, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface DoctorShift {
   id: string;
-  doctorName: string;
+  doctorNames: string[];
   dayOfWeek: string;
   startTime: string;
   endTime: string;
@@ -53,7 +54,7 @@ export const DoctorSchedulePanel = () => {
   const [shifts, setShifts] = useState<DoctorShift[]>([
     {
       id: "1",
-      doctorName: "Dr Tan",
+      doctorNames: ["Dr Tan", "Dr Wong"],
       dayOfWeek: "Monday",
       startTime: "09:00",
       endTime: "17:00",
@@ -61,7 +62,7 @@ export const DoctorSchedulePanel = () => {
     },
     {
       id: "2",
-      doctorName: "Dr Tan",
+      doctorNames: ["Dr Tan"],
       dayOfWeek: "Thursday",
       startTime: "12:00",
       endTime: "20:00",
@@ -69,17 +70,26 @@ export const DoctorSchedulePanel = () => {
     },
     {
       id: "3",
-      doctorName: "Dr Lim",
+      doctorNames: ["Dr Lim", "Dr Chen"],
       dayOfWeek: "Tuesday",
       startTime: "10:00",
       endTime: "18:00",
       serviceType: "General Consultation",
     },
+    {
+      id: "4",
+      doctorNames: ["Dr Wong"],
+      dayOfWeek: "Wednesday",
+      startTime: "08:00",
+      endTime: "14:00",
+      serviceType: "Health Screening",
+    },
   ]);
 
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [doctorInput, setDoctorInput] = useState("");
   const [formData, setFormData] = useState<Omit<DoctorShift, "id">>({
-    doctorName: "",
+    doctorNames: [],
     dayOfWeek: "",
     startTime: "",
     endTime: "",
@@ -88,22 +98,48 @@ export const DoctorSchedulePanel = () => {
 
   const resetForm = () => {
     setFormData({
-      doctorName: "",
+      doctorNames: [],
       dayOfWeek: "",
       startTime: "",
       endTime: "",
       serviceType: "",
     });
+    setDoctorInput("");
     setEditingId(null);
+  };
+
+  const handleAddDoctor = () => {
+    const trimmed = doctorInput.trim();
+    if (trimmed && !formData.doctorNames.includes(trimmed)) {
+      setFormData((prev) => ({
+        ...prev,
+        doctorNames: [...prev.doctorNames, trimmed],
+      }));
+      setDoctorInput("");
+    }
+  };
+
+  const handleRemoveDoctor = (name: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      doctorNames: prev.doctorNames.filter((n) => n !== name),
+    }));
+  };
+
+  const handleDoctorKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddDoctor();
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.doctorName || !formData.dayOfWeek || !formData.startTime || !formData.endTime) {
+    if (formData.doctorNames.length === 0 || !formData.dayOfWeek || !formData.startTime || !formData.endTime) {
       toast({
         title: "Missing fields",
-        description: "Please fill in all required fields.",
+        description: "Please fill in all required fields including at least one doctor.",
         variant: "destructive",
       });
       return;
@@ -126,7 +162,7 @@ export const DoctorSchedulePanel = () => {
       );
       toast({
         title: "Shift updated",
-        description: `Updated shift for ${formData.doctorName}.`,
+        description: `Updated shift for ${formData.doctorNames.join(", ")}.`,
       });
     } else {
       const newShift: DoctorShift = {
@@ -136,7 +172,7 @@ export const DoctorSchedulePanel = () => {
       setShifts((prev) => [...prev, newShift]);
       toast({
         title: "Shift added",
-        description: `Added new shift for ${formData.doctorName}.`,
+        description: `Added new shift for ${formData.doctorNames.join(", ")}.`,
       });
     }
 
@@ -145,12 +181,13 @@ export const DoctorSchedulePanel = () => {
 
   const handleEdit = (shift: DoctorShift) => {
     setFormData({
-      doctorName: shift.doctorName,
+      doctorNames: [...shift.doctorNames],
       dayOfWeek: shift.dayOfWeek,
       startTime: shift.startTime,
       endTime: shift.endTime,
       serviceType: shift.serviceType || "",
     });
+    setDoctorInput("");
     setEditingId(shift.id);
   };
 
@@ -159,14 +196,14 @@ export const DoctorSchedulePanel = () => {
     setShifts((prev) => prev.filter((s) => s.id !== id));
     toast({
       title: "Shift deleted",
-      description: `Removed shift for ${shift?.doctorName}.`,
+      description: `Removed shift for ${shift?.doctorNames.join(", ")}.`,
     });
   };
 
-  // Get today's day name
-  const getTodayShift = () => {
+  // Get all shifts for today
+  const getTodayShifts = () => {
     const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
-    return shifts.find((shift) => shift.dayOfWeek === today);
+    return shifts.filter((shift) => shift.dayOfWeek === today);
   };
 
   // Get next availability if no shift today
@@ -200,8 +237,34 @@ export const DoctorSchedulePanel = () => {
     return nextShift;
   };
 
-  const todayShift = getTodayShift();
-  const nextShift = !todayShift ? getNextAvailability() : null;
+  const todayShifts = getTodayShifts();
+  const nextShift = todayShifts.length === 0 ? getNextAvailability() : null;
+
+  // Combine all doctors on shift today with their times
+  const getTodayDoctorsDisplay = () => {
+    if (todayShifts.length === 0) return [];
+    
+    const doctorTimeMap: Record<string, string[]> = {};
+    
+    todayShifts.forEach((shift) => {
+      const timeSlot = `${shift.startTime}–${shift.endTime}`;
+      shift.doctorNames.forEach((name) => {
+        if (!doctorTimeMap[name]) {
+          doctorTimeMap[name] = [];
+        }
+        if (!doctorTimeMap[name].includes(timeSlot)) {
+          doctorTimeMap[name].push(timeSlot);
+        }
+      });
+    });
+
+    return Object.entries(doctorTimeMap).map(([name, times]) => ({
+      name,
+      times: times.join(", "),
+    }));
+  };
+
+  const todayDoctors = getTodayDoctorsDisplay();
 
   return (
     <div className="space-y-6">
@@ -216,16 +279,40 @@ export const DoctorSchedulePanel = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              <div className="space-y-2">
-                <Label htmlFor="doctorName">Doctor Name *</Label>
-                <Input
-                  id="doctorName"
-                  placeholder="e.g. Dr Tan"
-                  value={formData.doctorName}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, doctorName: e.target.value }))
-                  }
-                />
+              <div className="space-y-2 lg:col-span-2">
+                <Label htmlFor="doctorName">Doctors *</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="doctorName"
+                    placeholder="e.g. Dr Tan"
+                    value={doctorInput}
+                    onChange={(e) => setDoctorInput(e.target.value)}
+                    onKeyDown={handleDoctorKeyDown}
+                  />
+                  <Button type="button" variant="secondary" onClick={handleAddDoctor}>
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                {formData.doctorNames.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {formData.doctorNames.map((name) => (
+                      <Badge
+                        key={name}
+                        variant="secondary"
+                        className="gap-1 pr-1"
+                      >
+                        {name}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveDoctor(name)}
+                          className="ml-1 rounded-full p-0.5 hover:bg-muted"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -272,7 +359,9 @@ export const DoctorSchedulePanel = () => {
                   }
                 />
               </div>
+            </div>
 
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               <div className="space-y-2">
                 <Label htmlFor="serviceType">Service Type</Label>
                 <Select
@@ -328,7 +417,7 @@ export const DoctorSchedulePanel = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Doctor</TableHead>
+                    <TableHead>Doctors</TableHead>
                     <TableHead>Day</TableHead>
                     <TableHead>Start Time</TableHead>
                     <TableHead>End Time</TableHead>
@@ -339,7 +428,15 @@ export const DoctorSchedulePanel = () => {
                 <TableBody>
                   {shifts.map((shift) => (
                     <TableRow key={shift.id}>
-                      <TableCell className="font-medium">{shift.doctorName}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {shift.doctorNames.map((name) => (
+                            <Badge key={name} variant="outline" className="font-medium">
+                              {name}
+                            </Badge>
+                          ))}
+                        </div>
+                      </TableCell>
                       <TableCell>{shift.dayOfWeek}</TableCell>
                       <TableCell>{shift.startTime}</TableCell>
                       <TableCell>{shift.endTime}</TableCell>
@@ -391,19 +488,23 @@ export const DoctorSchedulePanel = () => {
               How it appears on your public clinic card
             </p>
             <div className="rounded-lg bg-card p-4 shadow-sm">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
                   <Clock className="h-5 w-5 text-primary" />
                 </div>
-                <div>
-                  {todayShift ? (
+                <div className="min-w-0 flex-1">
+                  {todayDoctors.length > 0 ? (
                     <>
                       <p className="text-sm font-semibold text-foreground">
                         On Shift Today
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        {todayShift.doctorName} ({todayShift.startTime}–{todayShift.endTime})
-                      </p>
+                      <div className="mt-1 space-y-0.5">
+                        {todayDoctors.map((doc) => (
+                          <p key={doc.name} className="text-sm text-muted-foreground">
+                            {doc.name} ({doc.times})
+                          </p>
+                        ))}
+                      </div>
                     </>
                   ) : nextShift ? (
                     <>
@@ -411,7 +512,10 @@ export const DoctorSchedulePanel = () => {
                         Next Availability
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {nextShift.dayOfWeek.slice(0, 3)} {nextShift.startTime}–{nextShift.endTime} ({nextShift.doctorName})
+                        {nextShift.dayOfWeek.slice(0, 3)} {nextShift.startTime}–{nextShift.endTime}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {nextShift.doctorNames.join(", ")}
                       </p>
                     </>
                   ) : (
