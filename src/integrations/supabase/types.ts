@@ -14,7 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      doctor_profiles: {
+        Row: {
+          bio: string | null
+          certifications: string[] | null
+          created_at: string
+          email: string | null
+          id: string
+          is_active: boolean
+          languages: string[] | null
+          name: string
+          phone: string | null
+          photo_url: string | null
+          specialization: string | null
+          title: string | null
+          updated_at: string
+          years_of_experience: number | null
+        }
+        Insert: {
+          bio?: string | null
+          certifications?: string[] | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          languages?: string[] | null
+          name: string
+          phone?: string | null
+          photo_url?: string | null
+          specialization?: string | null
+          title?: string | null
+          updated_at?: string
+          years_of_experience?: number | null
+        }
+        Update: {
+          bio?: string | null
+          certifications?: string[] | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          languages?: string[] | null
+          name?: string
+          phone?: string | null
+          photo_url?: string | null
+          specialization?: string | null
+          title?: string | null
+          updated_at?: string
+          years_of_experience?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

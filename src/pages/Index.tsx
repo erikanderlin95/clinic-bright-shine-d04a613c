@@ -9,6 +9,7 @@ import { VisitLogSection } from "@/components/VisitLogSection";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { AutomationPanel } from "@/components/AutomationPanel";
 import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
+import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
@@ -217,6 +218,7 @@ const Index = () => {
                 <TabsTrigger value="queue">Queue Management</TabsTrigger>
                 <TabsTrigger value="automation">Automation</TabsTrigger>
                 <TabsTrigger value="schedule">Doctor Schedule</TabsTrigger>
+                <TabsTrigger value="profiles">Doctor Profiles</TabsTrigger>
               </TabsList>
               
               <TabsContent value="queue" className="space-y-6 mt-6">
@@ -279,6 +281,10 @@ const Index = () => {
 
               <TabsContent value="schedule" className="mt-6">
                 <DoctorSchedulePanel />
+              </TabsContent>
+
+              <TabsContent value="profiles" className="mt-6">
+                <DoctorProfilesPanel />
               </TabsContent>
             </Tabs>
           </div>
