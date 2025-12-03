@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -19,8 +20,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, Calendar, Clock, User, Eye, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Calendar, Clock, User, Eye, X, CalendarDays, List } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { WeeklyCalendarView } from "./WeeklyCalendarView";
 
 interface DoctorShift {
   id: string;
@@ -200,6 +202,19 @@ export const DoctorSchedulePanel = () => {
     });
   };
 
+  const handleShiftMove = (shiftId: string, newDay: string) => {
+    setShifts((prev) =>
+      prev.map((shift) =>
+        shift.id === shiftId ? { ...shift, dayOfWeek: newDay } : shift
+      )
+    );
+    const shift = shifts.find((s) => s.id === shiftId);
+    toast({
+      title: "Shift moved",
+      description: `Moved ${shift?.doctorNames.join(", ")} to ${newDay}.`,
+    });
+  };
+
   // Get all shifts for today
   const getTodayShifts = () => {
     const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
@@ -268,211 +283,272 @@ export const DoctorSchedulePanel = () => {
 
   return (
     <div className="space-y-6">
-      {/* Form Section */}
-      <Card className="shadow-md">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Calendar className="h-5 w-5 text-primary" />
-            {editingId ? "Edit Shift" : "Add Doctor Shift"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              <div className="space-y-2 lg:col-span-2">
-                <Label htmlFor="doctorName">Doctors *</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="doctorName"
-                    placeholder="e.g. Dr Tan"
-                    value={doctorInput}
-                    onChange={(e) => setDoctorInput(e.target.value)}
-                    onKeyDown={handleDoctorKeyDown}
-                  />
-                  <Button type="button" variant="secondary" onClick={handleAddDoctor}>
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-                {formData.doctorNames.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {formData.doctorNames.map((name) => (
-                      <Badge
-                        key={name}
-                        variant="secondary"
-                        className="gap-1 pr-1"
-                      >
-                        {name}
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveDoctor(name)}
-                          className="ml-1 rounded-full p-0.5 hover:bg-muted"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ))}
+      {/* View Toggle Tabs */}
+      <Tabs defaultValue="calendar" className="w-full">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-foreground">Doctor Schedule</h2>
+          <TabsList>
+            <TabsTrigger value="calendar" className="gap-2">
+              <CalendarDays className="h-4 w-4" />
+              Calendar
+            </TabsTrigger>
+            <TabsTrigger value="list" className="gap-2">
+              <List className="h-4 w-4" />
+              List
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        {/* Calendar View */}
+        <TabsContent value="calendar" className="space-y-6 mt-0">
+          <WeeklyCalendarView
+            shifts={shifts}
+            onShiftMove={handleShiftMove}
+            onShiftClick={handleEdit}
+          />
+          
+          {/* Compact Add Form */}
+          <Card className="shadow-md">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Plus className="h-4 w-4 text-primary" />
+                {editingId ? "Edit Shift" : "Quick Add Shift"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+                  <div className="space-y-1.5 lg:col-span-2">
+                    <Label htmlFor="doctorNameCal" className="text-xs">Doctors</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="doctorNameCal"
+                        placeholder="e.g. Dr Tan"
+                        value={doctorInput}
+                        onChange={(e) => setDoctorInput(e.target.value)}
+                        onKeyDown={handleDoctorKeyDown}
+                        className="h-9"
+                      />
+                      <Button type="button" variant="secondary" size="sm" onClick={handleAddDoctor}>
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {formData.doctorNames.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {formData.doctorNames.map((name) => (
+                          <Badge key={name} variant="secondary" className="gap-1 pr-1 text-xs">
+                            {name}
+                            <button type="button" onClick={() => handleRemoveDoctor(name)} className="ml-0.5 rounded-full p-0.5 hover:bg-muted">
+                              <X className="h-2.5 w-2.5" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="dayOfWeek">Day of Week *</Label>
-                <Select
-                  value={formData.dayOfWeek}
-                  onValueChange={(value) =>
-                    setFormData((prev) => ({ ...prev, dayOfWeek: value }))
-                  }
-                >
-                  <SelectTrigger id="dayOfWeek">
-                    <SelectValue placeholder="Select day" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {DAYS_OF_WEEK.map((day) => (
-                      <SelectItem key={day} value={day}>
-                        {day}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="dayOfWeekCal" className="text-xs">Day</Label>
+                    <Select value={formData.dayOfWeek} onValueChange={(v) => setFormData((prev) => ({ ...prev, dayOfWeek: v }))}>
+                      <SelectTrigger id="dayOfWeekCal" className="h-9">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DAYS_OF_WEEK.map((day) => (
+                          <SelectItem key={day} value={day}>{day}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="startTime">Start Time *</Label>
-                <Input
-                  id="startTime"
-                  type="time"
-                  value={formData.startTime}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, startTime: e.target.value }))
-                  }
-                />
-              </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="startTimeCal" className="text-xs">Start</Label>
+                    <Input id="startTimeCal" type="time" value={formData.startTime} onChange={(e) => setFormData((prev) => ({ ...prev, startTime: e.target.value }))} className="h-9" />
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="endTime">End Time *</Label>
-                <Input
-                  id="endTime"
-                  type="time"
-                  value={formData.endTime}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, endTime: e.target.value }))
-                  }
-                />
-              </div>
-            </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="endTimeCal" className="text-xs">End</Label>
+                    <Input id="endTimeCal" type="time" value={formData.endTime} onChange={(e) => setFormData((prev) => ({ ...prev, endTime: e.target.value }))} className="h-9" />
+                  </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              <div className="space-y-2">
-                <Label htmlFor="serviceType">Service Type</Label>
-                <Select
-                  value={formData.serviceType}
-                  onValueChange={(value) =>
-                    setFormData((prev) => ({ ...prev, serviceType: value }))
-                  }
-                >
-                  <SelectTrigger id="serviceType">
-                    <SelectValue placeholder="Optional" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SERVICE_TYPES.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">&nbsp;</Label>
+                    <div className="flex gap-2">
+                      <Button type="submit" size="sm" className="h-9">
+                        {editingId ? "Update" : "Add"}
+                      </Button>
+                      {editingId && (
+                        <Button type="button" variant="outline" size="sm" onClick={resetForm} className="h-9">
+                          Cancel
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-            <div className="flex gap-2 pt-2">
-              <Button type="submit" className="gap-2">
-                <Plus className="h-4 w-4" />
-                {editingId ? "Update Shift" : "Add Shift"}
-              </Button>
-              {editingId && (
-                <Button type="button" variant="outline" onClick={resetForm}>
-                  Cancel
-                </Button>
+        {/* List View */}
+        <TabsContent value="list" className="space-y-6 mt-0">
+          {/* Form Section */}
+          <Card className="shadow-md">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Calendar className="h-5 w-5 text-primary" />
+                {editingId ? "Edit Shift" : "Add Doctor Shift"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                  <div className="space-y-2 lg:col-span-2">
+                    <Label htmlFor="doctorName">Doctors *</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="doctorName"
+                        placeholder="e.g. Dr Tan"
+                        value={doctorInput}
+                        onChange={(e) => setDoctorInput(e.target.value)}
+                        onKeyDown={handleDoctorKeyDown}
+                      />
+                      <Button type="button" variant="secondary" onClick={handleAddDoctor}>
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {formData.doctorNames.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {formData.doctorNames.map((name) => (
+                          <Badge key={name} variant="secondary" className="gap-1 pr-1">
+                            {name}
+                            <button type="button" onClick={() => handleRemoveDoctor(name)} className="ml-1 rounded-full p-0.5 hover:bg-muted">
+                              <X className="h-3 w-3" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="dayOfWeek">Day of Week *</Label>
+                    <Select value={formData.dayOfWeek} onValueChange={(v) => setFormData((prev) => ({ ...prev, dayOfWeek: v }))}>
+                      <SelectTrigger id="dayOfWeek">
+                        <SelectValue placeholder="Select day" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DAYS_OF_WEEK.map((day) => (
+                          <SelectItem key={day} value={day}>{day}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="startTime">Start Time *</Label>
+                    <Input id="startTime" type="time" value={formData.startTime} onChange={(e) => setFormData((prev) => ({ ...prev, startTime: e.target.value }))} />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="endTime">End Time *</Label>
+                    <Input id="endTime" type="time" value={formData.endTime} onChange={(e) => setFormData((prev) => ({ ...prev, endTime: e.target.value }))} />
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="serviceType">Service Type</Label>
+                    <Select value={formData.serviceType} onValueChange={(v) => setFormData((prev) => ({ ...prev, serviceType: v }))}>
+                      <SelectTrigger id="serviceType">
+                        <SelectValue placeholder="Optional" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SERVICE_TYPES.map((type) => (
+                          <SelectItem key={type} value={type}>{type}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <Button type="submit" className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    {editingId ? "Update Shift" : "Add Shift"}
+                  </Button>
+                  {editingId && (
+                    <Button type="button" variant="outline" onClick={resetForm}>
+                      Cancel
+                    </Button>
+                  )}
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Schedule List Table */}
+          <Card className="shadow-md">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <User className="h-5 w-5 text-primary" />
+                Doctor Shifts ({shifts.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {shifts.length === 0 ? (
+                <div className="py-8 text-center text-muted-foreground">
+                  No shifts scheduled. Add a shift above to get started.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Doctors</TableHead>
+                        <TableHead>Day</TableHead>
+                        <TableHead>Start Time</TableHead>
+                        <TableHead>End Time</TableHead>
+                        <TableHead>Services</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {shifts.map((shift) => (
+                        <TableRow key={shift.id}>
+                          <TableCell>
+                            <div className="flex flex-wrap gap-1">
+                              {shift.doctorNames.map((name) => (
+                                <Badge key={name} variant="outline" className="font-medium">{name}</Badge>
+                              ))}
+                            </div>
+                          </TableCell>
+                          <TableCell>{shift.dayOfWeek}</TableCell>
+                          <TableCell>{shift.startTime}</TableCell>
+                          <TableCell>{shift.endTime}</TableCell>
+                          <TableCell>
+                            <span className="text-muted-foreground">{shift.serviceType || "—"}</span>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-1">
+                              <Button variant="ghost" size="icon" onClick={() => handleEdit(shift)} className="h-8 w-8">
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" onClick={() => handleDelete(shift.id)} className="h-8 w-8 text-destructive hover:text-destructive">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               )}
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-
-      {/* Schedule List Table */}
-      <Card className="shadow-md">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <User className="h-5 w-5 text-primary" />
-            Doctor Shifts ({shifts.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {shifts.length === 0 ? (
-            <div className="py-8 text-center text-muted-foreground">
-              No shifts scheduled. Add a shift above to get started.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Doctors</TableHead>
-                    <TableHead>Day</TableHead>
-                    <TableHead>Start Time</TableHead>
-                    <TableHead>End Time</TableHead>
-                    <TableHead>Services</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {shifts.map((shift) => (
-                    <TableRow key={shift.id}>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {shift.doctorNames.map((name) => (
-                            <Badge key={name} variant="outline" className="font-medium">
-                              {name}
-                            </Badge>
-                          ))}
-                        </div>
-                      </TableCell>
-                      <TableCell>{shift.dayOfWeek}</TableCell>
-                      <TableCell>{shift.startTime}</TableCell>
-                      <TableCell>{shift.endTime}</TableCell>
-                      <TableCell>
-                        <span className="text-muted-foreground">
-                          {shift.serviceType || "—"}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(shift)}
-                            className="h-8 w-8"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDelete(shift.id)}
-                            className="h-8 w-8 text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {/* Marketplace Display Preview */}
       <Card className="shadow-md">
@@ -495,9 +571,7 @@ export const DoctorSchedulePanel = () => {
                 <div className="min-w-0 flex-1">
                   {todayDoctors.length > 0 ? (
                     <>
-                      <p className="text-sm font-semibold text-foreground">
-                        On Shift Today
-                      </p>
+                      <p className="text-sm font-semibold text-foreground">On Shift Today</p>
                       <div className="mt-1 space-y-0.5">
                         {todayDoctors.map((doc) => (
                           <p key={doc.name} className="text-sm text-muted-foreground">
@@ -508,24 +582,16 @@ export const DoctorSchedulePanel = () => {
                     </>
                   ) : nextShift ? (
                     <>
-                      <p className="text-sm font-semibold text-foreground">
-                        Next Availability
-                      </p>
+                      <p className="text-sm font-semibold text-foreground">Next Availability</p>
                       <p className="text-sm text-muted-foreground">
                         {nextShift.dayOfWeek.slice(0, 3)} {nextShift.startTime}–{nextShift.endTime}
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        {nextShift.doctorNames.join(", ")}
-                      </p>
+                      <p className="text-sm text-muted-foreground">{nextShift.doctorNames.join(", ")}</p>
                     </>
                   ) : (
                     <>
-                      <p className="text-sm font-semibold text-foreground">
-                        Doctor Schedule
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        No shifts scheduled
-                      </p>
+                      <p className="text-sm font-semibold text-foreground">Doctor Schedule</p>
+                      <p className="text-sm text-muted-foreground">No shifts scheduled</p>
                     </>
                   )}
                 </div>
