@@ -5,7 +5,6 @@ import { DailySummary } from "@/components/DailySummary";
 import { QueueTable } from "@/components/QueueTable";
 import { PatientDetailPanel } from "@/components/PatientDetailPanel";
 import { MessagingPanel } from "@/components/MessagingPanel";
-import { Phase1Notice } from "@/components/Phase1Notice";
 import { VisitLogSection } from "@/components/VisitLogSection";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { AutomationPanel } from "@/components/AutomationPanel";
@@ -213,8 +212,6 @@ const Index = () => {
       <div className="flex">
         <main className={`flex-1 p-6 ${selectedEntry ? "mr-80" : ""} transition-all duration-300`}>
           <div className="space-y-6">
-            <Phase1Notice />
-            
             <Tabs defaultValue="queue" className="w-full">
               <TabsList>
                 <TabsTrigger value="queue">Queue Management</TabsTrigger>
