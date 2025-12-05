@@ -10,6 +10,7 @@ import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { AutomationPanel } from "@/components/AutomationPanel";
 import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
+import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
@@ -216,6 +217,7 @@ const Index = () => {
             <Tabs defaultValue="queue" className="w-full">
               <TabsList>
                 <TabsTrigger value="queue">Queue Management</TabsTrigger>
+                <TabsTrigger value="appointments">Appointments</TabsTrigger>
                 <TabsTrigger value="automation">Automation</TabsTrigger>
                 <TabsTrigger value="schedule">Doctor Schedule</TabsTrigger>
                 <TabsTrigger value="profiles">Doctor Profiles</TabsTrigger>
@@ -261,6 +263,10 @@ const Index = () => {
                 <VisitLogSection entries={queueEntries} />
               </TabsContent>
               
+              <TabsContent value="appointments" className="mt-6">
+                <AppointmentBookingPanel />
+              </TabsContent>
+
               <TabsContent value="automation" className="mt-6">
                 <AutomationPanel
                   businessType={businessType}
