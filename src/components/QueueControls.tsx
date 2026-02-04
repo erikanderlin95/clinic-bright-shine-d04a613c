@@ -3,12 +3,12 @@ import { Pause, Play, XCircle, RotateCw } from "lucide-react";
 
 interface QueueControlsProps {
   isPaused: boolean;
+  isClosed: boolean;
   onTogglePause: () => void;
-  onClose: () => void;
-  onReopen: () => void;
+  onToggleClose: () => void;
 }
 
-export const QueueControls = ({ isPaused, onTogglePause, onClose, onReopen }: QueueControlsProps) => {
+export const QueueControls = ({ isPaused, isClosed, onTogglePause, onToggleClose }: QueueControlsProps) => {
   return (
     <div className="flex gap-2">
       <Button
@@ -16,6 +16,7 @@ export const QueueControls = ({ isPaused, onTogglePause, onClose, onReopen }: Qu
         size="sm"
         onClick={onTogglePause}
         className="gap-2"
+        disabled={isClosed}
       >
         {isPaused ? (
           <>
@@ -29,13 +30,23 @@ export const QueueControls = ({ isPaused, onTogglePause, onClose, onReopen }: Qu
           </>
         )}
       </Button>
-      <Button variant="outline" size="sm" onClick={onClose} className="gap-2">
-        <XCircle className="h-4 w-4" />
-        Close Queue
-      </Button>
-      <Button variant="outline" size="sm" onClick={onReopen} className="gap-2">
-        <RotateCw className="h-4 w-4" />
-        Reopen Queue
+      <Button 
+        variant={isClosed ? "default" : "outline"} 
+        size="sm" 
+        onClick={onToggleClose} 
+        className="gap-2"
+      >
+        {isClosed ? (
+          <>
+            <RotateCw className="h-4 w-4" />
+            Reopen Queue
+          </>
+        ) : (
+          <>
+            <XCircle className="h-4 w-4" />
+            Close Queue
+          </>
+        )}
       </Button>
     </div>
   );
