@@ -24,6 +24,7 @@ interface AutomationLog {
 
 const Index = () => {
   const [isPaused, setIsPaused] = useState(false);
+  const [isClosed, setIsClosed] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<QueueEntry | null>(null);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   
@@ -228,9 +229,9 @@ const Index = () => {
                   <h2 className="text-xl font-semibold text-foreground">Queue Management</h2>
                   <QueueControls
                     isPaused={isPaused}
+                    isClosed={isClosed}
                     onTogglePause={() => setIsPaused(!isPaused)}
-                    onClose={() => console.log("Close queue")}
-                    onReopen={() => console.log("Reopen queue")}
+                    onToggleClose={() => setIsClosed(!isClosed)}
                   />
                 </div>
 
