@@ -4,7 +4,7 @@ import { QueueControls } from "@/components/QueueControls";
 import { DailySummary } from "@/components/DailySummary";
 import { QueueTable } from "@/components/QueueTable";
 import { PatientDetailPanel } from "@/components/PatientDetailPanel";
-import { MessagingPanel } from "@/components/MessagingPanel";
+
 import { VisitLogSection } from "@/components/VisitLogSection";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { AutomationPanel } from "@/components/AutomationPanel";
@@ -236,7 +236,7 @@ const Index = () => {
 
                 <DailySummary summary={dailySummary} />
 
-                <div>
+                <div className="flex-1">
                   <div className="mb-4 flex items-center justify-between">
                     <h3 className="text-lg font-semibold text-foreground">Live Queue View</h3>
                     <Button onClick={() => setAddDialogOpen(true)} className="gap-2">
@@ -244,21 +244,21 @@ const Index = () => {
                       Add to Queue
                     </Button>
                   </div>
-                  <QueueTable
-                    entries={queueEntries.filter(
-                      (entry) => entry.status !== "completed" && 
-                                 entry.status !== "cancelled" && 
-                                 entry.status !== "no-show" &&
-                                 entry.status !== "booked"
-                    )}
-                    onSelectEntry={setSelectedEntry}
-                    selectedEntry={selectedEntry}
-                    onUpdateStatus={handleUpdateStatus}
-                    onRevertStatus={handleRevertStatus}
-                  />
+                  <div className="min-h-[400px]">
+                    <QueueTable
+                      entries={queueEntries.filter(
+                        (entry) => entry.status !== "completed" && 
+                                   entry.status !== "cancelled" && 
+                                   entry.status !== "no-show" &&
+                                   entry.status !== "booked"
+                      )}
+                      onSelectEntry={setSelectedEntry}
+                      selectedEntry={selectedEntry}
+                      onUpdateStatus={handleUpdateStatus}
+                      onRevertStatus={handleRevertStatus}
+                    />
+                  </div>
                 </div>
-
-                <MessagingPanel />
                 
                 <VisitLogSection entries={queueEntries} />
               </TabsContent>
