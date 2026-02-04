@@ -14,51 +14,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AlertCircle, AlertTriangle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import type { MessageTemplate } from "./AutomationPanel";
 
 interface OperationalBroadcastDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSendBroadcast: (message: string, isMarketing?: boolean) => void;
   businessType: "healthcare" | "wellness";
+  templates?: MessageTemplate[];
 }
-
-const OPERATIONAL_TEMPLATES = [
-  {
-    id: "closing-early",
-    message: "Clinic will be closing early today.",
-    isMarketing: false,
-  },
-  {
-    id: "doctor-unavailable",
-    message: "Doctor is unavailable temporarily.",
-    isMarketing: false,
-  },
-  {
-    id: "queue-disruption",
-    message: "There is a disruption to queue operations.",
-    isMarketing: false,
-  },
-  {
-    id: "delay-notice",
-    message: "Queue is experiencing delays. Thank you for your patience.",
-    isMarketing: false,
-  },
-  {
-    id: "emergency-closure",
-    message: "Clinic is temporarily closed due to emergency. Please check back later.",
-    isMarketing: false,
-  },
-  {
-    id: "custom",
-    message: "",
-    isMarketing: false,
-  },
-  {
-    id: "custom-marketing",
-    message: "",
-    isMarketing: true,
-  },
-];
 
 const RESTRICTED_WORDS = [
   "promo",
@@ -99,27 +63,26 @@ export const OperationalBroadcastDialog = ({
   onOpenChange,
   onSendBroadcast,
   businessType,
+  templates = [],
 }: OperationalBroadcastDialogProps) => {
-  const [selectedTemplate, setSelectedTemplate] = useState(OPERATIONAL_TEMPLATES[0].id);
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("custom");
   const [customMessage, setCustomMessage] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
   const [marketingConsent, setMarketingConsent] = useState(false);
+  const [isMarketingMessage, setIsMarketingMessage] = useState(false);
 
   const handleSend = () => {
-    const template = OPERATIONAL_TEMPLATES.find((t) => t.id === selectedTemplate);
-    if (!template) return;
-
-    const isCustom = selectedTemplate === "custom" || selectedTemplate === "custom-marketing";
-    const messageToSend = isCustom ? customMessage.trim() : template.message;
+    let messageToSend = "";
     
-    if (isCustom) {
+    if (selectedTemplate === "custom" || selectedTemplate === "custom-marketing") {
+      messageToSend = customMessage.trim();
+      
       if (!messageToSend) {
         setValidationError("Please enter a message.");
         return;
       }
       
-      // For healthcare mode, always validate
-      // For wellness mode with marketing template, skip validation
+      // For healthcare mode or non-marketing custom, validate
       if (businessType === "healthcare" || selectedTemplate === "custom") {
         const error = validateMessage(messageToSend);
         if (error) {
@@ -127,18 +90,27 @@ export const OperationalBroadcastDialog = ({
           return;
         }
       }
+    } else {
+      const template = templates.find((t) => t.id === selectedTemplate);
+      if (!template) {
+        setValidationError("Please select a template or enter a custom message.");
+        return;
+      }
+      messageToSend = template.message;
     }
 
     // Check marketing consent for marketing messages
-    if (template.isMarketing && !marketingConsent) {
+    if (isMarketingMessage && !marketingConsent) {
       setValidationError("You must confirm marketing consent to send this message.");
       return;
     }
 
-    onSendBroadcast(messageToSend, template.isMarketing);
+    onSendBroadcast(messageToSend, isMarketingMessage);
     setCustomMessage("");
     setValidationError(null);
     setMarketingConsent(false);
+    setIsMarketingMessage(false);
+    setSelectedTemplate("custom");
     onOpenChange(false);
   };
 
@@ -146,6 +118,7 @@ export const OperationalBroadcastDialog = ({
     setSelectedTemplate(value);
     setValidationError(null);
     setMarketingConsent(false);
+    setIsMarketingMessage(value === "custom-marketing");
   };
 
   const handleCustomMessageChange = (value: string) => {
@@ -154,6 +127,8 @@ export const OperationalBroadcastDialog = ({
       setValidationError(null);
     }
   };
+
+  const showCustomInput = selectedTemplate === "custom" || selectedTemplate === "custom-marketing";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -181,32 +156,44 @@ export const OperationalBroadcastDialog = ({
         )}
 
         <div className="space-y-4 py-4">
-          <Label className="text-sm font-medium">Select Announcement Template</Label>
+          <Label className="text-sm font-medium">Select Message</Label>
           <RadioGroup value={selectedTemplate} onValueChange={handleTemplateChange}>
-            {OPERATIONAL_TEMPLATES.filter((template) => {
-              // Filter templates based on business type
-              if (businessType === "healthcare") {
-                return !template.isMarketing;
-              }
-              return true;
-            }).map((template) => (
+            {templates.map((template) => (
               <div key={template.id} className="flex items-start space-x-3 space-y-0">
-                <RadioGroupItem value={template.id} id={template.id} className="mt-1" />
+                <RadioGroupItem value={template.id} id={`op-${template.id}`} className="mt-1" />
                 <Label
-                  htmlFor={template.id}
+                  htmlFor={`op-${template.id}`}
                   className="font-normal cursor-pointer leading-relaxed"
                 >
-                  {template.id === "custom" 
-                    ? "Custom Operational Message" 
-                    : template.id === "custom-marketing"
-                    ? "Custom Marketing Message"
-                    : template.message}
+                  {template.message}
                 </Label>
               </div>
             ))}
+            
+            <div className="flex items-start space-x-3 space-y-0">
+              <RadioGroupItem value="custom" id="op-custom" className="mt-1" />
+              <Label
+                htmlFor="op-custom"
+                className="font-normal cursor-pointer leading-relaxed"
+              >
+                Custom Operational Message
+              </Label>
+            </div>
+
+            {businessType === "wellness" && (
+              <div className="flex items-start space-x-3 space-y-0">
+                <RadioGroupItem value="custom-marketing" id="op-custom-marketing" className="mt-1" />
+                <Label
+                  htmlFor="op-custom-marketing"
+                  className="font-normal cursor-pointer leading-relaxed"
+                >
+                  Custom Marketing Message
+                </Label>
+              </div>
+            )}
           </RadioGroup>
 
-          {(selectedTemplate === "custom" || selectedTemplate === "custom-marketing") && (
+          {showCustomInput && (
             <div className="space-y-2 mt-4">
               <div className="flex justify-between items-center">
                 <Label htmlFor="custom-message" className="text-sm font-medium">
@@ -256,6 +243,12 @@ export const OperationalBroadcastDialog = ({
                 </div>
               )}
             </div>
+          )}
+
+          {templates.length === 0 && !showCustomInput && (
+            <p className="text-sm text-muted-foreground py-2">
+              No templates available. Create templates in Automation Settings or use a custom message.
+            </p>
           )}
         </div>
 

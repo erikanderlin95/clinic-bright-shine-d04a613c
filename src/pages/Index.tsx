@@ -7,7 +7,7 @@ import { PatientDetailPanel } from "@/components/PatientDetailPanel";
 
 import { VisitLogSection } from "@/components/VisitLogSection";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
-import { AutomationPanel } from "@/components/AutomationPanel";
+import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
 import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
@@ -34,6 +34,9 @@ const Index = () => {
   const [yourTurnSoonEnabled, setYourTurnSoonEnabled] = useState(false);
   const [delayAlertsEnabled, setDelayAlertsEnabled] = useState(false);
   const [visitCompletionEnabled, setVisitCompletionEnabled] = useState(false);
+  
+  // Message templates (up to 4)
+  const [messageTemplates, setMessageTemplates] = useState<MessageTemplate[]>([]);
   
   // Automation log
   const [automationLog, setAutomationLog] = useState<AutomationLog[]>([
@@ -283,6 +286,8 @@ const Index = () => {
                   onToggleVisitCompletion={handleToggleVisitCompletion}
                   onSendBroadcast={handleSendBroadcast}
                   onSendRecentCustomersBroadcast={handleSendRecentCustomersBroadcast}
+                  templates={messageTemplates}
+                  onTemplatesChange={setMessageTemplates}
                 />
               </TabsContent>
 
