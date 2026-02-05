@@ -36,7 +36,11 @@ const Index = () => {
   const [visitCompletionEnabled, setVisitCompletionEnabled] = useState(false);
   
   // Message templates (up to 4)
-  const [messageTemplates, setMessageTemplates] = useState<MessageTemplate[]>([]);
+  const [messageTemplates, setMessageTemplates] = useState<MessageTemplate[]>([
+    { id: "1", message: "Doctor running late. Thank you for your patience." },
+    { id: "2", message: "Queue moving. Please return to the clinic." },
+    { id: "3", message: "Your turn is coming up soon. Please be ready." },
+  ]);
   
   // Automation log
   const [automationLog, setAutomationLog] = useState<AutomationLog[]>([
