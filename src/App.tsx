@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import PatientArrival from "./pages/PatientArrival";
 import NotFound from "./pages/NotFound";
+import GlobalFooter from "./components/GlobalFooter";
 
 const queryClient = new QueryClient();
 
@@ -17,20 +18,25 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/arrival/:token" element={<PatientArrival />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Index />
-              </ProtectedRoute>
-            }
-          />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div className="flex flex-col min-h-screen">
+          <div className="flex-1">
+            <Routes>
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/arrival/:token" element={<PatientArrival />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Index />
+                  </ProtectedRoute>
+                }
+              />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
+          <GlobalFooter />
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
