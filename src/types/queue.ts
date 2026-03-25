@@ -34,7 +34,7 @@ export interface BookingLead {
   patientName: string;
   mobile: string;
   preferredDateTime?: string;
-  source: "QR" | "Marketplace" | "Direct";
+  source: "QR" | "Marketplace";
   timestamp: string;
   status: LeadStatus;
   notes?: string;
