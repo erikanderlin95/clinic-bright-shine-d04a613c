@@ -23,6 +23,7 @@ const generateCheckInCode = () => {
 };
 
 const Index = () => {
+  const { t } = useI18n();
   const [isPaused, setIsPaused] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<QueueEntry | null>(null);
