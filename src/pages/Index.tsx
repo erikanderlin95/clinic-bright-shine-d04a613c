@@ -29,6 +29,25 @@ const Index = () => {
   const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
   const [verifyEntry, setVerifyEntry] = useState<QueueEntry | null>(null);
 
+  // Automation state
+  const [messageTemplates, setMessageTemplates] = useState<MessageTemplate[]>([
+    { id: "1", message: "Doctor running late. Thank you for your patience." },
+    { id: "2", message: "Queue moving. Please return to the clinic." },
+    { id: "3", message: "Your turn is coming up soon. Please be ready." },
+  ]);
+
+  interface AutomationLog {
+    id: string;
+    time: string;
+    action: string;
+  }
+
+  const [automationLog, setAutomationLog] = useState<AutomationLog[]>([
+    { id: "1", time: "10:32", action: 'Sent "Your turn soon"' },
+    { id: "2", time: "10:40", action: "Patient marked Arrived" },
+    { id: "3", time: "11:10", action: "Delay alert sent" },
+  ]);
+
   const [queueEntries, setQueueEntries] = useState<QueueEntry[]>([
     {
       id: "1",
