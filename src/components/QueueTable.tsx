@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
-import { CheckCircle, XCircle, UserX, RotateCcw } from "lucide-react";
+import { CheckCircle, XCircle, UserX, RotateCcw, ShieldCheck } from "lucide-react";
 
 interface QueueTableProps {
   entries: QueueEntry[];
@@ -10,9 +10,10 @@ interface QueueTableProps {
   selectedEntry: QueueEntry | null;
   onUpdateStatus: (id: string, status: QueueEntry["status"]) => void;
   onRevertStatus: (id: string) => void;
+  onVerifyArrival?: (entry: QueueEntry) => void;
 }
 
-export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus }: QueueTableProps) => {
+export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival }: QueueTableProps) => {
   const getActions = (entry: QueueEntry) => {
     if (entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show" || entry.status === "booked") {
       return null;
@@ -27,27 +28,26 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
             e.stopPropagation();
             onUpdateStatus(entry.id, "completed");
           }}
-          className="gap-2"
+          className="gap-1.5 h-8 text-xs"
         >
-          <CheckCircle className="h-4 w-4" />
+          <CheckCircle className="h-3.5 w-3.5" />
           Completed
         </Button>
       );
     }
 
     return (
-      <div className="flex gap-2">
+      <div className="flex gap-1.5">
         <Button
           size="sm"
-          variant="outline"
           onClick={(e) => {
             e.stopPropagation();
-            onUpdateStatus(entry.id, "arrived");
+            onVerifyArrival?.(entry);
           }}
-          className="gap-2"
+          className="gap-1.5 h-8 text-xs"
         >
-          <CheckCircle className="h-4 w-4" />
-          Arrived
+          <ShieldCheck className="h-3.5 w-3.5" />
+          Verify & Arrived
         </Button>
         <Button
           size="sm"
@@ -56,9 +56,9 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
             e.stopPropagation();
             onUpdateStatus(entry.id, "cancelled");
           }}
-          className="gap-2"
+          className="gap-1.5 h-8 text-xs"
         >
-          <XCircle className="h-4 w-4" />
+          <XCircle className="h-3.5 w-3.5" />
           Cancel
         </Button>
         <Button
@@ -68,9 +68,9 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
             e.stopPropagation();
             onUpdateStatus(entry.id, "no-show");
           }}
-          className="gap-2"
+          className="gap-1.5 h-8 text-xs"
         >
-          <UserX className="h-4 w-4" />
+          <UserX className="h-3.5 w-3.5" />
           No Show
         </Button>
       </div>
@@ -82,45 +82,57 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[120px]">Queue No</TableHead>
-            <TableHead className="w-[140px]">Status</TableHead>
-            <TableHead className="w-[120px]">Queue Joined</TableHead>
+            <TableHead className="w-[100px]">Queue No</TableHead>
+            <TableHead className="w-[120px]">Status</TableHead>
+            <TableHead className="w-[110px]">Queue Joined</TableHead>
+            <TableHead className="w-[110px]">Check-in Code</TableHead>
             <TableHead>Actions</TableHead>
-            <TableHead className="w-[100px]"></TableHead>
+            <TableHead className="w-[80px]"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {entries.map((entry) => (
-            <TableRow
-              key={entry.id}
-              className="cursor-pointer hover:bg-muted/50"
-              onClick={() => onSelectEntry(entry)}
-              data-selected={selectedEntry?.id === entry.id}
-            >
-              <TableCell className="font-medium">{entry.queueNumber}</TableCell>
-              <TableCell>
-                <StatusBadge status={entry.status} />
-              </TableCell>
-              <TableCell className="text-muted-foreground">{entry.joinedAt}</TableCell>
-              <TableCell>{getActions(entry)}</TableCell>
-              <TableCell>
-                {entry.previousStatus && (
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onRevertStatus(entry.id);
-                    }}
-                    className="gap-2"
-                  >
-                    <RotateCcw className="h-4 w-4" />
-                    Undo
-                  </Button>
-                )}
+          {entries.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                No patients in queue
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            entries.map((entry) => (
+              <TableRow
+                key={entry.id}
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => onSelectEntry(entry)}
+                data-selected={selectedEntry?.id === entry.id}
+              >
+                <TableCell className="font-semibold">{entry.queueNumber}</TableCell>
+                <TableCell>
+                  <StatusBadge status={entry.status} />
+                </TableCell>
+                <TableCell className="text-muted-foreground text-sm">{entry.joinedAt}</TableCell>
+                <TableCell className="font-mono text-sm text-muted-foreground">
+                  {entry.checkInCode || "—"}
+                </TableCell>
+                <TableCell>{getActions(entry)}</TableCell>
+                <TableCell>
+                  {entry.previousStatus && (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRevertStatus(entry.id);
+                      }}
+                      className="gap-1.5 h-7 text-xs"
+                    >
+                      <RotateCcw className="h-3 w-3" />
+                      Undo
+                    </Button>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>

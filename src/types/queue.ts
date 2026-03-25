@@ -15,6 +15,7 @@ export interface QueueEntry {
   notes?: string;
   duration?: number;
   visitCategory?: VisitCategory;
+  checkInCode?: string;
 }
 
 export interface DailySummary {
@@ -23,4 +24,18 @@ export interface DailySummary {
   cancelled: number;
   noShows: number;
   avgWaitTime: string;
+}
+
+export type LeadStatus = "new" | "contacted" | "booked" | "closed";
+
+export interface BookingLead {
+  id: string;
+  caseId: string;
+  patientName: string;
+  mobile: string;
+  preferredDateTime?: string;
+  source: "QR" | "Marketplace" | "Direct";
+  timestamp: string;
+  status: LeadStatus;
+  notes?: string;
 }

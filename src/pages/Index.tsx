@@ -4,51 +4,27 @@ import { QueueControls } from "@/components/QueueControls";
 import { DailySummary } from "@/components/DailySummary";
 import { QueueTable } from "@/components/QueueTable";
 import { PatientDetailPanel } from "@/components/PatientDetailPanel";
-
 import { VisitLogSection } from "@/components/VisitLogSection";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
-import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
-import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
-import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
-import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
+import { BookingLeadsPanel } from "@/components/BookingLeadsPanel";
+import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
-import type { QueueEntry, DailySummary as DailySummaryType } from "@/types/queue";
+import type { QueueEntry, DailySummary as DailySummaryType, BookingLead, LeadStatus } from "@/types/queue";
 
-interface AutomationLog {
-  id: string;
-  time: string;
-  action: string;
-}
+const generateCheckInCode = () => {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+};
 
 const Index = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<QueueEntry | null>(null);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
-  
-  // Business type and automation state
-  const [businessType, setBusinessType] = useState<"healthcare" | "wellness">("healthcare");
-  const [autoArrivalCheckEnabled, setAutoArrivalCheckEnabled] = useState(false);
-  const [yourTurnSoonEnabled, setYourTurnSoonEnabled] = useState(false);
-  const [delayAlertsEnabled, setDelayAlertsEnabled] = useState(false);
-  const [visitCompletionEnabled, setVisitCompletionEnabled] = useState(false);
-  
-  // Message templates (up to 4)
-  const [messageTemplates, setMessageTemplates] = useState<MessageTemplate[]>([
-    { id: "1", message: "Doctor running late. Thank you for your patience." },
-    { id: "2", message: "Queue moving. Please return to the clinic." },
-    { id: "3", message: "Your turn is coming up soon. Please be ready." },
-  ]);
-  
-  // Automation log
-  const [automationLog, setAutomationLog] = useState<AutomationLog[]>([
-    { id: "1", time: "10:32", action: 'Sent "Your turn soon"' },
-    { id: "2", time: "10:40", action: "Patient marked Arrived" },
-    { id: "3", time: "11:10", action: "Delay alert sent" },
-  ]);
-  
+  const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
+  const [verifyEntry, setVerifyEntry] = useState<QueueEntry | null>(null);
+
   const [queueEntries, setQueueEntries] = useState<QueueEntry[]>([
     {
       id: "1",
@@ -57,6 +33,7 @@ const Index = () => {
       joinedAt: "10:05",
       mobile: "+65 9123 4567",
       queueSource: "Walk-in",
+      checkInCode: "X7K2M9",
     },
     {
       id: "2",
@@ -66,6 +43,7 @@ const Index = () => {
       name: "John Doe",
       mobile: "+65 9234 5678",
       queueSource: "Phone Booking",
+      checkInCode: "P3N8Q1",
     },
     {
       id: "10",
@@ -79,30 +57,39 @@ const Index = () => {
       duration: 22,
       visitCategory: "Follow-up",
       notes: "Regular walk-in visit",
+      checkInCode: "R5T1W4",
     },
+  ]);
+
+  const [bookingLeads, setBookingLeads] = useState<BookingLead[]>([
     {
-      id: "7",
-      queueNumber: "",
-      status: "booked",
-      joinedAt: "14:00",
-      name: "Sarah Chen",
+      id: "L1",
+      caseId: "BK-001",
+      patientName: "Sarah Chen",
       mobile: "+65 9111 2233",
-      email: "sarah.chen@example.com",
-      queueSource: "Other",
-      notes: "Book Appointment - ClynicQ",
-      visitCategory: "Consultation",
+      preferredDateTime: "2026-03-26 14:00",
+      source: "QR",
+      timestamp: "2026-03-25 09:15",
+      status: "new",
     },
     {
-      id: "8",
-      queueNumber: "",
-      status: "booked",
-      joinedAt: "15:30",
-      name: "Michael Tan",
+      id: "L2",
+      caseId: "BK-002",
+      patientName: "Michael Tan",
       mobile: "+65 9333 4455",
-      email: "michael.tan@example.com",
-      queueSource: "Other",
-      notes: "Book Appointment - ClynicQ",
-      visitCategory: "General Treatment",
+      preferredDateTime: "2026-03-27 10:00",
+      source: "Marketplace",
+      timestamp: "2026-03-25 10:30",
+      status: "contacted",
+    },
+    {
+      id: "L3",
+      caseId: "BK-003",
+      patientName: "Priya Kumar",
+      mobile: "+65 9555 6677",
+      source: "Direct",
+      timestamp: "2026-03-25 11:00",
+      status: "new",
     },
   ]);
 
@@ -116,9 +103,9 @@ const Index = () => {
 
   const handleUpdateStatus = (id: string, status: QueueEntry["status"]) => {
     setQueueEntries((prev) =>
-      prev.map((entry) => 
-        entry.id === id 
-          ? { ...entry, previousStatus: entry.status, status } 
+      prev.map((entry) =>
+        entry.id === id
+          ? { ...entry, previousStatus: entry.status, status }
           : entry
       )
     );
@@ -152,158 +139,95 @@ const Index = () => {
       id: Date.now().toString(),
       queueNumber: `A${nextNumber}`,
       status: "waiting",
-      joinedAt: new Date().toLocaleTimeString("en-US", { 
-        hour: "2-digit", 
+      joinedAt: new Date().toLocaleTimeString("en-US", {
+        hour: "2-digit",
         minute: "2-digit",
-        hour12: false 
+        hour12: false,
       }),
+      checkInCode: generateCheckInCode(),
       ...data,
     };
     setQueueEntries((prev) => [...prev, newEntry]);
   };
 
-  const addAutomationLog = (action: string) => {
-    const now = new Date();
-    const timeString = now.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-    
-    const newLog: AutomationLog = {
-      id: Date.now().toString(),
-      time: timeString,
-      action,
-    };
-    
-    setAutomationLog((prev) => [newLog, ...prev]);
+  const handleVerifyArrival = (entry: QueueEntry) => {
+    setVerifyEntry(entry);
+    setVerifyDialogOpen(true);
   };
 
-  const handleToggleAutoArrivalCheck = (checked: boolean) => {
-    setAutoArrivalCheckEnabled(checked);
-    addAutomationLog(`Auto Arrival Check turned ${checked ? "ON" : "OFF"}`);
+  const handleVerified = (id: string) => {
+    handleUpdateStatus(id, "arrived");
   };
 
-  const handleToggleYourTurnSoon = (checked: boolean) => {
-    setYourTurnSoonEnabled(checked);
-    addAutomationLog(`"Your Turn Soon" Message turned ${checked ? "ON" : "OFF"}`);
+  const handleBypass = (id: string) => {
+    handleUpdateStatus(id, "arrived");
   };
 
-  const handleToggleDelayAlerts = (checked: boolean) => {
-    setDelayAlertsEnabled(checked);
-    addAutomationLog(`Delay Alerts Broadcast turned ${checked ? "ON" : "OFF"}`);
-  };
-
-  const handleToggleVisitCompletion = (checked: boolean) => {
-    setVisitCompletionEnabled(checked);
-    addAutomationLog(`Visit Completion Message turned ${checked ? "ON" : "OFF"}`);
-  };
-
-  const handleSendBroadcast = (message: string, isMarketing: boolean = false) => {
-    if (isMarketing) {
-      addAutomationLog(`Marketing broadcast sent (consented users only): "${message}"`);
-    } else {
-      addAutomationLog(`Operational broadcast sent to active patients: "${message}"`);
-    }
-  };
-
-  const handleSendRecentCustomersBroadcast = (message: string, isMarketing: boolean = false) => {
-    if (isMarketing) {
-      addAutomationLog(`Marketing broadcast sent to recent customers (consented users only): "${message}"`);
-    } else {
-      addAutomationLog(`Operational broadcast sent to recent customers (last 60 days): "${message}"`);
-    }
+  const handleUpdateLeadStatus = (id: string, status: LeadStatus) => {
+    setBookingLeads((prev) =>
+      prev.map((lead) => (lead.id === id ? { ...lead, status } : lead))
+    );
   };
 
   return (
     <div className="min-h-screen bg-background">
       <QueueHeader />
-      
+
       <div className="flex">
         <main className={`flex-1 p-6 ${selectedEntry ? "mr-80" : ""} transition-all duration-300`}>
-          <div className="space-y-6">
-            <Tabs defaultValue="queue" className="w-full">
-              <TabsList>
-                <TabsTrigger value="queue">Queue Management</TabsTrigger>
-                <TabsTrigger value="appointments">Appointments</TabsTrigger>
-                <TabsTrigger value="automation">Automation</TabsTrigger>
-                <TabsTrigger value="schedule">Doctor Schedule</TabsTrigger>
-                <TabsTrigger value="profiles">Doctor Profiles</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="queue" className="space-y-6 mt-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold text-foreground">Queue Management</h2>
-                  <QueueControls
-                    isPaused={isPaused}
-                    isClosed={isClosed}
-                    onTogglePause={() => setIsPaused(!isPaused)}
-                    onToggleClose={() => setIsClosed(!isClosed)}
-                  />
-                </div>
+          <Tabs defaultValue="queue" className="w-full">
+            <TabsList>
+              <TabsTrigger value="queue">Queue Management</TabsTrigger>
+              <TabsTrigger value="leads">Booking Leads</TabsTrigger>
+            </TabsList>
 
-                <DailySummary summary={dailySummary} />
-
-                <div className="flex-1">
-                  <div className="mb-4 flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-foreground">Live Queue View</h3>
-                    <Button onClick={() => setAddDialogOpen(true)} className="gap-2">
-                      <Plus className="h-4 w-4" />
-                      Add to Queue
-                    </Button>
-                  </div>
-                  <div className="min-h-[400px]">
-                    <QueueTable
-                      entries={queueEntries.filter(
-                        (entry) => entry.status !== "completed" && 
-                                   entry.status !== "cancelled" && 
-                                   entry.status !== "no-show" &&
-                                   entry.status !== "booked"
-                      )}
-                      onSelectEntry={setSelectedEntry}
-                      selectedEntry={selectedEntry}
-                      onUpdateStatus={handleUpdateStatus}
-                      onRevertStatus={handleRevertStatus}
-                    />
-                  </div>
-                </div>
-                
-                <VisitLogSection entries={queueEntries} />
-              </TabsContent>
-              
-              <TabsContent value="appointments" className="mt-6">
-                <AppointmentBookingPanel />
-              </TabsContent>
-
-              <TabsContent value="automation" className="mt-6">
-                <AutomationPanel
-                  businessType={businessType}
-                  onBusinessTypeChange={setBusinessType}
-                  autoArrivalCheckEnabled={autoArrivalCheckEnabled}
-                  yourTurnSoonEnabled={yourTurnSoonEnabled}
-                  delayAlertsEnabled={delayAlertsEnabled}
-                  visitCompletionEnabled={visitCompletionEnabled}
-                  automationLog={automationLog}
-                  onToggleAutoArrivalCheck={handleToggleAutoArrivalCheck}
-                  onToggleYourTurnSoon={handleToggleYourTurnSoon}
-                  onToggleDelayAlerts={handleToggleDelayAlerts}
-                  onToggleVisitCompletion={handleToggleVisitCompletion}
-                  onSendBroadcast={handleSendBroadcast}
-                  onSendRecentCustomersBroadcast={handleSendRecentCustomersBroadcast}
-                  templates={messageTemplates}
-                  onTemplatesChange={setMessageTemplates}
+            <TabsContent value="queue" className="space-y-5 mt-5">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-foreground">Queue Management</h2>
+                <QueueControls
+                  isPaused={isPaused}
+                  isClosed={isClosed}
+                  onTogglePause={() => setIsPaused(!isPaused)}
+                  onToggleClose={() => setIsClosed(!isClosed)}
                 />
-              </TabsContent>
+              </div>
 
-              <TabsContent value="schedule" className="mt-6">
-                <DoctorSchedulePanel />
-              </TabsContent>
+              <DailySummary summary={dailySummary} />
 
-              <TabsContent value="profiles" className="mt-6">
-                <DoctorProfilesPanel />
-              </TabsContent>
-            </Tabs>
-          </div>
+              <div>
+                <div className="mb-3 flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-foreground">Live Queue View</h3>
+                  <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
+                    <Plus className="h-4 w-4" />
+                    Add to Queue
+                  </Button>
+                </div>
+                <QueueTable
+                  entries={queueEntries.filter(
+                    (entry) =>
+                      entry.status !== "completed" &&
+                      entry.status !== "cancelled" &&
+                      entry.status !== "no-show" &&
+                      entry.status !== "booked"
+                  )}
+                  onSelectEntry={setSelectedEntry}
+                  selectedEntry={selectedEntry}
+                  onUpdateStatus={handleUpdateStatus}
+                  onRevertStatus={handleRevertStatus}
+                  onVerifyArrival={handleVerifyArrival}
+                />
+              </div>
+
+              <VisitLogSection entries={queueEntries} />
+            </TabsContent>
+
+            <TabsContent value="leads" className="mt-5">
+              <BookingLeadsPanel
+                leads={bookingLeads}
+                onUpdateStatus={handleUpdateLeadStatus}
+              />
+            </TabsContent>
+          </Tabs>
         </main>
 
         {selectedEntry && (
@@ -321,6 +245,14 @@ const Index = () => {
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         onAddToQueue={handleAddToQueue}
+      />
+
+      <CheckInVerifyDialog
+        open={verifyDialogOpen}
+        onOpenChange={setVerifyDialogOpen}
+        entry={verifyEntry}
+        onVerified={handleVerified}
+        onBypass={handleBypass}
       />
     </div>
   );
