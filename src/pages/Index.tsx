@@ -110,7 +110,7 @@ const Index = () => {
       caseId: "BK-003",
       patientName: "Priya Kumar",
       mobile: "+65 9555 6677",
-      source: "Direct",
+      source: "QR",
       timestamp: "2026-03-25 11:00",
       status: "new",
     },
