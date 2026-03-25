@@ -272,6 +272,38 @@ const Index = () => {
                 onUpdateStatus={handleUpdateLeadStatus}
               />
             </TabsContent>
+
+            <TabsContent value="appointments" className="mt-5">
+              <AppointmentBookingPanel />
+            </TabsContent>
+
+            <TabsContent value="automation" className="mt-5">
+              <AutomationPanel
+                businessType="healthcare"
+                onBusinessTypeChange={() => {}}
+                autoArrivalCheckEnabled={false}
+                yourTurnSoonEnabled={false}
+                delayAlertsEnabled={false}
+                visitCompletionEnabled={false}
+                automationLog={automationLog}
+                onToggleAutoArrivalCheck={() => {}}
+                onToggleYourTurnSoon={() => {}}
+                onToggleDelayAlerts={() => {}}
+                onToggleVisitCompletion={() => {}}
+                onSendBroadcast={handleSendBroadcast}
+                onSendRecentCustomersBroadcast={handleSendRecentCustomersBroadcast}
+                templates={messageTemplates}
+                onTemplatesChange={setMessageTemplates}
+              />
+            </TabsContent>
+
+            <TabsContent value="schedule" className="mt-5">
+              <DoctorSchedulePanel />
+            </TabsContent>
+
+            <TabsContent value="profiles" className="mt-5">
+              <DoctorProfilesPanel />
+            </TabsContent>
           </Tabs>
         </main>
 
