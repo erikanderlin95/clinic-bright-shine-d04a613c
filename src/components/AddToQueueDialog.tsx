@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/hooks/useI18n";
+import { ScanLine, QrCode } from "lucide-react";
 import type { VisitCategory } from "@/types/queue";
 
 interface AddToQueueDialogProps {
@@ -18,7 +19,6 @@ interface AddToQueueDialogProps {
     email?: string;
     queueSource: "Walk-in" | "Phone Booking" | "Other";
     notes?: string;
-    duration?: number;
     visitCategory?: VisitCategory;
   }) => void;
 }
@@ -31,7 +31,6 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
   const [email, setEmail] = useState("");
   const [queueSource, setQueueSource] = useState<"Walk-in" | "Phone Booking" | "Other">("Walk-in");
   const [notes, setNotes] = useState("");
-  const [duration, setDuration] = useState("");
   const [visitCategory, setVisitCategory] = useState<VisitCategory | "">("Consultation");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,22 +41,27 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
       return;
     }
 
-    const durationValue = duration.trim() ? parseInt(duration.trim()) : undefined;
-
     onAddToQueue({
       name: name.trim() || undefined,
       mobile: mobile.trim(),
       email: email.trim() || undefined,
       queueSource,
       notes: notes.trim() || undefined,
-      duration: durationValue,
       visitCategory: visitCategory || undefined,
     });
 
-    setName(""); setMobile(""); setEmail(""); setQueueSource("Walk-in"); setNotes(""); setDuration(""); setVisitCategory("Consultation");
+    setName(""); setMobile(""); setEmail(""); setQueueSource("Walk-in"); setNotes(""); setVisitCategory("Consultation");
     onOpenChange(false);
 
     toast({ title: t("addedToQueue"), description: t("patientAddedToQueue") });
+  };
+
+  const handleScanNRIC = () => {
+    toast({ title: t("scanNRIC"), description: t("scanNRICDesc") });
+  };
+
+  const handleScanSingpass = () => {
+    toast({ title: t("scanSingpass"), description: t("scanSingpassDesc") });
   };
 
   return (
@@ -67,6 +71,24 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
           <DialogTitle>{t("addToQueueTitle")}</DialogTitle>
           <DialogDescription>{t("addToQueueDesc")}</DialogDescription>
         </DialogHeader>
+
+        <div className="flex gap-2">
+          <Button type="button" variant="outline" className="flex-1 gap-2" onClick={handleScanNRIC}>
+            <ScanLine className="h-4 w-4" />
+            {t("scanNRIC")}
+          </Button>
+          <Button type="button" variant="outline" className="flex-1 gap-2" onClick={handleScanSingpass}>
+            <QrCode className="h-4 w-4" />
+            {t("scanSingpass")}
+          </Button>
+        </div>
+
+        <div className="relative flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex-1 border-t border-border" />
+          <span>{t("orManualEntry")}</span>
+          <div className="flex-1 border-t border-border" />
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">{t("nameOptional")}</Label>
@@ -106,11 +128,6 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
                 <SelectItem value="Standard Visit">{t("standardVisit")}</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="duration">{t("duration")}</Label>
-            <Input id="duration" type="number" placeholder={t("enterDuration")} value={duration} onChange={(e) => setDuration(e.target.value)} min="1" />
           </div>
 
           <div className="space-y-2">
