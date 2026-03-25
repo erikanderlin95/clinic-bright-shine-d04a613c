@@ -219,7 +219,7 @@ const Index = () => {
           <Tabs defaultValue="queue" className="w-full">
             <TabsList>
               <TabsTrigger value="queue">Queue Management</TabsTrigger>
-              <TabsTrigger value="leads">Booking Leads</TabsTrigger>
+              <TabsTrigger value="requests">Booking Requests</TabsTrigger>
               <TabsTrigger value="appointments">Appointments</TabsTrigger>
               <TabsTrigger value="automation">Automation</TabsTrigger>
               <TabsTrigger value="schedule">Doctor Schedule</TabsTrigger>
