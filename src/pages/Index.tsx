@@ -215,17 +215,17 @@ const Index = () => {
         <main className={`flex-1 p-6 ${selectedEntry ? "mr-80" : ""} transition-all duration-300`}>
           <Tabs defaultValue="queue" className="w-full">
             <TabsList>
-              <TabsTrigger value="queue">Queue Management</TabsTrigger>
-              <TabsTrigger value="requests">Booking Requests</TabsTrigger>
-              <TabsTrigger value="appointments">Appointments</TabsTrigger>
-              <TabsTrigger value="automation">Automation</TabsTrigger>
-              <TabsTrigger value="schedule">Doctor Schedule</TabsTrigger>
-              <TabsTrigger value="profiles">Doctor Profiles</TabsTrigger>
+              <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
+              <TabsTrigger value="requests">{t("bookingRequests")}</TabsTrigger>
+              <TabsTrigger value="appointments">{t("appointments")}</TabsTrigger>
+              <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
+              <TabsTrigger value="schedule">{t("doctorSchedule")}</TabsTrigger>
+              <TabsTrigger value="profiles">{t("doctorProfiles")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="queue" className="space-y-5 mt-5">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-foreground">Queue Management</h2>
+                <h2 className="text-xl font-semibold text-foreground">{t("queueManagement")}</h2>
                 <QueueControls
                   isPaused={isPaused}
                   isClosed={isClosed}
@@ -238,10 +238,10 @@ const Index = () => {
 
               <div>
                 <div className="mb-3 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-foreground">Live Queue View</h3>
+                  <h3 className="text-lg font-semibold text-foreground">{t("liveQueueView")}</h3>
                   <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
                     <Plus className="h-4 w-4" />
-                    Add to Queue
+                    {t("addToQueue")}
                   </Button>
                 </div>
                 <QueueTable
