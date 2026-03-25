@@ -186,11 +186,6 @@ const Index = () => {
     handleUpdateStatus(id, "arrived");
   };
 
-  const handleUpdateLeadStatus = (id: string, status: LeadStatus) => {
-    setBookingLeads((prev) =>
-      prev.map((lead) => (lead.id === id ? { ...lead, status } : lead))
-    );
-  };
 
   const addAutomationLog = (action: string) => {
     const now = new Date();
