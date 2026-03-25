@@ -192,6 +192,24 @@ const Index = () => {
     );
   };
 
+  const addAutomationLog = (action: string) => {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    setAutomationLog((prev) => [{ id: Date.now().toString(), time: timeString, action }, ...prev]);
+  };
+
+  const handleSendBroadcast = (message: string, isMarketing: boolean = false) => {
+    addAutomationLog(`${isMarketing ? "Marketing" : "Operational"} broadcast sent: "${message}"`);
+  };
+
+  const handleSendRecentCustomersBroadcast = (message: string, isMarketing: boolean = false) => {
+    addAutomationLog(`${isMarketing ? "Marketing" : "Operational"} broadcast to recent customers: "${message}"`);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <QueueHeader />
