@@ -147,16 +147,6 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
               </TableBody>
             </Table>
           </div>
-          <div className="flex items-center gap-4 mt-4 text-xs">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded border-2 border-primary bg-primary/10"></div>
-              <span className="text-foreground">{t("appointmentBookings")}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded border-2 border-accent bg-accent/10"></div>
-              <span className="text-foreground">{t("queueVisits")}</span>
-            </div>
-          </div>
           <p className="text-xs text-foreground/70 mt-3 italic">{t("visitLogNote")}</p>
         </CardContent>
       )}
