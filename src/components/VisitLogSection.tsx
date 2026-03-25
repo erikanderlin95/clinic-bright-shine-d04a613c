@@ -24,7 +24,7 @@ export const VisitLogSection = ({ entries }: VisitLogSectionProps) => {
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-foreground">
             <FileText className="h-5 w-5" />
-            Visit Log (Optional)
+            Visit Log
           </CardTitle>
           <Button
             variant="ghost"
