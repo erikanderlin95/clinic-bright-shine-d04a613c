@@ -8,6 +8,10 @@ import { VisitLogSection } from "@/components/VisitLogSection";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { BookingLeadsPanel } from "@/components/BookingLeadsPanel";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
+import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
+import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
+import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
+import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
@@ -24,6 +28,25 @@ const Index = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
   const [verifyEntry, setVerifyEntry] = useState<QueueEntry | null>(null);
+
+  // Automation state
+  const [messageTemplates, setMessageTemplates] = useState<MessageTemplate[]>([
+    { id: "1", message: "Doctor running late. Thank you for your patience." },
+    { id: "2", message: "Queue moving. Please return to the clinic." },
+    { id: "3", message: "Your turn is coming up soon. Please be ready." },
+  ]);
+
+  interface AutomationLog {
+    id: string;
+    time: string;
+    action: string;
+  }
+
+  const [automationLog, setAutomationLog] = useState<AutomationLog[]>([
+    { id: "1", time: "10:32", action: 'Sent "Your turn soon"' },
+    { id: "2", time: "10:40", action: "Patient marked Arrived" },
+    { id: "3", time: "11:10", action: "Delay alert sent" },
+  ]);
 
   const [queueEntries, setQueueEntries] = useState<QueueEntry[]>([
     {
@@ -169,6 +192,24 @@ const Index = () => {
     );
   };
 
+  const addAutomationLog = (action: string) => {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    setAutomationLog((prev) => [{ id: Date.now().toString(), time: timeString, action }, ...prev]);
+  };
+
+  const handleSendBroadcast = (message: string, isMarketing: boolean = false) => {
+    addAutomationLog(`${isMarketing ? "Marketing" : "Operational"} broadcast sent: "${message}"`);
+  };
+
+  const handleSendRecentCustomersBroadcast = (message: string, isMarketing: boolean = false) => {
+    addAutomationLog(`${isMarketing ? "Marketing" : "Operational"} broadcast to recent customers: "${message}"`);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <QueueHeader />
@@ -179,6 +220,10 @@ const Index = () => {
             <TabsList>
               <TabsTrigger value="queue">Queue Management</TabsTrigger>
               <TabsTrigger value="leads">Booking Leads</TabsTrigger>
+              <TabsTrigger value="appointments">Appointments</TabsTrigger>
+              <TabsTrigger value="automation">Automation</TabsTrigger>
+              <TabsTrigger value="schedule">Doctor Schedule</TabsTrigger>
+              <TabsTrigger value="profiles">Doctor Profiles</TabsTrigger>
             </TabsList>
 
             <TabsContent value="queue" className="space-y-5 mt-5">
@@ -226,6 +271,38 @@ const Index = () => {
                 leads={bookingLeads}
                 onUpdateStatus={handleUpdateLeadStatus}
               />
+            </TabsContent>
+
+            <TabsContent value="appointments" className="mt-5">
+              <AppointmentBookingPanel />
+            </TabsContent>
+
+            <TabsContent value="automation" className="mt-5">
+              <AutomationPanel
+                businessType="healthcare"
+                onBusinessTypeChange={() => {}}
+                autoArrivalCheckEnabled={false}
+                yourTurnSoonEnabled={false}
+                delayAlertsEnabled={false}
+                visitCompletionEnabled={false}
+                automationLog={automationLog}
+                onToggleAutoArrivalCheck={() => {}}
+                onToggleYourTurnSoon={() => {}}
+                onToggleDelayAlerts={() => {}}
+                onToggleVisitCompletion={() => {}}
+                onSendBroadcast={handleSendBroadcast}
+                onSendRecentCustomersBroadcast={handleSendRecentCustomersBroadcast}
+                templates={messageTemplates}
+                onTemplatesChange={setMessageTemplates}
+              />
+            </TabsContent>
+
+            <TabsContent value="schedule" className="mt-5">
+              <DoctorSchedulePanel />
+            </TabsContent>
+
+            <TabsContent value="profiles" className="mt-5">
+              <DoctorProfilesPanel />
             </TabsContent>
           </Tabs>
         </main>
