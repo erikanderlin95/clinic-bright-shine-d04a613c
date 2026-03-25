@@ -39,6 +39,11 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
           label: "Completed",
           className: "bg-primary/10 text-primary border-primary/20",
         };
+      case "booked":
+        return {
+          label: "Booked",
+          className: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+        };
     }
   };
 
