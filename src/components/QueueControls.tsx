@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Pause, Play, XCircle, RotateCw } from "lucide-react";
+import { useI18n } from "@/hooks/useI18n";
 
 interface QueueControlsProps {
   isPaused: boolean;
@@ -9,6 +10,8 @@ interface QueueControlsProps {
 }
 
 export const QueueControls = ({ isPaused, isClosed, onTogglePause, onToggleClose }: QueueControlsProps) => {
+  const { t } = useI18n();
+
   return (
     <div className="flex gap-2">
       <Button
@@ -21,30 +24,30 @@ export const QueueControls = ({ isPaused, isClosed, onTogglePause, onToggleClose
         {isPaused ? (
           <>
             <Play className="h-4 w-4" />
-            Resume Queue
+            {t("resumeQueue")}
           </>
         ) : (
           <>
             <Pause className="h-4 w-4" />
-            Pause Queue
+            {t("pauseQueue")}
           </>
         )}
       </Button>
-      <Button 
-        variant={isClosed ? "default" : "outline"} 
-        size="sm" 
-        onClick={onToggleClose} 
+      <Button
+        variant={isClosed ? "default" : "outline"}
+        size="sm"
+        onClick={onToggleClose}
         className="gap-2"
       >
         {isClosed ? (
           <>
             <RotateCw className="h-4 w-4" />
-            Reopen Queue
+            {t("reopenQueue")}
           </>
         ) : (
           <>
             <XCircle className="h-4 w-4" />
-            Close Queue
+            {t("closeQueue")}
           </>
         )}
       </Button>

@@ -1,43 +1,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, CheckCircle, XCircle, AlertCircle, Clock } from "lucide-react";
 import type { DailySummary as DailySummaryType } from "@/types/queue";
+import { useI18n } from "@/hooks/useI18n";
 
 interface DailySummaryProps {
   summary: DailySummaryType;
 }
 
 export const DailySummary = ({ summary }: DailySummaryProps) => {
+  const { t } = useI18n();
+
   const stats = [
-    {
-      title: "Total Queue Today",
-      value: summary.totalQueue,
-      icon: Users,
-      color: "text-primary",
-    },
-    {
-      title: "Arrived",
-      value: summary.arrived,
-      icon: CheckCircle,
-      color: "text-status-arrived",
-    },
-    {
-      title: "Cancelled",
-      value: summary.cancelled,
-      icon: XCircle,
-      color: "text-status-cancelled",
-    },
-    {
-      title: "No Shows",
-      value: summary.noShows,
-      icon: AlertCircle,
-      color: "text-destructive",
-    },
-    {
-      title: "Avg Wait Time",
-      value: summary.avgWaitTime,
-      icon: Clock,
-      color: "text-accent",
-    },
+    { title: t("totalQueueToday"), value: summary.totalQueue, icon: Users, color: "text-primary" },
+    { title: t("arrived"), value: summary.arrived, icon: CheckCircle, color: "text-status-arrived" },
+    { title: t("cancelled"), value: summary.cancelled, icon: XCircle, color: "text-status-cancelled" },
+    { title: t("noShows"), value: summary.noShows, icon: AlertCircle, color: "text-destructive" },
+    { title: t("avgWaitTime"), value: summary.avgWaitTime, icon: Clock, color: "text-accent" },
   ];
 
   return (

@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
 import { CheckCircle, XCircle, UserX, RotateCcw, ShieldCheck } from "lucide-react";
+import { useI18n } from "@/hooks/useI18n";
 
 interface QueueTableProps {
   entries: QueueEntry[];
@@ -14,6 +15,8 @@ interface QueueTableProps {
 }
 
 export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival }: QueueTableProps) => {
+  const { t } = useI18n();
+
   const getActions = (entry: QueueEntry) => {
     if (entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show" || entry.status === "booked") {
       return null;
@@ -24,14 +27,11 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
         <Button
           size="sm"
           variant="outline"
-          onClick={(e) => {
-            e.stopPropagation();
-            onUpdateStatus(entry.id, "completed");
-          }}
+          onClick={(e) => { e.stopPropagation(); onUpdateStatus(entry.id, "completed"); }}
           className="gap-1.5 h-8 text-xs"
         >
           <CheckCircle className="h-3.5 w-3.5" />
-          Completed
+          {t("completed")}
         </Button>
       );
     }
@@ -40,38 +40,29 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
       <div className="flex gap-1.5">
         <Button
           size="sm"
-          onClick={(e) => {
-            e.stopPropagation();
-            onVerifyArrival?.(entry);
-          }}
+          onClick={(e) => { e.stopPropagation(); onVerifyArrival?.(entry); }}
           className="gap-1.5 h-8 text-xs"
         >
           <ShieldCheck className="h-3.5 w-3.5" />
-          Verify & Arrived
+          {t("verifyAndArrive")}
         </Button>
         <Button
           size="sm"
           variant="outline"
-          onClick={(e) => {
-            e.stopPropagation();
-            onUpdateStatus(entry.id, "cancelled");
-          }}
+          onClick={(e) => { e.stopPropagation(); onUpdateStatus(entry.id, "cancelled"); }}
           className="gap-1.5 h-8 text-xs"
         >
           <XCircle className="h-3.5 w-3.5" />
-          Cancel
+          {t("cancel")}
         </Button>
         <Button
           size="sm"
           variant="outline"
-          onClick={(e) => {
-            e.stopPropagation();
-            onUpdateStatus(entry.id, "no-show");
-          }}
+          onClick={(e) => { e.stopPropagation(); onUpdateStatus(entry.id, "no-show"); }}
           className="gap-1.5 h-8 text-xs"
         >
           <UserX className="h-3.5 w-3.5" />
-          No Show
+          {t("noShow")}
         </Button>
       </div>
     );
@@ -82,11 +73,11 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Queue No</TableHead>
-            <TableHead className="w-[120px]">Status</TableHead>
-            <TableHead className="w-[110px]">Queue Joined</TableHead>
-            <TableHead className="w-[110px]">Check-in Code</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className="w-[100px]">{t("queueNo")}</TableHead>
+            <TableHead className="w-[120px]">{t("status")}</TableHead>
+            <TableHead className="w-[110px]">{t("timeJoined")}</TableHead>
+            <TableHead className="w-[110px]">{t("checkInCode")}</TableHead>
+            <TableHead>{t("actions")}</TableHead>
             <TableHead className="w-[80px]"></TableHead>
           </TableRow>
         </TableHeader>
@@ -94,7 +85,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
           {entries.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                No patients in queue
+                {t("noPatients")}
               </TableCell>
             </TableRow>
           ) : (
@@ -106,27 +97,20 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
                 data-selected={selectedEntry?.id === entry.id}
               >
                 <TableCell className="font-semibold">{entry.queueNumber}</TableCell>
-                <TableCell>
-                  <StatusBadge status={entry.status} />
-                </TableCell>
+                <TableCell><StatusBadge status={entry.status} /></TableCell>
                 <TableCell className="text-muted-foreground text-sm">{entry.joinedAt}</TableCell>
-                <TableCell className="font-mono text-sm text-muted-foreground">
-                  {entry.checkInCode || "—"}
-                </TableCell>
+                <TableCell className="font-mono text-sm text-muted-foreground">{entry.checkInCode || "—"}</TableCell>
                 <TableCell>{getActions(entry)}</TableCell>
                 <TableCell>
                   {entry.previousStatus && (
                     <Button
                       size="sm"
                       variant="secondary"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onRevertStatus(entry.id);
-                      }}
+                      onClick={(e) => { e.stopPropagation(); onRevertStatus(entry.id); }}
                       className="gap-1.5 h-7 text-xs"
                     >
                       <RotateCcw className="h-3 w-3" />
-                      Undo
+                      {t("undo")}
                     </Button>
                   )}
                 </TableCell>
