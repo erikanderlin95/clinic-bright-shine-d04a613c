@@ -100,8 +100,7 @@ export const CheckInVerifyDialog = ({ open, onOpenChange, entry, onVerified, onB
               Verify & Mark Arrived
             </Button>
             <Button variant="ghost" size="sm" onClick={handleBypass} className="text-muted-foreground">
-              <ShieldOff className="h-3.5 w-3.5 mr-1.5" />
-              Bypass & Mark Arrived
+              Mark as Arrived (No Code)
             </Button>
           </div>
         </div>
