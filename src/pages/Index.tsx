@@ -15,6 +15,7 @@ import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
+import { useI18n } from "@/hooks/useI18n";
 import type { QueueEntry, DailySummary as DailySummaryType, BookingLead } from "@/types/queue";
 
 const generateCheckInCode = () => {
