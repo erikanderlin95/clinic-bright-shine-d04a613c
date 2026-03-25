@@ -266,11 +266,8 @@ const Index = () => {
               <VisitLogSection entries={queueEntries} />
             </TabsContent>
 
-            <TabsContent value="leads" className="mt-5">
-              <BookingLeadsPanel
-                leads={bookingLeads}
-                onUpdateStatus={handleUpdateLeadStatus}
-              />
+            <TabsContent value="requests" className="mt-5">
+              <BookingRequestsPanel requests={bookingLeads} />
             </TabsContent>
 
             <TabsContent value="appointments" className="mt-5">
