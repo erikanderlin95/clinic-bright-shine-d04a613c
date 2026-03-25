@@ -6,6 +6,7 @@ import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
 import { X, MessageSquare, FileText } from "lucide-react";
 import { useState } from "react";
+import { useI18n } from "@/hooks/useI18n";
 
 interface PatientDetailPanelProps {
   entry: QueueEntry;
@@ -15,6 +16,7 @@ interface PatientDetailPanelProps {
 
 export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDetailPanelProps) => {
   const [notes, setNotes] = useState(entry.notes || "");
+  const { t } = useI18n();
 
   const handleSaveNotes = () => {
     onUpdateNotes(entry.id, notes);
@@ -23,7 +25,7 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
   return (
     <Card className="h-full border-l">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-lg">Patient Details</CardTitle>
+        <CardTitle className="text-lg">{t("patientDetails")}</CardTitle>
         <Button variant="ghost" size="icon" onClick={onClose}>
           <X className="h-4 w-4" />
         </Button>
@@ -31,19 +33,19 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div>
-            <Label className="text-xs text-muted-foreground">Queue Number</Label>
+            <Label className="text-xs text-muted-foreground">{t("queueNumber")}</Label>
             <p className="text-2xl font-bold text-foreground">{entry.queueNumber}</p>
           </div>
 
           {entry.name && (
             <div>
-              <Label className="text-xs text-muted-foreground">Name</Label>
+              <Label className="text-xs text-muted-foreground">{t("patientName")}</Label>
               <p className="text-sm font-medium text-foreground">{entry.name}</p>
             </div>
           )}
 
           <div>
-            <Label className="text-xs text-muted-foreground">Mobile Number</Label>
+            <Label className="text-xs text-muted-foreground">{t("mobileNumber")}</Label>
             <p className="text-sm font-medium text-foreground">{entry.mobile}</p>
           </div>
 
@@ -55,40 +57,40 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
           )}
 
           <div>
-            <Label className="text-xs text-muted-foreground">Queue Source</Label>
+            <Label className="text-xs text-muted-foreground">{t("queueSource")}</Label>
             <p className="text-sm font-medium text-foreground">{entry.queueSource}</p>
           </div>
 
           {entry.visitCategory && (
             <div>
-              <Label className="text-xs text-muted-foreground">Visit Category</Label>
+              <Label className="text-xs text-muted-foreground">{t("visitCategoryCol")}</Label>
               <p className="text-sm font-medium text-foreground">{entry.visitCategory}</p>
             </div>
           )}
 
           {entry.duration && (
             <div>
-              <Label className="text-xs text-muted-foreground">Duration</Label>
+              <Label className="text-xs text-muted-foreground">{t("durationCol")}</Label>
               <p className="text-sm font-medium text-foreground">{entry.duration} minutes</p>
             </div>
           )}
 
           <div>
-            <Label className="text-xs text-muted-foreground">Joined At</Label>
+            <Label className="text-xs text-muted-foreground">{t("timeJoined")}</Label>
             <p className="text-sm font-medium text-foreground">{entry.joinedAt}</p>
           </div>
 
           <div>
-            <Label className="text-xs text-muted-foreground">Status</Label>
+            <Label className="text-xs text-muted-foreground">{t("status")}</Label>
             <div className="mt-1">
               <StatusBadge status={entry.status} />
             </div>
           </div>
 
           <div>
-            <Label className="text-xs text-muted-foreground">Notes (Optional)</Label>
+            <Label className="text-xs text-muted-foreground">{t("notesOptional")}</Label>
             <Textarea
-              placeholder="Internal notes only"
+              placeholder={t("internalNotes")}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               onBlur={handleSaveNotes}
@@ -98,15 +100,15 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
         </div>
 
         <div className="space-y-2 border-t border-border pt-4">
-          <Label className="text-xs font-semibold text-muted-foreground">Quick Actions</Label>
+          <Label className="text-xs font-semibold text-muted-foreground">{t("quickActions")}</Label>
           <div className="flex flex-col gap-2">
             <Button variant="outline" className="w-full justify-start gap-2">
               <MessageSquare className="h-4 w-4" />
-              Send Message
+              {t("sendMessage")}
             </Button>
             <Button variant="outline" className="w-full justify-start gap-2">
               <FileText className="h-4 w-4" />
-              Log Visit
+              {t("logVisit")}
             </Button>
           </div>
         </div>

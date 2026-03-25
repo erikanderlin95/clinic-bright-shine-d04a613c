@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useI18n } from "@/hooks/useI18n";
 import type { VisitCategory } from "@/types/queue";
 
 interface AddToQueueDialogProps {
@@ -24,6 +25,7 @@ interface AddToQueueDialogProps {
 
 export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueueDialogProps) => {
   const { toast } = useToast();
+  const { t } = useI18n();
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
@@ -34,18 +36,14 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!mobile.trim()) {
-      toast({
-        title: "Mobile number required",
-        description: "Please enter a mobile number",
-        variant: "destructive",
-      });
+      toast({ title: t("mobileRequired"), description: t("pleaseEnterMobile"), variant: "destructive" });
       return;
     }
 
     const durationValue = duration.trim() ? parseInt(duration.trim()) : undefined;
-    
+
     onAddToQueue({
       name: name.trim() || undefined,
       mobile: mobile.trim(),
@@ -56,126 +54,73 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
       visitCategory: visitCategory || undefined,
     });
 
-    // Reset form
-    setName("");
-    setMobile("");
-    setEmail("");
-    setQueueSource("Walk-in");
-    setNotes("");
-    setDuration("");
-    setVisitCategory("Consultation");
+    setName(""); setMobile(""); setEmail(""); setQueueSource("Walk-in"); setNotes(""); setDuration(""); setVisitCategory("Consultation");
     onOpenChange(false);
 
-    toast({
-      title: "Added to queue",
-      description: "Patient has been added to the queue",
-    });
+    toast({ title: t("addedToQueue"), description: t("patientAddedToQueue") });
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add to Queue</DialogTitle>
-          <DialogDescription>
-            Add a new patient to the queue. Only mobile number is required.
-          </DialogDescription>
+          <DialogTitle>{t("addToQueueTitle")}</DialogTitle>
+          <DialogDescription>{t("addToQueueDesc")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Name (Optional)</Label>
-            <Input
-              id="name"
-              placeholder="Enter patient name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+            <Label htmlFor="name">{t("nameOptional")}</Label>
+            <Input id="name" placeholder={t("enterPatientName")} value={name} onChange={(e) => setName(e.target.value)} />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="mobile">
-              Mobile Number <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="mobile"
-              type="tel"
-              placeholder="Enter mobile number"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
-              required
-            />
+            <Label htmlFor="mobile">{t("mobileNumber")} <span className="text-destructive">*</span></Label>
+            <Input id="mobile" type="tel" placeholder={t("enterMobile")} value={mobile} onChange={(e) => setMobile(e.target.value)} required />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email (Optional)</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="Enter email for contact"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <Label htmlFor="email">{t("emailOptional")}</Label>
+            <Input id="email" type="email" placeholder={t("enterEmail")} value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="source">
-              Queue Source <span className="text-destructive">*</span>
-            </Label>
+            <Label htmlFor="source">{t("queueSource")} <span className="text-destructive">*</span></Label>
             <Select value={queueSource} onValueChange={(value: "Walk-in" | "Phone Booking" | "Other") => setQueueSource(value)}>
-              <SelectTrigger id="source">
-                <SelectValue />
-              </SelectTrigger>
+              <SelectTrigger id="source"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="Walk-in">Walk-in</SelectItem>
-                <SelectItem value="Phone Booking">Phone Booking</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
+                <SelectItem value="Walk-in">{t("walkIn")}</SelectItem>
+                <SelectItem value="Phone Booking">{t("phoneBooking")}</SelectItem>
+                <SelectItem value="Other">{t("other")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="visit-category">Visit Category (Optional)</Label>
+            <Label htmlFor="visit-category">{t("visitCategory")}</Label>
             <Select value={visitCategory} onValueChange={(value: VisitCategory | "") => setVisitCategory(value)}>
-              <SelectTrigger id="visit-category">
-                <SelectValue placeholder="Select visit category" />
-              </SelectTrigger>
+              <SelectTrigger id="visit-category"><SelectValue placeholder={t("visitCategory")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="Consultation">Consultation</SelectItem>
-                <SelectItem value="Follow-up">Follow-up</SelectItem>
-                <SelectItem value="General Treatment">General Treatment</SelectItem>
-                <SelectItem value="Standard Visit">Standard Visit</SelectItem>
+                <SelectItem value="Consultation">{t("consultation")}</SelectItem>
+                <SelectItem value="Follow-up">{t("followUp")}</SelectItem>
+                <SelectItem value="General Treatment">{t("generalTreatment")}</SelectItem>
+                <SelectItem value="Standard Visit">{t("standardVisit")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="duration">Duration (Optional)</Label>
-            <Input
-              id="duration"
-              type="number"
-              placeholder="Enter duration in minutes"
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-              min="1"
-            />
+            <Label htmlFor="duration">{t("duration")}</Label>
+            <Input id="duration" type="number" placeholder={t("enterDuration")} value={duration} onChange={(e) => setDuration(e.target.value)} min="1" />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes (Optional)</Label>
-            <Textarea
-              id="notes"
-              placeholder="Internal notes only"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="min-h-[80px]"
-            />
+            <Label htmlFor="notes">{t("notesOptional")}</Label>
+            <Textarea id="notes" placeholder={t("internalNotes")} value={notes} onChange={(e) => setNotes(e.target.value)} className="min-h-[80px]" />
           </div>
 
           <div className="flex gap-2 justify-end">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <Button type="submit">Add to Queue</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t("cancel")}</Button>
+            <Button type="submit">{t("addToQueue")}</Button>
           </div>
         </form>
       </DialogContent>

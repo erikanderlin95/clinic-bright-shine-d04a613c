@@ -3,8 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle, AlertCircle, ShieldOff } from "lucide-react";
+import { CheckCircle, AlertCircle } from "lucide-react";
 import type { QueueEntry } from "@/types/queue";
+import { useI18n } from "@/hooks/useI18n";
 
 interface CheckInVerifyDialogProps {
   open: boolean;
@@ -15,34 +16,30 @@ interface CheckInVerifyDialogProps {
 }
 
 export const CheckInVerifyDialog = ({ open, onOpenChange, entry, onVerified, onBypass }: CheckInVerifyDialogProps) => {
+  const { t } = useI18n();
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
 
   const handleVerify = () => {
     if (!entry) return;
     if (code.trim() === entry.checkInCode) {
-      setCode("");
-      setError("");
+      setCode(""); setError("");
       onVerified(entry.id);
       onOpenChange(false);
     } else {
-      setError("Invalid code. Please try again.");
+      setError(t("invalidCode"));
     }
   };
 
   const handleBypass = () => {
     if (!entry) return;
-    setCode("");
-    setError("");
+    setCode(""); setError("");
     onBypass(entry.id);
     onOpenChange(false);
   };
 
   const handleClose = (isOpen: boolean) => {
-    if (!isOpen) {
-      setCode("");
-      setError("");
-    }
+    if (!isOpen) { setCode(""); setError(""); }
     onOpenChange(isOpen);
   };
 
@@ -54,35 +51,28 @@ export const CheckInVerifyDialog = ({ open, onOpenChange, entry, onVerified, onB
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CheckCircle className="h-5 w-5 text-primary" />
-            Verify Check-In
+            {t("verifyCheckIn")}
           </DialogTitle>
-          <DialogDescription>
-            Enter the patient's check-in code to verify arrival.
-          </DialogDescription>
+          <DialogDescription>{t("enterCheckInCode")}</DialogDescription>
         </DialogHeader>
-
         <div className="space-y-4">
           <div className="rounded-md border border-border bg-muted/30 p-3 space-y-1">
-            <p className="text-xs text-muted-foreground">Queue Number</p>
+            <p className="text-xs text-muted-foreground">{t("queueNumber")}</p>
             <p className="text-lg font-bold text-foreground">{entry.queueNumber}</p>
             {entry.name && (
               <>
-                <p className="text-xs text-muted-foreground mt-2">Patient Name</p>
+                <p className="text-xs text-muted-foreground mt-2">{t("patientName")}</p>
                 <p className="text-sm font-medium text-foreground">{entry.name}</p>
               </>
             )}
           </div>
-
           <div className="space-y-2">
-            <Label htmlFor="checkin-code">Check-in Code</Label>
+            <Label htmlFor="checkin-code">{t("checkInCodeLabel")}</Label>
             <Input
               id="checkin-code"
-              placeholder="Enter code"
+              placeholder={t("enterCode")}
               value={code}
-              onChange={(e) => {
-                setCode(e.target.value);
-                setError("");
-              }}
+              onChange={(e) => { setCode(e.target.value); setError(""); }}
               onKeyDown={(e) => e.key === "Enter" && handleVerify()}
               autoFocus
             />
@@ -93,14 +83,13 @@ export const CheckInVerifyDialog = ({ open, onOpenChange, entry, onVerified, onB
               </p>
             )}
           </div>
-
           <div className="flex flex-col gap-2">
             <Button onClick={handleVerify} disabled={!code.trim()}>
               <CheckCircle className="h-4 w-4 mr-2" />
-              Verify & Mark Arrived
+              {t("verifyAndMarkArrived")}
             </Button>
             <Button variant="ghost" size="sm" onClick={handleBypass} className="text-muted-foreground">
-              Mark as Arrived (No Code)
+              {t("markArrivedNoCode")}
             </Button>
           </div>
         </div>
