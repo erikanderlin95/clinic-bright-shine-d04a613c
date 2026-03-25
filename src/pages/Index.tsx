@@ -6,7 +6,7 @@ import { QueueTable } from "@/components/QueueTable";
 import { PatientDetailPanel } from "@/components/PatientDetailPanel";
 import { VisitLogSection } from "@/components/VisitLogSection";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
-import { BookingLeadsPanel } from "@/components/BookingLeadsPanel";
+import { BookingRequestsPanel } from "@/components/BookingRequestsPanel";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
 import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
@@ -15,7 +15,7 @@ import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
-import type { QueueEntry, DailySummary as DailySummaryType, BookingLead, LeadStatus } from "@/types/queue";
+import type { QueueEntry, DailySummary as DailySummaryType, BookingLead } from "@/types/queue";
 
 const generateCheckInCode = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
