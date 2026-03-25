@@ -220,6 +220,10 @@ const Index = () => {
             <TabsList>
               <TabsTrigger value="queue">Queue Management</TabsTrigger>
               <TabsTrigger value="leads">Booking Leads</TabsTrigger>
+              <TabsTrigger value="appointments">Appointments</TabsTrigger>
+              <TabsTrigger value="automation">Automation</TabsTrigger>
+              <TabsTrigger value="schedule">Doctor Schedule</TabsTrigger>
+              <TabsTrigger value="profiles">Doctor Profiles</TabsTrigger>
             </TabsList>
 
             <TabsContent value="queue" className="space-y-5 mt-5">
