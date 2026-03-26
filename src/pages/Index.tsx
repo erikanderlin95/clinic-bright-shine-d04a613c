@@ -237,6 +237,7 @@ const Index = () => {
     toast({ title: t("adjustToast") });
   };
 
+  const addAutomationLog = (action: string) => {
     const now = new Date();
     const timeString = now.toLocaleTimeString("en-US", {
       hour: "2-digit",
