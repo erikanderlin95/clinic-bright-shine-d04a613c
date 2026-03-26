@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
-import { CheckCircle, XCircle, UserX, RotateCcw, ShieldCheck } from "lucide-react";
+import { CheckCircle, UserX, RotateCcw, ShieldCheck, ArrowUpDown } from "lucide-react";
 import { useI18n } from "@/hooks/useI18n";
 
 interface QueueTableProps {
@@ -12,9 +12,10 @@ interface QueueTableProps {
   onUpdateStatus: (id: string, status: QueueEntry["status"]) => void;
   onRevertStatus: (id: string) => void;
   onVerifyArrival?: (entry: QueueEntry) => void;
+  onAdjust?: (entry: QueueEntry) => void;
 }
 
-export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival }: QueueTableProps) => {
+export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival, onAdjust }: QueueTableProps) => {
   const { t } = useI18n();
 
   const getActions = (entry: QueueEntry) => {
@@ -49,10 +50,10 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
         <Button
           size="sm"
           variant="outline"
-          onClick={(e) => { e.stopPropagation(); onUpdateStatus(entry.id, "cancelled"); }}
+          onClick={(e) => { e.stopPropagation(); onAdjust?.(entry); }}
           className="gap-1.5 h-8 text-xs"
         >
-          <XCircle className="h-3.5 w-3.5" />
+          <ArrowUpDown className="h-3.5 w-3.5" />
           {t("cancel")}
         </Button>
         <Button
