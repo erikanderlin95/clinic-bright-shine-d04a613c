@@ -292,18 +292,13 @@ const Index = () => {
                   </Button>
                 </div>
                 <QueueTable
-                  entries={queueEntries.filter(
-                    (entry) =>
-                      entry.status !== "completed" &&
-                      entry.status !== "cancelled" &&
-                      entry.status !== "no-show" &&
-                      entry.status !== "booked"
-                  )}
+                  entries={getActiveQueue()}
                   onSelectEntry={setSelectedEntry}
                   selectedEntry={selectedEntry}
                   onUpdateStatus={handleUpdateStatus}
                   onRevertStatus={handleRevertStatus}
                   onVerifyArrival={handleVerifyArrival}
+                  onAdjust={handleOpenAdjust}
                 />
               </div>
 
@@ -371,6 +366,15 @@ const Index = () => {
         entry={verifyEntry}
         onVerified={handleVerified}
         onBypass={handleBypass}
+      />
+
+      <AdjustQueueDialog
+        open={adjustDialogOpen}
+        onOpenChange={setAdjustDialogOpen}
+        entry={adjustEntry}
+        currentPosition={adjustEntry ? getActiveQueue().findIndex((e) => e.id === adjustEntry.id) + 1 : 1}
+        totalPositions={getActiveQueue().length}
+        onSave={handleAdjustSave}
       />
     </div>
   );
