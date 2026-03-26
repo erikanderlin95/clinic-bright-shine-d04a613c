@@ -37,12 +37,10 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
             <p className="text-2xl font-bold text-foreground">{entry.queueNumber}</p>
           </div>
 
-          {entry.name && (
-            <div>
-              <Label className="text-xs text-muted-foreground">{t("patientName")}</Label>
-              <p className="text-sm font-medium text-foreground">{entry.name}</p>
-            </div>
-          )}
+          <div>
+            <Label className="text-xs text-muted-foreground">{t("patientName")}</Label>
+            <p className="text-sm font-medium text-foreground">{entry.name || "—"}</p>
+          </div>
 
           <div>
             <Label className="text-xs text-muted-foreground">{t("mobileNumber")}</Label>
