@@ -18,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/hooks/useI18n";
-import type { QueueEntry, DailySummary as DailySummaryType, BookingLead } from "@/types/queue";
+import type { QueueEntry, DailySummary as DailySummaryType, BookingLead, VisitCategory } from "@/types/queue";
 
 const generateCheckInCode = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -161,8 +161,10 @@ const Index = () => {
   const handleAddToQueue = (data: {
     name?: string;
     mobile: string;
+    email?: string;
     queueSource: "Walk-in" | "Phone Booking" | "Other";
     notes?: string;
+    visitCategory?: VisitCategory;
   }) => {
     const nextNumber = queueEntries.length + 101;
     const newEntry: QueueEntry = {
