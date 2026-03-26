@@ -161,8 +161,10 @@ const Index = () => {
   const handleAddToQueue = (data: {
     name?: string;
     mobile: string;
+    email?: string;
     queueSource: "Walk-in" | "Phone Booking" | "Other";
     notes?: string;
+    visitCategory?: VisitCategory;
   }) => {
     const nextNumber = queueEntries.length + 101;
     const newEntry: QueueEntry = {
