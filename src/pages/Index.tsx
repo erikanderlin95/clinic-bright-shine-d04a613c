@@ -355,6 +355,7 @@ const Index = () => {
                 onSendRecentCustomersBroadcast={handleSendRecentCustomersBroadcast}
                 templates={messageTemplates}
                 onTemplatesChange={setMessageTemplates}
+                queueEntries={queueEntries}
               />
             </TabsContent>
 
