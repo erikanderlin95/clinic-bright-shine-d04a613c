@@ -126,11 +126,16 @@ export const AutomationPanel = ({
         </CardHeader>
         <CardContent className="space-y-3">
           {!clinicIntegrationActive ? (
-            <div className="flex items-start gap-2 p-2.5 rounded-md bg-muted/60 border border-dashed mb-1">
-              <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" style={{ color: "hsl(220, 80%, 40%)" }} />
-              <p className="text-sm font-bold leading-relaxed" style={{ color: "hsl(220, 80%, 40%)" }}>
-                Clinic system not connected. Active queue uses ClynicQ session data. Connect Clinic Assist for live queue sync.
-              </p>
+            <div className="flex items-center justify-between gap-2 p-2.5 rounded-md bg-muted/60 border border-dashed mb-1">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="h-3.5 w-3.5 shrink-0" style={{ color: "hsl(220, 80%, 40%)" }} />
+                <p className="text-sm font-bold leading-relaxed" style={{ color: "hsl(220, 80%, 40%)" }}>
+                  Clinic system not connected. Active queue uses ClynicQ session data.
+                </p>
+              </div>
+              <Button variant="outline" size="sm" className="shrink-0 text-xs" disabled>
+                Connect Clinic Assist
+              </Button>
             </div>
           ) : null}
           <Button 
