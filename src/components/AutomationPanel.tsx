@@ -307,10 +307,10 @@ export const AutomationPanel = ({
       <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-4 items-start">
         {/* LEFT COLUMN — Operational Broadcast */}
         <Card>
-          <CardHeader className="pb-3 pt-5 px-5">
+          <CardHeader className="pb-3 pt-4 px-4">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-[20px] font-semibold">Operational Broadcast</CardTitle>
+                <CardTitle className="text-lg font-semibold">Operational Broadcast</CardTitle>
                 <CardDescription className="text-[14px] mt-1">Select audience and send announcements</CardDescription>
               </div>
               <Badge variant="outline" className="gap-1 text-[12px] font-normal px-2 py-0.5">
@@ -319,7 +319,7 @@ export const AutomationPanel = ({
               </Badge>
             </div>
           </CardHeader>
-          <CardContent className="px-5 pb-5 pt-0">
+          <CardContent className="px-4 pb-4 pt-0">
             {/* Block 1: Audience Selection */}
             <div className="space-y-3">
               <div className="flex gap-2.5">
@@ -552,14 +552,14 @@ export const AutomationPanel = ({
         </Card>
 
         {/* RIGHT COLUMN — Automation Log + Message Templates */}
-        <div className="space-y-5">
+        <div className="space-y-4">
           {/* Automation Log */}
           <Card>
-            <CardHeader className="pb-3 pt-5 px-5">
-              <CardTitle className="text-[20px] font-semibold">Automation Log</CardTitle>
+            <CardHeader className="pb-3 pt-4 px-4">
+              <CardTitle className="text-lg font-semibold">Automation Log</CardTitle>
               <CardDescription className="text-[14px] mt-1">Recent automated actions</CardDescription>
             </CardHeader>
-            <CardContent className="px-5 pb-5 pt-0">
+            <CardContent className="px-4 pb-4 pt-0">
               <div className="border rounded-md max-h-[220px] overflow-y-auto">
                 <Table>
                   <TableHeader>
@@ -591,11 +591,11 @@ export const AutomationPanel = ({
 
           {/* Message Templates */}
           <Card>
-            <CardHeader className="pb-3 pt-5 px-5">
-              <CardTitle className="text-[20px] font-semibold">Message Templates</CardTitle>
+            <CardHeader className="pb-3 pt-4 px-4">
+              <CardTitle className="text-lg font-semibold">Message Templates</CardTitle>
               <CardDescription className="text-[14px] mt-1">Create and manage reusable message templates</CardDescription>
             </CardHeader>
-            <CardContent className="px-5 pb-5 pt-0 space-y-5">
+            <CardContent className="px-4 pb-4 pt-0 space-y-4">
               {/* Saved Templates — Dropdown with edit */}
               <div className="space-y-3">
                 <Label className="text-[16px] font-medium">Saved Templates</Label>
