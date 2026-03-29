@@ -23,8 +23,8 @@ const translations = {
     reopenQueue: "Reopen Queue",
 
     // Daily Summary
-    totalQueueToday: "Live Queue Today (pax)",
-    bookingsToday: "Bookings Today (pax)",
+    totalQueueToday: "Live Queue",
+    bookingsToday: "Bookings",
     arrived: "Arrived",
     cancelled: "Cancelled",
     noShows: "No Shows",
@@ -187,8 +187,8 @@ const translations = {
     reopenQueue: "重新开放排队",
 
     // Daily Summary
-    totalQueueToday: "今日现场排队 (人)",
-    bookingsToday: "今日预约 (人)",
+    totalQueueToday: "现场排队",
+    bookingsToday: "预约",
     arrived: "已到达",
     cancelled: "已取消",
     noShows: "未到",
