@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Megaphone, Users, Plus, Trash2, Edit2, Check, X, Database, AlertTriangle } from "lucide-react";
@@ -159,74 +160,76 @@ export const AutomationPanel = ({
 
       <Card>
         <CardHeader>
-          <CardTitle>Message Templates</CardTitle>
-          <CardDescription>Create up to {MAX_TEMPLATES} custom message templates for broadcasts</CardDescription>
+          <CardTitle className="text-lg">Message Templates</CardTitle>
+          <CardDescription className="text-sm">Create up to {MAX_TEMPLATES} custom message templates for broadcasts</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {templates.length > 0 && (
-            <div className="space-y-2">
-              {templates.map((template) => (
-                <div
-                  key={template.id}
-                  className="flex items-center gap-2 p-3 rounded-lg border bg-muted/50"
-                >
-                  {editingId === template.id ? (
-                    <>
-                      <Input
-                        value={editingValue}
-                        onChange={(e) => setEditingValue(e.target.value)}
-                        className="flex-1"
-                        maxLength={200}
-                        autoFocus
-                      />
-                      <Button size="icon" variant="ghost" onClick={handleSaveEdit}>
-                        <Check className="h-4 w-4 text-primary" />
-                      </Button>
-                      <Button size="icon" variant="ghost" onClick={handleCancelEdit}>
-                        <X className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <span className="flex-1 text-sm">{template.message}</span>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => handleStartEdit(template)}
-                      >
-                        <Edit2 className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => handleDeleteTemplate(template.id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </>
-                  )}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium">Saved Templates</Label>
+              <Select
+                value={editingId || ""}
+                onValueChange={(id) => {
+                  const t = templates.find((t) => t.id === id);
+                  if (t) handleStartEdit(t);
+                }}
+              >
+                <SelectTrigger className="w-full text-base">
+                  <SelectValue placeholder="View / edit a template..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {templates.map((template) => (
+                    <SelectItem key={template.id} value={template.id} className="text-base">
+                      {template.message}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {editingId && (
+                <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/50">
+                  <Input
+                    value={editingValue}
+                    onChange={(e) => setEditingValue(e.target.value)}
+                    className="flex-1 text-base"
+                    maxLength={200}
+                    autoFocus
+                  />
+                  <Button size="icon" variant="ghost" onClick={handleSaveEdit}>
+                    <Check className="h-4 w-4 text-primary" />
+                  </Button>
+                  <Button size="icon" variant="ghost" onClick={handleCancelEdit}>
+                    <X className="h-4 w-4 text-destructive" />
+                  </Button>
+                  <Button size="icon" variant="ghost" onClick={() => { handleDeleteTemplate(editingId); setEditingId(null); }}>
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
                 </div>
-              ))}
+              )}
             </div>
           )}
 
           {templates.length < MAX_TEMPLATES && (
-            <div className="flex gap-2">
-              <Input
-                placeholder="Enter a new message template..."
-                value={newTemplate}
-                onChange={(e) => setNewTemplate(e.target.value)}
-                maxLength={200}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleAddTemplate();
-                  }
-                }}
-              />
-              <Button onClick={handleAddTemplate} disabled={!newTemplate.trim()}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add
-              </Button>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Create New Template</Label>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Enter a new message template..."
+                  value={newTemplate}
+                  onChange={(e) => setNewTemplate(e.target.value)}
+                  maxLength={200}
+                  className="text-base"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleAddTemplate();
+                    }
+                  }}
+                />
+                <Button onClick={handleAddTemplate} disabled={!newTemplate.trim()}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add
+                </Button>
+              </div>
             </div>
           )}
 
@@ -236,7 +239,7 @@ export const AutomationPanel = ({
             </p>
           )}
 
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {templates.length}/{MAX_TEMPLATES} templates used
           </p>
         </CardContent>
