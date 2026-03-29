@@ -109,6 +109,31 @@ export const AutomationPanel = ({
     <div className="space-y-6">
       <Card>
         <CardHeader>
+          <CardTitle>Operational Broadcast</CardTitle>
+          <CardDescription>Send generic announcements to patients</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <Button 
+            onClick={() => setBroadcastDialogOpen(true)}
+            className="w-full gap-2"
+            variant="default"
+          >
+            <Megaphone className="h-4 w-4" />
+            Active Queue Patients
+          </Button>
+          <Button 
+            onClick={() => setRecentCustomersDialogOpen(true)}
+            className="w-full gap-2"
+            variant="secondary"
+          >
+            <Users className="h-4 w-4" />
+            Recent Customers (60 Days)
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Message Templates</CardTitle>
           <CardDescription>Create up to {MAX_TEMPLATES} custom message templates for broadcasts</CardDescription>
         </CardHeader>
@@ -189,31 +214,6 @@ export const AutomationPanel = ({
           <p className="text-xs text-muted-foreground">
             {templates.length}/{MAX_TEMPLATES} templates used
           </p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Operational Broadcast</CardTitle>
-          <CardDescription>Send generic announcements to patients</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Button 
-            onClick={() => setBroadcastDialogOpen(true)}
-            className="w-full gap-2"
-            variant="default"
-          >
-            <Megaphone className="h-4 w-4" />
-            Active Queue Patients
-          </Button>
-          <Button 
-            onClick={() => setRecentCustomersDialogOpen(true)}
-            className="w-full gap-2"
-            variant="secondary"
-          >
-            <Users className="h-4 w-4" />
-            Recent Customers (60 Days)
-          </Button>
         </CardContent>
       </Card>
 
