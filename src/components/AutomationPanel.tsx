@@ -133,8 +133,8 @@ export const AutomationPanel = ({
                   Clinic system not connected. Active queue uses ClynicQ session data.
                 </p>
               </div>
-              <Button variant="outline" size="sm" className="shrink-0 text-xs" disabled>
-                Connect Clinic Assist
+              <Button variant="outline" size="sm" className="shrink-0 text-xs text-foreground border-2 border-foreground/40" disabled>
+                Connect CMS
               </Button>
             </div>
           ) : null}
@@ -165,8 +165,8 @@ export const AutomationPanel = ({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Message Templates</CardTitle>
-          <CardDescription className="text-sm">Create up to {MAX_TEMPLATES} custom message templates for broadcasts</CardDescription>
+          <CardTitle>Message Templates</CardTitle>
+          <CardDescription>Create up to {MAX_TEMPLATES} custom message templates for broadcasts</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {templates.length > 0 && (
