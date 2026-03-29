@@ -64,6 +64,7 @@ const Index = () => {
       mobile: "+65 9123 4567",
       queueSource: "Walk-in",
       checkInCode: "X7K2M9",
+      patientType: "walk-in",
     },
     {
       id: "2",
@@ -74,6 +75,18 @@ const Index = () => {
       mobile: "+65 9234 5678",
       queueSource: "Phone Booking",
       checkInCode: "P3N8Q1",
+      patientType: "walk-in",
+    },
+    {
+      id: "3",
+      queueNumber: "—",
+      status: "booked",
+      joinedAt: "—",
+      name: "Sarah Lim",
+      mobile: "+65 9444 5566",
+      queueSource: "Other",
+      patientType: "booking",
+      appointmentTime: "14:00",
     },
     {
       id: "10",
@@ -88,6 +101,7 @@ const Index = () => {
       visitCategory: "Follow-up",
       notes: "Regular walk-in visit",
       checkInCode: "R5T1W4",
+      patientType: "walk-in",
     },
   ]);
 
