@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, CheckCircle, XCircle, AlertCircle, Clock } from "lucide-react";
+import { Users, CheckCircle, XCircle, AlertCircle, Clock, CalendarCheck } from "lucide-react";
 import type { DailySummary as DailySummaryType } from "@/types/queue";
 import { useI18n } from "@/hooks/useI18n";
 
@@ -12,7 +12,7 @@ export const DailySummary = ({ summary }: DailySummaryProps) => {
 
   const stats = [
     { title: t("totalQueueToday"), value: summary.liveQueue, icon: Users, color: "text-primary" },
-    { title: t("bookingsToday"), value: summary.bookingsToday, icon: Clock, color: "text-blue-600" },
+    { title: t("bookingsToday"), value: summary.bookingsToday, icon: CalendarCheck, color: "text-blue-600" },
     { title: t("arrived"), value: summary.arrived, icon: CheckCircle, color: "text-status-arrived" },
     { title: t("cancelled"), value: summary.cancelled, icon: XCircle, color: "text-status-cancelled" },
     { title: t("noShows"), value: summary.noShows, icon: AlertCircle, color: "text-destructive" },
