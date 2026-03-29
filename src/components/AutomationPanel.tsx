@@ -127,7 +127,7 @@ export const AutomationPanel = ({
           {!clinicIntegrationActive ? (
             <div className="flex items-start gap-2 p-2.5 rounded-md bg-muted/60 border border-dashed mb-1">
               <AlertTriangle className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
+              <p className="text-sm font-bold text-foreground leading-relaxed">
                 Clinic system not connected. Active Queue uses ClynicQ session data. Connect Clinic Assist for live queue sync.
               </p>
             </div>
