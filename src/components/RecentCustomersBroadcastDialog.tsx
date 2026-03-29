@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AlertCircle, AlertTriangle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { BroadcastAudienceTable, type AudiencePatient } from "./BroadcastAudienceTable";
 import type { MessageTemplate } from "./AutomationPanel";
+import type { QueueEntry } from "@/types/queue";
 
 interface RecentCustomersBroadcastDialogProps {
   open: boolean;
@@ -22,39 +24,22 @@ interface RecentCustomersBroadcastDialogProps {
   onSendBroadcast: (message: string, isMarketing?: boolean) => void;
   businessType: "healthcare" | "wellness";
   templates?: MessageTemplate[];
+  queueEntries?: QueueEntry[];
 }
 
 const RESTRICTED_WORDS = [
-  "promo",
-  "discount",
-  "package",
-  "deal",
-  "offer",
-  "treatment advice",
-  "supplement",
-  "medicine",
-  "medication",
-  "prescription",
-  "diagnosis",
-  "cure",
-  "sale",
-  "promotion",
-  "special",
-  "buy",
-  "price",
-  "cheap",
-  "free gift",
+  "promo", "discount", "package", "deal", "offer", "treatment advice",
+  "supplement", "medicine", "medication", "prescription", "diagnosis",
+  "cure", "sale", "promotion", "special", "buy", "price", "cheap", "free gift",
 ];
 
 const validateMessage = (message: string): string | null => {
   const lowerMessage = message.toLowerCase();
-  
   for (const word of RESTRICTED_WORDS) {
     if (lowerMessage.includes(word)) {
       return "Marketing or medical content is not allowed. Only operational notices are permitted.";
     }
   }
-  
   return null;
 };
 
@@ -64,31 +49,68 @@ export const RecentCustomersBroadcastDialog = ({
   onSendBroadcast,
   businessType,
   templates = [],
+  queueEntries = [],
 }: RecentCustomersBroadcastDialogProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState<string>("custom");
   const [customMessage, setCustomMessage] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [isMarketingMessage, setIsMarketingMessage] = useState(false);
+  const [selectedPatientIds, setSelectedPatientIds] = useState<Set<string>>(new Set());
+
+  // Build recent customers from completed entries (simulating 60-day history)
+  const audiencePatients: AudiencePatient[] = useMemo(() => {
+    // Deduplicate by mobile number to prevent duplicate sends
+    const seen = new Set<string>();
+    const result: AudiencePatient[] = [];
+
+    const completed = queueEntries.filter((e) => e.status === "completed");
+    for (const entry of completed) {
+      if (seen.has(entry.mobile)) continue;
+      seen.add(entry.mobile);
+      result.push({
+        id: entry.id,
+        name: entry.name || "Walk-in",
+        mobile: entry.mobile,
+        lastVisitDate: new Date().toLocaleDateString("en-SG"),
+      });
+    }
+
+    // Also include some mock recent data for demonstration
+    if (result.length === 0) {
+      result.push(
+        { id: "rc-1", name: "Alice Wong", mobile: "+65 9777 5678", lastVisitDate: "28/03/2026" },
+        { id: "rc-2", name: "David Lim", mobile: "+65 9888 1234", lastVisitDate: "25/03/2026" },
+        { id: "rc-3", name: "Rachel Tan", mobile: "+65 9666 4321", lastVisitDate: "20/03/2026" },
+      );
+    }
+
+    return result;
+  }, [queueEntries]);
+
+  // Default: none selected for recent customers
+  useEffect(() => {
+    if (open) {
+      setSelectedPatientIds(new Set());
+    }
+  }, [open]);
 
   const handleSend = () => {
+    if (selectedPatientIds.size === 0) {
+      setValidationError("No recipients selected. Please select at least one patient.");
+      return;
+    }
+
     let messageToSend = "";
-    
     if (selectedTemplate === "custom" || selectedTemplate === "custom-marketing") {
       messageToSend = customMessage.trim();
-      
       if (!messageToSend) {
         setValidationError("Please enter a message.");
         return;
       }
-      
-      // For healthcare mode or non-marketing custom, validate
       if (businessType === "healthcare" || selectedTemplate === "custom") {
         const error = validateMessage(messageToSend);
-        if (error) {
-          setValidationError(error);
-          return;
-        }
+        if (error) { setValidationError(error); return; }
       }
     } else {
       const template = templates.find((t) => t.id === selectedTemplate);
@@ -99,7 +121,6 @@ export const RecentCustomersBroadcastDialog = ({
       messageToSend = template.message;
     }
 
-    // Check marketing consent for marketing messages
     if (isMarketingMessage && !marketingConsent) {
       setValidationError("You must confirm marketing consent to send this message.");
       return;
@@ -132,21 +153,20 @@ export const RecentCustomersBroadcastDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[650px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Operational Announcement (Recent Customers)</DialogTitle>
           <DialogDescription>
-            Send a generic operational message to customers who visited in the last 60 days.
+            Select recipients from customers who visited in the last 60 days.
           </DialogDescription>
         </DialogHeader>
 
-        <Alert>
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            This broadcast will be sent to customers who interacted with the clinic in the last 60 days only.
-            Messages are generic and PDPA-compliant.
-          </AlertDescription>
-        </Alert>
+        <BroadcastAudienceTable
+          patients={audiencePatients}
+          selectedIds={selectedPatientIds}
+          onSelectionChange={setSelectedPatientIds}
+          variant="recent-customers"
+        />
 
         {validationError && (
           <Alert variant="destructive">
@@ -155,38 +175,27 @@ export const RecentCustomersBroadcastDialog = ({
           </Alert>
         )}
 
-        <div className="space-y-4 py-4">
+        <div className="space-y-4 py-2">
           <Label className="text-sm font-medium">Select Message</Label>
           <RadioGroup value={selectedTemplate} onValueChange={handleTemplateChange}>
             {templates.map((template) => (
               <div key={template.id} className="flex items-start space-x-3 space-y-0">
                 <RadioGroupItem value={template.id} id={`rc-${template.id}`} className="mt-1" />
-                <Label
-                  htmlFor={`rc-${template.id}`}
-                  className="font-normal cursor-pointer leading-relaxed"
-                >
+                <Label htmlFor={`rc-${template.id}`} className="font-normal cursor-pointer leading-relaxed">
                   {template.message}
                 </Label>
               </div>
             ))}
-            
             <div className="flex items-start space-x-3 space-y-0">
               <RadioGroupItem value="custom" id="rc-custom" className="mt-1" />
-              <Label
-                htmlFor="rc-custom"
-                className="font-normal cursor-pointer leading-relaxed"
-              >
+              <Label htmlFor="rc-custom" className="font-normal cursor-pointer leading-relaxed">
                 Custom Operational Message
               </Label>
             </div>
-
             {businessType === "wellness" && (
               <div className="flex items-start space-x-3 space-y-0">
                 <RadioGroupItem value="custom-marketing" id="rc-custom-marketing" className="mt-1" />
-                <Label
-                  htmlFor="rc-custom-marketing"
-                  className="font-normal cursor-pointer leading-relaxed"
-                >
+                <Label htmlFor="rc-custom-marketing" className="font-normal cursor-pointer leading-relaxed">
                   Custom Marketing Message
                 </Label>
               </div>
@@ -196,12 +205,8 @@ export const RecentCustomersBroadcastDialog = ({
           {showCustomInput && (
             <div className="space-y-2 mt-4">
               <div className="flex justify-between items-center">
-                <Label htmlFor="custom-message-rc" className="text-sm font-medium">
-                  Your Message
-                </Label>
-                <span className="text-xs text-muted-foreground">
-                  {customMessage.length}/200
-                </span>
+                <Label htmlFor="custom-message-rc" className="text-sm font-medium">Your Message</Label>
+                <span className="text-xs text-muted-foreground">{customMessage.length}/200</span>
               </div>
               <Textarea
                 id="custom-message-rc"
@@ -212,7 +217,7 @@ export const RecentCustomersBroadcastDialog = ({
                     ? "Enter your marketing message (e.g., special offers, promotions, packages)"
                     : "Enter operational notice (e.g., clinic hours, closure notices, schedule changes)"
                 }
-                className="min-h-[100px]"
+                className="min-h-[80px]"
               />
               {selectedTemplate === "custom" && (
                 <p className="text-xs text-muted-foreground">
@@ -233,10 +238,7 @@ export const RecentCustomersBroadcastDialog = ({
                       checked={marketingConsent}
                       onCheckedChange={(checked) => setMarketingConsent(checked as boolean)}
                     />
-                    <Label
-                      htmlFor="marketing-consent-rc"
-                      className="text-sm font-normal leading-relaxed cursor-pointer"
-                    >
+                    <Label htmlFor="marketing-consent-rc" className="text-sm font-normal leading-relaxed cursor-pointer">
                       I confirm this announcement is only sent to users who provided marketing consent.
                     </Label>
                   </div>
@@ -253,11 +255,9 @@ export const RecentCustomersBroadcastDialog = ({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button onClick={handleSend}>
-            Send Announcement
+            Send to {selectedPatientIds.size} Customer{selectedPatientIds.size !== 1 ? "s" : ""}
           </Button>
         </DialogFooter>
       </DialogContent>
