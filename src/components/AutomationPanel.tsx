@@ -293,11 +293,11 @@ export const AutomationPanel = ({
         <div className="flex items-center justify-between gap-3 p-3 rounded-md bg-muted/60 border border-dashed">
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 shrink-0" style={{ color: "hsl(220, 80%, 40%)" }} />
-            <p className="text-[15px] font-semibold leading-normal" style={{ color: "hsl(220, 80%, 40%)" }}>
+            <p className="text-[16px] font-semibold leading-normal" style={{ color: "hsl(220, 80%, 40%)" }}>
               Clinic system not connected. Active queue uses ClynicQ session data.
             </p>
           </div>
-          <Button variant="outline" size="sm" className="shrink-0 text-[13px] pointer-events-none opacity-80" style={{ color: "black", borderWidth: "2px", borderColor: "hsl(215, 25%, 40%)" }}>
+          <Button variant="outline" size="sm" className="shrink-0 text-[14px] pointer-events-none opacity-80" style={{ color: "black", borderWidth: "2px", borderColor: "hsl(215, 25%, 40%)" }}>
             Connect CMS
           </Button>
         </div>
@@ -310,10 +310,10 @@ export const AutomationPanel = ({
           <CardHeader className="pb-3 pt-5 px-5">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-[18px] font-semibold">Operational Broadcast</CardTitle>
-                <CardDescription className="text-[13px] mt-1">Select audience and send announcements</CardDescription>
+                <CardTitle className="text-[20px] font-semibold">Operational Broadcast</CardTitle>
+                <CardDescription className="text-[14px] mt-1">Select audience and send announcements</CardDescription>
               </div>
-              <Badge variant="outline" className="gap-1 text-[11px] font-normal px-2 py-0.5">
+              <Badge variant="outline" className="gap-1 text-[12px] font-normal px-2 py-0.5">
                 <Database className="h-3.5 w-3.5" />
                 {clinicIntegrationActive ? "Clinic Assist" : "ClynicQ"}
               </Badge>
@@ -326,7 +326,7 @@ export const AutomationPanel = ({
                 <Button
                   variant={audienceMode === "active-queue" ? "default" : "outline"}
                   size="sm"
-                  className="flex-1 gap-1.5 text-[15px] h-10"
+                  className="flex-1 gap-1.5 text-[16px] h-10"
                   onClick={() => setAudienceMode("active-queue")}
                   disabled={activeQueueDisabled}
                 >
@@ -336,14 +336,14 @@ export const AutomationPanel = ({
                 <Button
                   variant={audienceMode === "recent-customers" ? "default" : "outline"}
                   size="sm"
-                  className="flex-1 gap-1.5 text-[15px] h-10"
+                  className="flex-1 gap-1.5 text-[16px] h-10"
                   onClick={() => setAudienceMode("recent-customers")}
                 >
                   <Users className="h-4 w-4" />
                   Recent Customers (60 Days)
                 </Button>
               </div>
-              <p className="text-[12px] text-muted-foreground/60">
+              <p className="text-[13px] text-muted-foreground/60">
                 Audience source: {clinicIntegrationActive ? "Clinic system" : "ClynicQ session data"}
               </p>
             </div>
@@ -353,7 +353,7 @@ export const AutomationPanel = ({
               {audienceMode === "active-queue" && (
                 <div className="flex items-center gap-3">
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-[140px] h-9 text-[15px]">
+                    <SelectTrigger className="w-[140px] h-9 text-[16px]">
                       <SelectValue placeholder="Filter status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -363,13 +363,13 @@ export const AutomationPanel = ({
                     </SelectContent>
                   </Select>
                   <div className="flex items-center gap-2">
-                    <span className="text-[13px] text-muted-foreground whitespace-nowrap">Ahead ≤</span>
+                    <span className="text-[14px] text-muted-foreground whitespace-nowrap">Ahead ≤</span>
                     <Input
                       type="number"
                       min={0}
                       value={maxAhead}
                       onChange={(e) => setMaxAhead(e.target.value)}
-                      className="w-[60px] h-9 text-[15px]"
+                      className="w-[60px] h-9 text-[16px]"
                       placeholder="—"
                     />
                   </div>
@@ -387,16 +387,16 @@ export const AutomationPanel = ({
                           aria-label="Select all"
                         />
                       </TableHead>
-                      <TableHead className="text-[15px] font-semibold text-foreground/80 px-3 py-2">Name</TableHead>
+                      <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Name</TableHead>
                       {audienceMode === "active-queue" && (
                         <>
-                          <TableHead className="text-[15px] font-semibold text-foreground/80 px-3 py-2">Queue #</TableHead>
-                          <TableHead className="text-[15px] font-semibold text-foreground/80 px-3 py-2">Ahead</TableHead>
-                          <TableHead className="text-[15px] font-semibold text-foreground/80 px-3 py-2">Status</TableHead>
+                          <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Queue #</TableHead>
+                          <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Ahead</TableHead>
+                          <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Status</TableHead>
                         </>
                       )}
                       {audienceMode === "recent-customers" && (
-                        <TableHead className="text-[15px] font-semibold text-foreground/80 px-3 py-2">Last Visit</TableHead>
+                        <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Last Visit</TableHead>
                       )}
                     </TableRow>
                   </TableHeader>
@@ -405,7 +405,7 @@ export const AutomationPanel = ({
                       <TableRow>
                         <TableCell
                           colSpan={audienceMode === "active-queue" ? 5 : 3}
-                          className="text-center text-[15px] text-muted-foreground py-8"
+                          className="text-center text-[16px] text-muted-foreground py-8"
                         >
                           {audienceMode === "active-queue"
                             ? "No active queue patients"
@@ -421,15 +421,15 @@ export const AutomationPanel = ({
                               onCheckedChange={(checked) => handleTogglePatient(patient.id, !!checked)}
                             />
                           </TableCell>
-                          <TableCell className="text-[15px] font-medium px-3 py-2">{patient.name || "—"}</TableCell>
+                          <TableCell className="text-[16px] font-medium px-3 py-2">{patient.name || "—"}</TableCell>
                           {audienceMode === "active-queue" && (
                             <>
-                              <TableCell className="text-[15px] px-3 py-2">{patient.queueNumber || "—"}</TableCell>
-                              <TableCell className="text-[15px] px-3 py-2">{patient.patientsAhead ?? "—"}</TableCell>
+                              <TableCell className="text-[16px] px-3 py-2">{patient.queueNumber || "—"}</TableCell>
+                              <TableCell className="text-[16px] px-3 py-2">{patient.patientsAhead ?? "—"}</TableCell>
                               <TableCell className="px-3 py-2">
                                 <Badge
                                   variant={patient.status === "arrived" ? "default" : "secondary"}
-                                  className="text-[11px] px-1.5 py-0"
+                                  className="text-[12px] px-1.5 py-0"
                                 >
                                   {patient.status === "arrived" ? "Arrived" : "Waiting"}
                                 </Badge>
@@ -437,7 +437,7 @@ export const AutomationPanel = ({
                             </>
                           )}
                           {audienceMode === "recent-customers" && (
-                            <TableCell className="text-[15px] text-muted-foreground px-3 py-2">
+                            <TableCell className="text-[16px] text-muted-foreground px-3 py-2">
                               {patient.lastVisitDate || "—"}
                             </TableCell>
                           )}
@@ -448,7 +448,7 @@ export const AutomationPanel = ({
                 </Table>
               </div>
 
-              <p className="text-[12px] text-muted-foreground/60">
+              <p className="text-[13px] text-muted-foreground/60">
                 {selectedPatientIds.size} of {filteredAudience.length} selected
               </p>
             </div>
@@ -456,27 +456,27 @@ export const AutomationPanel = ({
             {/* Block 3: Message Selection */}
             <div className="mt-5 border-t pt-5 space-y-3">
               <div className="space-y-2">
-                <Label className="text-[15px] font-medium">Select Message</Label>
+                <Label className="text-[16px] font-medium">Select Message</Label>
                 <Select value={selectedTemplateId} onValueChange={handleTemplateSelection}>
-                  <SelectTrigger className="w-full h-10 text-[15px]">
+                  <SelectTrigger className="w-full h-10 text-[16px]">
                     <SelectValue placeholder="Choose a message template..." />
                   </SelectTrigger>
                   <SelectContent>
                     {templates.map((template) => (
-                      <SelectItem key={template.id} value={template.id} className="text-[15px]">
+                      <SelectItem key={template.id} value={template.id} className="text-[16px]">
                         {template.message}
                       </SelectItem>
                     ))}
-                    <SelectItem value="custom" className="text-[15px]">Custom Operational Message</SelectItem>
+                    <SelectItem value="custom" className="text-[16px]">Custom Operational Message</SelectItem>
                     {businessType === "wellness" && (
-                      <SelectItem value="custom-marketing" className="text-[15px]">Custom Marketing Message</SelectItem>
+                      <SelectItem value="custom-marketing" className="text-[16px]">Custom Marketing Message</SelectItem>
                     )}
                   </SelectContent>
                 </Select>
               </div>
 
               {isTemplateSelected && (
-                <div className="p-3 rounded border bg-muted/40 text-[15px] leading-relaxed">
+                <div className="p-3 rounded border bg-muted/40 text-[16px] leading-relaxed">
                   {templates.find((t) => t.id === selectedTemplateId)?.message}
                 </div>
               )}
@@ -484,8 +484,8 @@ export const AutomationPanel = ({
               {showCustomInput && (
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <Label className="text-[15px] font-medium">Your Message</Label>
-                    <span className="text-[12px] text-muted-foreground">{customMessage.length}/200</span>
+                    <Label className="text-[16px] font-medium">Your Message</Label>
+                    <span className="text-[13px] text-muted-foreground">{customMessage.length}/200</span>
                   </div>
                   <Textarea
                     value={customMessage}
@@ -500,10 +500,10 @@ export const AutomationPanel = ({
                         ? "Enter your marketing message..."
                         : "Enter operational notice..."
                     }
-                    className="min-h-[100px] text-[15px] p-3"
+                    className="min-h-[100px] text-[16px] p-3"
                   />
                   {selectedTemplateId === "custom" && (
-                    <p className="text-[12px] text-muted-foreground/70">
+                    <p className="text-[13px] text-muted-foreground/70">
                       Only operational notices are allowed. Marketing, promotions, and medical advice are prohibited.
                     </p>
                   )}
@@ -511,7 +511,7 @@ export const AutomationPanel = ({
                     <div className="space-y-2 mt-1">
                       <Alert className="py-2">
                         <AlertCircle className="h-3.5 w-3.5" />
-                        <AlertDescription className="text-[13px]">
+                        <AlertDescription className="text-[14px]">
                           Marketing messages can only be sent to users who have provided consent.
                         </AlertDescription>
                       </Alert>
@@ -521,7 +521,7 @@ export const AutomationPanel = ({
                           checked={marketingConsent}
                           onCheckedChange={(checked) => setMarketingConsent(checked as boolean)}
                         />
-                        <Label htmlFor="marketing-consent-inline" className="text-[13px] font-normal leading-relaxed cursor-pointer">
+                        <Label htmlFor="marketing-consent-inline" className="text-[14px] font-normal leading-relaxed cursor-pointer">
                           I confirm this is only sent to users who provided marketing consent.
                         </Label>
                       </div>
@@ -536,14 +536,14 @@ export const AutomationPanel = ({
               <div className="mt-4">
                 <Alert variant="destructive" className="py-2">
                   <AlertTriangle className="h-3.5 w-3.5" />
-                  <AlertDescription className="text-[15px]">{validationError}</AlertDescription>
+                  <AlertDescription className="text-[16px]">{validationError}</AlertDescription>
                 </Alert>
               </div>
             )}
 
             {/* Block 4: Send Button */}
             <div className="mt-5">
-              <Button onClick={handleSendBroadcast} className="w-full gap-2 h-11 text-[15px]" disabled={selectedPatientIds.size === 0}>
+              <Button onClick={handleSendBroadcast} className="w-full gap-2 h-11 text-[16px]" disabled={selectedPatientIds.size === 0}>
                 <Send className="h-4 w-4" />
                 Send Broadcast to {selectedPatientIds.size} {selectedPatientIds.size === 1 ? "Patient" : "Patients"}
               </Button>
@@ -556,30 +556,30 @@ export const AutomationPanel = ({
           {/* Automation Log */}
           <Card>
             <CardHeader className="pb-3 pt-5 px-5">
-              <CardTitle className="text-[18px] font-semibold">Automation Log</CardTitle>
-              <CardDescription className="text-[13px] mt-1">Recent automated actions</CardDescription>
+              <CardTitle className="text-[20px] font-semibold">Automation Log</CardTitle>
+              <CardDescription className="text-[14px] mt-1">Recent automated actions</CardDescription>
             </CardHeader>
             <CardContent className="px-5 pb-5 pt-0">
               <div className="border rounded-md max-h-[220px] overflow-y-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="h-11">
-                      <TableHead className="w-[110px] text-[15px] font-semibold text-foreground/80 px-3 py-2">Time</TableHead>
-                      <TableHead className="text-[15px] font-semibold text-foreground/80 px-3 py-2">Bot Action</TableHead>
+                      <TableHead className="w-[110px] text-[16px] font-semibold text-foreground/80 px-3 py-2">Time</TableHead>
+                      <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Bot Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {automationLog.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={2} className="text-center text-[15px] text-muted-foreground py-8">
+                        <TableCell colSpan={2} className="text-center text-[16px] text-muted-foreground py-8">
                           No actions logged yet
                         </TableCell>
                       </TableRow>
                     ) : (
                       automationLog.map((log) => (
                         <TableRow key={log.id} className="h-[44px]">
-                          <TableCell className="text-[15px] font-medium px-3 py-2">{log.time}</TableCell>
-                          <TableCell className="text-[15px] px-3 py-2">{log.action}</TableCell>
+                          <TableCell className="text-[16px] font-medium px-3 py-2">{log.time}</TableCell>
+                          <TableCell className="text-[16px] px-3 py-2">{log.action}</TableCell>
                         </TableRow>
                       ))
                     )}
@@ -592,13 +592,13 @@ export const AutomationPanel = ({
           {/* Message Templates */}
           <Card>
             <CardHeader className="pb-3 pt-5 px-5">
-              <CardTitle className="text-[18px] font-semibold">Message Templates</CardTitle>
-              <CardDescription className="text-[13px] mt-1">Create and manage reusable message templates</CardDescription>
+              <CardTitle className="text-[20px] font-semibold">Message Templates</CardTitle>
+              <CardDescription className="text-[14px] mt-1">Create and manage reusable message templates</CardDescription>
             </CardHeader>
             <CardContent className="px-5 pb-5 pt-0 space-y-5">
               {/* Saved Templates — Dropdown with edit */}
               <div className="space-y-3">
-                <Label className="text-[15px] font-medium">Saved Templates</Label>
+                <Label className="text-[16px] font-medium">Saved Templates</Label>
                 {templates.length > 0 ? (
                   <>
                     <Select
@@ -608,12 +608,12 @@ export const AutomationPanel = ({
                         if (t) handleStartEdit(t);
                       }}
                     >
-                      <SelectTrigger className="w-full h-10 text-[15px]">
+                      <SelectTrigger className="w-full h-10 text-[16px]">
                         <SelectValue placeholder="View / edit a template..." />
                       </SelectTrigger>
                       <SelectContent>
                         {templates.map((template) => (
-                          <SelectItem key={template.id} value={template.id} className="text-[15px]">
+                          <SelectItem key={template.id} value={template.id} className="text-[16px]">
                             {template.message}
                           </SelectItem>
                         ))}
@@ -625,7 +625,7 @@ export const AutomationPanel = ({
                         <Input
                           value={editingValue}
                           onChange={(e) => setEditingValue(e.target.value)}
-                          className="flex-1 h-10 text-[15px]"
+                          className="flex-1 h-10 text-[16px]"
                           maxLength={200}
                           autoFocus
                         />
@@ -642,7 +642,7 @@ export const AutomationPanel = ({
                     )}
                   </>
                 ) : (
-                  <p className="text-[15px] text-muted-foreground text-center py-6">
+                  <p className="text-[16px] text-muted-foreground text-center py-6">
                     No templates created yet. Add your first template below.
                   </p>
                 )}
@@ -654,17 +654,17 @@ export const AutomationPanel = ({
               {/* Add New Template */}
               {templates.length < MAX_TEMPLATES && (
                 <div className="space-y-2">
-                  <Label className="text-[15px] font-medium">Create New Template</Label>
+                  <Label className="text-[16px] font-medium">Create New Template</Label>
                   <div className="flex gap-2">
                     <Input
                       placeholder="Enter a new message template..."
                       value={newTemplate}
                       onChange={(e) => setNewTemplate(e.target.value)}
                       maxLength={200}
-                      className="text-[15px] h-10"
+                      className="text-[16px] h-10"
                       onKeyDown={(e) => { if (e.key === "Enter") handleAddTemplate(); }}
                     />
-                    <Button size="sm" onClick={handleAddTemplate} disabled={!newTemplate.trim()} className="h-10 text-[15px] px-4">
+                    <Button size="sm" onClick={handleAddTemplate} disabled={!newTemplate.trim()} className="h-10 text-[16px] px-4">
                       <Plus className="h-4 w-4 mr-1.5" />
                       Add
                     </Button>
@@ -672,7 +672,7 @@ export const AutomationPanel = ({
                 </div>
               )}
 
-              <p className="text-[13px] text-muted-foreground/60">
+              <p className="text-[14px] text-muted-foreground/60">
                 {templates.length}/{MAX_TEMPLATES} templates used
               </p>
             </CardContent>
