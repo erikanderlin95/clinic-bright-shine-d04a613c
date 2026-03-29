@@ -106,41 +106,6 @@ export const AutomationPanel = ({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Business Type</CardTitle>
-          <CardDescription>Configure your business type for appropriate messaging rules</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <RadioGroup value={businessType} onValueChange={onBusinessTypeChange}>
-            <div className="flex items-start space-x-3 space-y-0">
-              <RadioGroupItem value="healthcare" id="healthcare" className="mt-1" />
-              <Label
-                htmlFor="healthcare"
-                className="font-normal cursor-pointer leading-relaxed"
-              >
-                <div className="font-medium">Healthcare / Medical Clinic</div>
-                <div className="text-sm text-muted-foreground">
-                  Strict mode - Only operational announcements allowed
-                </div>
-              </Label>
-            </div>
-            <div className="flex items-start space-x-3 space-y-0 mt-3">
-              <RadioGroupItem value="wellness" id="wellness" className="mt-1" />
-              <Label
-                htmlFor="wellness"
-                className="font-normal cursor-pointer leading-relaxed"
-              >
-                <div className="font-medium">Wellness / Spa / Fitness</div>
-                <div className="text-sm text-muted-foreground">
-                  Marketing mode - Allows marketing messages with consent
-                </div>
-              </Label>
-            </div>
-          </RadioGroup>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
           <CardTitle>Message Templates</CardTitle>
           <CardDescription>Create up to {MAX_TEMPLATES} custom message templates for broadcasts</CardDescription>
         </CardHeader>
