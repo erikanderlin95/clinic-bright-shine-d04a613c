@@ -10,7 +10,7 @@ const translations = {
 
     // Tabs
     queueManagement: "Today's Patients",
-    bookingRequests: "Booking Requests",
+    bookingRequests: "Booking Log",
     appointments: "Appointments",
     automation: "Automation",
     doctorSchedule: "Doctor Schedule",
@@ -174,7 +174,7 @@ const translations = {
 
     // Tabs
     queueManagement: "今日患者",
-    bookingRequests: "预约请求",
+    bookingRequests: "预约记录",
     appointments: "预约",
     automation: "自动化",
     doctorSchedule: "医生排班",
