@@ -11,7 +11,8 @@ export const DailySummary = ({ summary }: DailySummaryProps) => {
   const { t } = useI18n();
 
   const stats = [
-    { title: t("totalQueueToday"), value: summary.totalQueue, icon: Users, color: "text-primary" },
+    { title: t("totalQueueToday"), value: summary.liveQueue, icon: Users, color: "text-primary" },
+    { title: t("bookingsToday"), value: summary.bookingsToday, icon: Clock, color: "text-blue-600" },
     { title: t("arrived"), value: summary.arrived, icon: CheckCircle, color: "text-status-arrived" },
     { title: t("cancelled"), value: summary.cancelled, icon: XCircle, color: "text-status-cancelled" },
     { title: t("noShows"), value: summary.noShows, icon: AlertCircle, color: "text-destructive" },
@@ -19,7 +20,7 @@ export const DailySummary = ({ summary }: DailySummaryProps) => {
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+    <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
       {stats.map((stat) => (
         <Card key={stat.title}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

@@ -23,7 +23,8 @@ export interface QueueEntry {
 }
 
 export interface DailySummary {
-  totalQueue: number;
+  liveQueue: number;
+  bookingsToday: number;
   arrived: number;
   cancelled: number;
   noShows: number;

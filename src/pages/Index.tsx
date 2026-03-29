@@ -138,7 +138,8 @@ const Index = () => {
   ]);
 
   const dailySummary: DailySummaryType = {
-    totalQueue: 32,
+    liveQueue: 32,
+    bookingsToday: 5,
     arrived: 26,
     cancelled: 4,
     noShows: 2,
