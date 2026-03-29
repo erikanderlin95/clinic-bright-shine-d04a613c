@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { QueueEntry } from "@/types/queue";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -7,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Megaphone, Users, Plus, Trash2, Edit2, Check, X } from "lucide-react";
+import { Megaphone, Users, Plus, Trash2, Edit2, Check, X, Database, AlertTriangle } from "lucide-react";
 import { OperationalBroadcastDialog } from "@/components/OperationalBroadcastDialog";
 import { RecentCustomersBroadcastDialog } from "@/components/RecentCustomersBroadcastDialog";
 
