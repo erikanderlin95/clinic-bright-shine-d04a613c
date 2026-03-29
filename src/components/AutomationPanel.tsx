@@ -287,7 +287,7 @@ export const AutomationPanel = ({
   const activeQueueDisabled = !clinicIntegrationActive && activeQueuePatients.length === 0;
 
   return (
-    <div className="space-y-5">
+    <div className="max-w-[1100px] mx-auto space-y-4">
       {/* Row 1 — Full Width System Alert Banner */}
       {!clinicIntegrationActive && (
         <div className="flex items-center justify-between gap-3 p-3 rounded-md bg-muted/60 border border-dashed">
@@ -304,7 +304,7 @@ export const AutomationPanel = ({
       )}
 
       {/* Row 2 — Two Columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-4 items-start">
         {/* LEFT COLUMN — Operational Broadcast */}
         <Card>
           <CardHeader className="pb-3 pt-5 px-5">
