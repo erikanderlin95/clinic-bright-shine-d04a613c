@@ -318,7 +318,7 @@ const Index = () => {
                   </Button>
                 </div>
                 <QueueTable
-                  entries={getActiveQueue()}
+                  entries={getTodaysPatientFlow()}
                   onSelectEntry={setSelectedEntry}
                   selectedEntry={selectedEntry}
                   onUpdateStatus={handleUpdateStatus}
