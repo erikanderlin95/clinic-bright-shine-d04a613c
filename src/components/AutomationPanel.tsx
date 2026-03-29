@@ -595,46 +595,54 @@ export const AutomationPanel = ({
               <CardTitle className="text-[17px] font-semibold">Message Templates</CardTitle>
               <CardDescription className="text-[13px] mt-1">Create and manage reusable message templates</CardDescription>
             </CardHeader>
-            <CardContent className="px-5 pb-5 pt-0 space-y-4">
-              {/* Saved Templates */}
-              <div className="space-y-2">
-                <Label className="text-[14px] font-medium">Saved Templates</Label>
+            <CardContent className="px-5 pb-5 pt-0 space-y-5">
+              {/* Saved Templates — Dropdown with edit */}
+              <div className="space-y-3">
+                <Label className="text-[15px] font-medium">Saved Templates</Label>
                 {templates.length > 0 ? (
-                  <div className="space-y-2">
-                    {templates.map((template) => (
-                      <div key={template.id} className="flex items-center gap-2 px-3 py-2.5 rounded-md border bg-muted/30 text-[14px]">
-                        {editingId === template.id ? (
-                          <>
-                            <Input
-                              value={editingValue}
-                              onChange={(e) => setEditingValue(e.target.value)}
-                              className="flex-1 h-9 text-[14px]"
-                              maxLength={200}
-                              autoFocus
-                            />
-                            <Button size="icon" variant="ghost" className="h-8 w-8" onClick={handleSaveEdit}>
-                              <Check className="h-4 w-4 text-primary" />
-                            </Button>
-                            <Button size="icon" variant="ghost" className="h-8 w-8" onClick={handleCancelEdit}>
-                              <X className="h-4 w-4 text-destructive" />
-                            </Button>
-                          </>
-                        ) : (
-                          <>
-                            <span className="flex-1 leading-snug truncate">{template.message}</span>
-                            <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" onClick={() => handleStartEdit(template)}>
-                              <Edit2 className="h-4 w-4" />
-                            </Button>
-                            <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" onClick={() => handleDeleteTemplate(template.id)}>
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                          </>
-                        )}
+                  <>
+                    <Select
+                      value={editingId || ""}
+                      onValueChange={(id) => {
+                        const t = templates.find((t) => t.id === id);
+                        if (t) handleStartEdit(t);
+                      }}
+                    >
+                      <SelectTrigger className="w-full h-10 text-[15px]">
+                        <SelectValue placeholder="View / edit a template..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {templates.map((template) => (
+                          <SelectItem key={template.id} value={template.id} className="text-[15px]">
+                            {template.message}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    {editingId && (
+                      <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/40">
+                        <Input
+                          value={editingValue}
+                          onChange={(e) => setEditingValue(e.target.value)}
+                          className="flex-1 h-10 text-[15px]"
+                          maxLength={200}
+                          autoFocus
+                        />
+                        <Button size="icon" variant="ghost" className="h-9 w-9" onClick={handleSaveEdit}>
+                          <Check className="h-4 w-4 text-primary" />
+                        </Button>
+                        <Button size="icon" variant="ghost" className="h-9 w-9" onClick={handleCancelEdit}>
+                          <X className="h-4 w-4 text-destructive" />
+                        </Button>
+                        <Button size="icon" variant="ghost" className="h-9 w-9" onClick={() => { handleDeleteTemplate(editingId); setEditingId(null); }}>
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
                       </div>
-                    ))}
-                  </div>
+                    )}
+                  </>
                 ) : (
-                  <p className="text-[14px] text-muted-foreground text-center py-6">
+                  <p className="text-[15px] text-muted-foreground text-center py-6">
                     No templates created yet. Add your first template below.
                   </p>
                 )}
@@ -646,17 +654,17 @@ export const AutomationPanel = ({
               {/* Add New Template */}
               {templates.length < MAX_TEMPLATES && (
                 <div className="space-y-2">
-                  <Label className="text-[14px] font-medium">Create New Template</Label>
+                  <Label className="text-[15px] font-medium">Create New Template</Label>
                   <div className="flex gap-2">
                     <Input
                       placeholder="Enter a new message template..."
                       value={newTemplate}
                       onChange={(e) => setNewTemplate(e.target.value)}
                       maxLength={200}
-                      className="text-[14px] h-10"
+                      className="text-[15px] h-10"
                       onKeyDown={(e) => { if (e.key === "Enter") handleAddTemplate(); }}
                     />
-                    <Button size="sm" onClick={handleAddTemplate} disabled={!newTemplate.trim()} className="h-10 text-[14px] px-4">
+                    <Button size="sm" onClick={handleAddTemplate} disabled={!newTemplate.trim()} className="h-10 text-[15px] px-4">
                       <Plus className="h-4 w-4 mr-1.5" />
                       Add
                     </Button>
@@ -664,7 +672,7 @@ export const AutomationPanel = ({
                 </div>
               )}
 
-              <p className="text-[12px] text-muted-foreground/60">
+              <p className="text-[13px] text-muted-foreground/60">
                 {templates.length}/{MAX_TEMPLATES} templates used
               </p>
             </CardContent>
