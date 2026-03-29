@@ -2,6 +2,8 @@ export type QueueStatus = "waiting" | "arrived" | "late" | "cancelled" | "no-sho
 
 export type VisitCategory = "Consultation" | "Follow-up" | "General Treatment" | "Standard Visit";
 
+export type PatientType = "walk-in" | "booking";
+
 export interface QueueEntry {
   id: string;
   queueNumber: string;
@@ -16,6 +18,8 @@ export interface QueueEntry {
   duration?: number;
   visitCategory?: VisitCategory;
   checkInCode?: string;
+  patientType?: PatientType;
+  appointmentTime?: string;
 }
 
 export interface DailySummary {

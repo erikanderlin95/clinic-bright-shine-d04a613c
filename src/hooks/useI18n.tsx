@@ -6,10 +6,10 @@ const translations = {
   en: {
     // Header
     dashboardTitle: "ClynicQ Dashboard",
-    dashboardSubtitle: "Queue & communication interface for daily clinic operations",
+    dashboardSubtitle: "Operational visibility for today's patients (walk-ins + bookings)",
 
     // Tabs
-    queueManagement: "Queue Management",
+    queueManagement: "Today's Patients",
     bookingRequests: "Booking Requests",
     appointments: "Appointments",
     automation: "Automation",
@@ -23,7 +23,7 @@ const translations = {
     reopenQueue: "Reopen Queue",
 
     // Daily Summary
-    totalQueueToday: "Total Queue Today",
+    totalQueueToday: "Total Patients Today",
     arrived: "Arrived",
     cancelled: "Cancelled",
     noShows: "No Shows",
@@ -77,7 +77,11 @@ const translations = {
     statusBooked: "Booked",
 
     // Live Queue
-    liveQueueView: "Live Queue View",
+    liveQueueView: "Today's Patient Flow",
+    patientTypeCol: "Type",
+    apptTimeCol: "Appt Time",
+    typeWalkIn: "Walk-in",
+    typeBooking: "Booking",
     addToQueue: "Add to Queue",
 
     // Check-in Dialog
@@ -165,10 +169,10 @@ const translations = {
   zh: {
     // Header
     dashboardTitle: "ClynicQ 仪表板",
-    dashboardSubtitle: "诊所日常运营的排队与通讯界面",
+    dashboardSubtitle: "今日患者的运营可视化（现场挂号 + 预约）",
 
     // Tabs
-    queueManagement: "排队管理",
+    queueManagement: "今日患者",
     bookingRequests: "预约请求",
     appointments: "预约",
     automation: "自动化",
@@ -182,7 +186,7 @@ const translations = {
     reopenQueue: "重新开放排队",
 
     // Daily Summary
-    totalQueueToday: "今日排队总数",
+    totalQueueToday: "今日患者总数",
     arrived: "已到达",
     cancelled: "已取消",
     noShows: "未到",
@@ -236,7 +240,11 @@ const translations = {
     statusBooked: "已预约",
 
     // Live Queue
-    liveQueueView: "实时排队视图",
+    liveQueueView: "今日患者流",
+    patientTypeCol: "类型",
+    apptTimeCol: "预约时间",
+    typeWalkIn: "现场挂号",
+    typeBooking: "预约",
     addToQueue: "加入排队",
 
     // Check-in Dialog
