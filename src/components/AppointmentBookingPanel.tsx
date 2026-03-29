@@ -352,7 +352,7 @@ export const AppointmentBookingPanel = () => {
         </Dialog>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
         {/* Calendar Sidebar */}
         <Card className="shadow-md h-fit">
           <CardHeader className="pb-2">
