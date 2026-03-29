@@ -287,7 +287,7 @@ export const AutomationPanel = ({
   const activeQueueDisabled = !clinicIntegrationActive && activeQueuePatients.length === 0;
 
   return (
-    <div className="max-w-[1100px] mx-auto space-y-4">
+    <div className="max-w-[1265px] mx-auto space-y-4">
       {/* Row 1 — Full Width System Alert Banner */}
       {!clinicIntegrationActive && (
         <div className="flex items-center justify-between gap-3 p-3 rounded-md bg-muted/60 border border-dashed">
