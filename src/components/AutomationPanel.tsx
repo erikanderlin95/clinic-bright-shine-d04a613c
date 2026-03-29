@@ -450,6 +450,86 @@ export const AutomationPanel = ({
               {selectedPatientIds.size} of {filteredAudience.length} selected
             </p>
 
+            {/* Select Message — moved here */}
+            <div className="border-t pt-2 space-y-2">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium">Select Message</Label>
+                <Select value={selectedTemplateId} onValueChange={handleTemplateSelection}>
+                  <SelectTrigger className="w-full h-8 text-xs">
+                    <SelectValue placeholder="Choose a message template..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {templates.map((template) => (
+                      <SelectItem key={template.id} value={template.id} className="text-xs">
+                        {template.message}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="custom" className="text-xs">Custom Operational Message</SelectItem>
+                    {businessType === "wellness" && (
+                      <SelectItem value="custom-marketing" className="text-xs">Custom Marketing Message</SelectItem>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Message Preview */}
+              {isTemplateSelected && (
+                <div className="p-2 rounded border bg-muted/40 text-xs leading-relaxed">
+                  {templates.find((t) => t.id === selectedTemplateId)?.message}
+                </div>
+              )}
+
+              {/* Custom Message Input */}
+              {showCustomInput && (
+                <div className="space-y-1.5">
+                  <div className="flex justify-between items-center">
+                    <Label className="text-xs font-medium">Your Message</Label>
+                    <span className="text-[10px] text-muted-foreground">{customMessage.length}/200</span>
+                  </div>
+                  <Textarea
+                    value={customMessage}
+                    onChange={(e) => {
+                      if (e.target.value.length <= 200) {
+                        setCustomMessage(e.target.value);
+                        setValidationError(null);
+                      }
+                    }}
+                    placeholder={
+                      selectedTemplateId === "custom-marketing"
+                        ? "Enter your marketing message..."
+                        : "Enter operational notice..."
+                    }
+                    className="min-h-[56px] text-xs"
+                  />
+                  {selectedTemplateId === "custom" && (
+                    <p className="text-[10px] text-muted-foreground/70">
+                      Only operational notices are allowed. Marketing, promotions, and medical advice are prohibited.
+                    </p>
+                  )}
+                  {selectedTemplateId === "custom-marketing" && (
+                    <div className="space-y-1.5 mt-1">
+                      <Alert className="py-1.5">
+                        <AlertCircle className="h-3 w-3" />
+                        <AlertDescription className="text-[11px]">
+                          Marketing messages can only be sent to users who have provided consent.
+                        </AlertDescription>
+                      </Alert>
+                      <div className="flex items-start space-x-2">
+                        <Checkbox
+                          id="marketing-consent-inline"
+                          checked={marketingConsent}
+                          onCheckedChange={(checked) => setMarketingConsent(checked as boolean)}
+                        />
+                        <Label htmlFor="marketing-consent-inline" className="text-[11px] font-normal leading-relaxed cursor-pointer">
+                          I confirm this is only sent to users who provided marketing consent.
+                        </Label>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
             {/* Validation Error */}
             {validationError && (
               <Alert variant="destructive" className="py-1.5">
@@ -466,95 +546,13 @@ export const AutomationPanel = ({
           </CardContent>
         </Card>
 
-        {/* RIGHT COLUMN — Message Templates */}
+        {/* RIGHT COLUMN — Manage Templates Only */}
         <Card>
           <CardHeader className="pb-2 pt-4 px-4">
             <CardTitle className="text-base font-semibold">Message Templates</CardTitle>
-            <CardDescription className="text-xs mt-0.5">Select or manage message templates for broadcast</CardDescription>
+            <CardDescription className="text-xs mt-0.5">Create and manage reusable message templates</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 px-4 pb-4 pt-0">
-            {/* Template Selection Dropdown */}
-            <div className="space-y-1.5">
-              <Label className="text-xs font-medium">Select Message</Label>
-              <Select value={selectedTemplateId} onValueChange={handleTemplateSelection}>
-                <SelectTrigger className="w-full h-8 text-xs">
-                  <SelectValue placeholder="Choose a message template..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {templates.map((template) => (
-                    <SelectItem key={template.id} value={template.id} className="text-xs">
-                      {template.message}
-                    </SelectItem>
-                  ))}
-                  <SelectItem value="custom" className="text-xs">Custom Operational Message</SelectItem>
-                  {businessType === "wellness" && (
-                    <SelectItem value="custom-marketing" className="text-xs">Custom Marketing Message</SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Message Preview / Custom Input */}
-            {isTemplateSelected && (
-              <div className="p-2.5 rounded border bg-muted/40 text-xs leading-relaxed">
-                {templates.find((t) => t.id === selectedTemplateId)?.message}
-              </div>
-            )}
-
-            {showCustomInput && (
-              <div className="space-y-1.5">
-                <div className="flex justify-between items-center">
-                  <Label className="text-xs font-medium">Your Message</Label>
-                  <span className="text-[10px] text-muted-foreground">{customMessage.length}/200</span>
-                </div>
-                <Textarea
-                  value={customMessage}
-                  onChange={(e) => {
-                    if (e.target.value.length <= 200) {
-                      setCustomMessage(e.target.value);
-                      setValidationError(null);
-                    }
-                  }}
-                  placeholder={
-                    selectedTemplateId === "custom-marketing"
-                      ? "Enter your marketing message..."
-                      : "Enter operational notice..."
-                  }
-                  className="min-h-[60px] text-xs"
-                />
-                {selectedTemplateId === "custom" && (
-                  <p className="text-[10px] text-muted-foreground/70">
-                    Only operational notices are allowed. Marketing, promotions, and medical advice are prohibited.
-                  </p>
-                )}
-                {selectedTemplateId === "custom-marketing" && (
-                  <div className="space-y-1.5 mt-1">
-                    <Alert className="py-1.5">
-                      <AlertCircle className="h-3 w-3" />
-                      <AlertDescription className="text-[11px]">
-                        Marketing messages can only be sent to users who have provided consent.
-                      </AlertDescription>
-                    </Alert>
-                    <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="marketing-consent-inline"
-                        checked={marketingConsent}
-                        onCheckedChange={(checked) => setMarketingConsent(checked as boolean)}
-                      />
-                      <Label htmlFor="marketing-consent-inline" className="text-[11px] font-normal leading-relaxed cursor-pointer">
-                        I confirm this is only sent to users who provided marketing consent.
-                      </Label>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Divider */}
-            <div className="border-t pt-2">
-              <Label className="text-xs font-medium">Manage Templates</Label>
-            </div>
-
             {/* Template Management */}
             {templates.length > 0 && (
               <div className="space-y-1">
@@ -590,6 +588,12 @@ export const AutomationPanel = ({
                   </div>
                 ))}
               </div>
+            )}
+
+            {templates.length === 0 && (
+              <p className="text-xs text-muted-foreground text-center py-3">
+                No templates created yet. Add your first template below.
+              </p>
             )}
 
             {templates.length < MAX_TEMPLATES && (
