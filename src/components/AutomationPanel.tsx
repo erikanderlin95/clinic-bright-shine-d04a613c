@@ -40,6 +40,7 @@ interface AutomationPanelProps {
   templates?: MessageTemplate[];
   onTemplatesChange?: (templates: MessageTemplate[]) => void;
   queueEntries?: QueueEntry[];
+  clinicIntegrationActive?: boolean;
 }
 
 const MAX_TEMPLATES = 4;
@@ -61,6 +62,7 @@ export const AutomationPanel = ({
   templates = [],
   onTemplatesChange,
   queueEntries = [],
+  clinicIntegrationActive = false,
 }: AutomationPanelProps) => {
   const [broadcastDialogOpen, setBroadcastDialogOpen] = useState(false);
   const [recentCustomersDialogOpen, setRecentCustomersDialogOpen] = useState(false);
@@ -110,18 +112,40 @@ export const AutomationPanel = ({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Operational Broadcast</CardTitle>
-          <CardDescription>Send generic announcements to patients</CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Operational Broadcast</CardTitle>
+              <CardDescription>Send generic announcements to patients</CardDescription>
+            </div>
+            <Badge variant="outline" className="gap-1 text-[10px] font-normal px-2 py-1">
+              <Database className="h-3 w-3" />
+              {clinicIntegrationActive ? "Clinic Assist" : "ClynicQ"}
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent className="space-y-3">
+          {!clinicIntegrationActive ? (
+            <div className="flex items-start gap-2 p-2.5 rounded-md bg-muted/60 border border-dashed mb-1">
+              <AlertTriangle className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Clinic system not connected. Active Queue uses ClynicQ session data. Connect Clinic Assist for live queue sync.
+              </p>
+            </div>
+          ) : null}
           <Button 
             onClick={() => setBroadcastDialogOpen(true)}
             className="w-full gap-2"
             variant="default"
+            disabled={!clinicIntegrationActive && queueEntries.filter(e => e.status !== "completed" && e.status !== "cancelled" && e.status !== "no-show").length === 0}
           >
             <Megaphone className="h-4 w-4" />
             Active Queue Patients
           </Button>
+          {!clinicIntegrationActive && queueEntries.filter(e => e.status !== "completed" && e.status !== "cancelled" && e.status !== "no-show").length === 0 && (
+            <p className="text-[10px] text-muted-foreground text-center">
+              No active queue patients available
+            </p>
+          )}
           <Button 
             onClick={() => setRecentCustomersDialogOpen(true)}
             className="w-full gap-2"
