@@ -80,7 +80,7 @@ const Index = () => {
     {
       id: "3",
       queueNumber: "—",
-      status: "booked",
+      status: "waiting",
       joinedAt: "—",
       name: "Sarah Lim",
       mobile: "+65 9444 5566",
