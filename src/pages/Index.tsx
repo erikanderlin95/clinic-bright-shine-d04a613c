@@ -328,7 +328,8 @@ const Index = () => {
                 />
               </div>
 
-              <VisitLogSection entries={queueEntries} />
+              <WalkinRecordsSection entries={queueEntries} />
+              <BookingRecordsSection entries={queueEntries} />
             </TabsContent>
 
 
