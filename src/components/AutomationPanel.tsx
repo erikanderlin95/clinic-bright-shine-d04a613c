@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { QueueEntry } from "@/types/queue";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -37,6 +38,7 @@ interface AutomationPanelProps {
   onSendRecentCustomersBroadcast: (message: string, isMarketing?: boolean) => void;
   templates?: MessageTemplate[];
   onTemplatesChange?: (templates: MessageTemplate[]) => void;
+  queueEntries?: QueueEntry[];
 }
 
 const MAX_TEMPLATES = 4;
@@ -57,6 +59,7 @@ export const AutomationPanel = ({
   onSendRecentCustomersBroadcast,
   templates = [],
   onTemplatesChange,
+  queueEntries = [],
 }: AutomationPanelProps) => {
   const [broadcastDialogOpen, setBroadcastDialogOpen] = useState(false);
   const [recentCustomersDialogOpen, setRecentCustomersDialogOpen] = useState(false);
@@ -245,6 +248,7 @@ export const AutomationPanel = ({
         onSendBroadcast={onSendBroadcast}
         businessType={businessType}
         templates={templates}
+        queueEntries={queueEntries}
       />
 
       <RecentCustomersBroadcastDialog
@@ -253,6 +257,7 @@ export const AutomationPanel = ({
         onSendBroadcast={onSendRecentCustomersBroadcast}
         businessType={businessType}
         templates={templates}
+        queueEntries={queueEntries}
       />
     </div>
   );
