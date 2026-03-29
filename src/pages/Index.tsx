@@ -210,11 +210,19 @@ const Index = () => {
     handleUpdateStatus(id, "arrived");
   };
 
-  // Adjust queue flow
+  // Active queue = walk-ins not completed/cancelled/no-show
   const getActiveQueue = () =>
     queueEntries.filter(
-      (e) => e.status !== "completed" && e.status !== "cancelled" && e.status !== "no-show" && e.status !== "booked"
+      (e) => e.status !== "completed" && e.status !== "cancelled" && e.status !== "no-show"
     );
+
+  // Today's patient flow: walk-ins first, then bookings
+  const getTodaysPatientFlow = () => {
+    const active = getActiveQueue();
+    const walkIns = active.filter((e) => e.patientType !== "booking");
+    const bookings = active.filter((e) => e.patientType === "booking");
+    return [...walkIns, ...bookings];
+  };
 
   const handleOpenAdjust = (entry: QueueEntry) => {
     setAdjustEntry(entry);
