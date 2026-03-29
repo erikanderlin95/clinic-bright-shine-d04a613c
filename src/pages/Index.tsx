@@ -275,7 +275,7 @@ const Index = () => {
 
             <TabsContent value="queue" className="space-y-5 mt-5">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-foreground">{t("queueManagement")}</h2>
+                <h2 className="text-xl font-semibold text-foreground">{t("liveQueueView")}</h2>
                 <QueueControls
                   isPaused={isPaused}
                   isClosed={isClosed}
