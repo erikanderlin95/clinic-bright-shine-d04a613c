@@ -133,7 +133,7 @@ export const AutomationPanel = ({
                   Clinic system not connected. Active queue uses ClynicQ session data.
                 </p>
               </div>
-              <Button variant="outline" size="sm" className="shrink-0 text-xs text-foreground border-2 border-foreground/40" disabled>
+              <Button variant="outline" size="sm" className="shrink-0 text-xs pointer-events-none opacity-80" style={{ color: "black", borderWidth: "2px", borderColor: "hsl(215, 25%, 40%)" }}>
                 Connect CMS
               </Button>
             </div>
