@@ -126,7 +126,7 @@ const translations = {
     mobileRequired: "Mobile number required",
     pleaseEnterMobile: "Please enter a mobile number",
 
-    // Visit Log
+    // Visit Log / Records
     visitLog: "Visit Log",
     collapse: "Collapse",
     expand: "Expand",
@@ -141,6 +141,17 @@ const translations = {
     appointmentBookings: "Appointment Bookings",
     queueVisits: "Queue Visits",
     visitLogNote: "Note: No medical records, billing, or diagnosis stored. Queue and booking tracking only.",
+
+    // Walk-in & Booking Records
+    walkinRecordsTitle: "Walk-in Records (Last 30 Days)",
+    bookingRecordsTitle: "Booking Records (Last 30 Days)",
+    downloadCSV: "Download CSV",
+    visitDate: "Visit Date",
+    arrivalTime: "Arrival Time",
+    appointmentDateTime: "Appointment Date & Time",
+    arrivalStatus: "Arrival Status",
+    noWalkinRecords: "No walk-in records yet",
+    noBookingRecords: "No booking records yet",
 
     // Booking Requests
     bookingRequestsTitle: "Booking Requests",
@@ -290,7 +301,7 @@ const translations = {
     mobileRequired: "需要手机号码",
     pleaseEnterMobile: "请输入手机号码",
 
-    // Visit Log
+    // Visit Log / Records
     visitLog: "就诊记录",
     collapse: "收起",
     expand: "展开",
@@ -305,6 +316,17 @@ const translations = {
     appointmentBookings: "预约挂号",
     queueVisits: "排队就诊",
     visitLogNote: "注意：不存储病历、账单或诊断信息。仅用于排队和预约追踪。",
+
+    // Walk-in & Booking Records
+    walkinRecordsTitle: "现场挂号记录（最近30天）",
+    bookingRecordsTitle: "预约记录（最近30天）",
+    downloadCSV: "下载CSV",
+    visitDate: "就诊日期",
+    arrivalTime: "到达时间",
+    appointmentDateTime: "预约日期和时间",
+    arrivalStatus: "到达状态",
+    noWalkinRecords: "暂无现场挂号记录",
+    noBookingRecords: "暂无预约记录",
 
     // Booking Requests
     bookingRequestsTitle: "预约请求",

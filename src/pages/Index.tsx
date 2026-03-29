@@ -4,9 +4,9 @@ import { QueueControls } from "@/components/QueueControls";
 import { DailySummary } from "@/components/DailySummary";
 import { QueueTable } from "@/components/QueueTable";
 import { PatientDetailPanel } from "@/components/PatientDetailPanel";
-import { VisitLogSection } from "@/components/VisitLogSection";
+import { WalkinRecordsSection } from "@/components/WalkinRecordsSection";
+import { BookingRecordsSection } from "@/components/BookingRecordsSection";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
-import { BookingRequestsPanel } from "@/components/BookingRequestsPanel";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
 import { AdjustQueueDialog } from "@/components/AdjustQueueDialog";
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
@@ -289,7 +289,7 @@ const Index = () => {
           <Tabs defaultValue="queue" className="w-full">
             <TabsList>
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
-              <TabsTrigger value="requests">{t("bookingRequests")}</TabsTrigger>
+              
               <TabsTrigger value="appointments">{t("appointments")}</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               <TabsTrigger value="schedule">{t("doctorSchedule")}</TabsTrigger>
@@ -328,12 +328,11 @@ const Index = () => {
                 />
               </div>
 
-              <VisitLogSection entries={queueEntries} />
+              <WalkinRecordsSection entries={queueEntries} />
+              <BookingRecordsSection entries={queueEntries} />
             </TabsContent>
 
-            <TabsContent value="requests" className="mt-5">
-              <BookingRequestsPanel requests={bookingLeads} />
-            </TabsContent>
+
 
             <TabsContent value="appointments" className="mt-5">
               <AppointmentBookingPanel />
