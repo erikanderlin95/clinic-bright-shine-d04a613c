@@ -19,6 +19,8 @@ interface QueueTableProps {
 
 export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival, onAdjust }: QueueTableProps) => {
   const { t } = useI18n();
+  const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false);
+  const [completeEntryId, setCompleteEntryId] = useState<string | null>(null);
 
   const getActions = (entry: QueueEntry) => {
     if (entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show" || entry.status === "booked") {
