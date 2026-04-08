@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
 import { CheckCircle, UserX, RotateCcw, ShieldCheck, ArrowUpDown } from "lucide-react";
@@ -17,6 +19,8 @@ interface QueueTableProps {
 
 export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival, onAdjust }: QueueTableProps) => {
   const { t } = useI18n();
+  const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false);
+  const [completeEntryId, setCompleteEntryId] = useState<string | null>(null);
 
   const getActions = (entry: QueueEntry) => {
     if (entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show" || entry.status === "booked") {
@@ -28,7 +32,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
         <Button
           size="sm"
           variant="outline"
-          onClick={(e) => { e.stopPropagation(); onUpdateStatus(entry.id, "completed"); }}
+          onClick={(e) => { e.stopPropagation(); setCompleteEntryId(entry.id); setCompleteConfirmOpen(true); }}
           className="gap-1.5 h-8 text-xs"
         >
           <CheckCircle className="h-3.5 w-3.5" />
@@ -70,6 +74,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
   };
 
   return (
+    <>
     <div className="rounded-lg border border-border bg-card">
       <Table>
         <TableHeader>
@@ -133,5 +138,27 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
         </TableBody>
       </Table>
     </div>
+
+    <AlertDialog open={completeConfirmOpen} onOpenChange={setCompleteConfirmOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t("completed")}?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will mark the current patient as completed, call the next patient in queue, and move the queue up.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => setCompleteEntryId(null)}>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={() => {
+            if (completeEntryId) {
+              onUpdateStatus(completeEntryId, "completed");
+            }
+            setCompleteEntryId(null);
+            setCompleteConfirmOpen(false);
+          }}>Confirm</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  </>
   );
 };
