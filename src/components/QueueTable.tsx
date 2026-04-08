@@ -74,6 +74,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
   };
 
   return (
+    <>
     <div className="rounded-lg border border-border bg-card">
       <Table>
         <TableHeader>
