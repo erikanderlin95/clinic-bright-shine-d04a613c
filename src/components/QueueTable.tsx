@@ -137,5 +137,27 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
         </TableBody>
       </Table>
     </div>
+
+    <AlertDialog open={completeConfirmOpen} onOpenChange={setCompleteConfirmOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t("completed")}?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will mark the current patient as completed, call the next patient in queue, and move the queue up.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => setCompleteEntryId(null)}>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={() => {
+            if (completeEntryId) {
+              onUpdateStatus(completeEntryId, "completed");
+            }
+            setCompleteEntryId(null);
+            setCompleteConfirmOpen(false);
+          }}>Confirm</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  </>
   );
 };
