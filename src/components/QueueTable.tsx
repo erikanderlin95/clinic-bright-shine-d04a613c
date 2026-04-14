@@ -93,7 +93,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
         <TableBody>
           {entries.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+              <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
                 {t("noPatients")}
               </TableCell>
             </TableRow>
@@ -115,6 +115,13 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
                   }`}>
                     {entry.patientType === "booking" ? t("typeBooking") : t("typeWalkIn")}
                   </span>
+                </TableCell>
+                <TableCell className="text-sm text-muted-foreground">
+                  {entry.visitCategory
+                    ? entry.visitCategory === "Others" && entry.remarksDetail
+                      ? `Others: ${entry.remarksDetail}`
+                      : entry.visitCategory
+                    : "—"}
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">{entry.appointmentTime || "—"}</TableCell>
                 <TableCell className="text-muted-foreground text-sm">{entry.joinedAt}</TableCell>
