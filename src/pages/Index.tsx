@@ -65,6 +65,7 @@ const Index = () => {
       queueSource: "Walk-in",
       checkInCode: "X7K2M9",
       patientType: "walk-in",
+      visitCategory: "Consultation",
     },
     {
       id: "2",
@@ -76,6 +77,7 @@ const Index = () => {
       queueSource: "Phone Booking",
       checkInCode: "P3N8Q1",
       patientType: "walk-in",
+      visitCategory: "Follow-up",
     },
     {
       id: "3",
@@ -87,6 +89,8 @@ const Index = () => {
       queueSource: "Other",
       patientType: "booking",
       appointmentTime: "14:00",
+      visitCategory: "Others",
+      remarksDetail: "Post-op review",
     },
     {
       id: "10",
