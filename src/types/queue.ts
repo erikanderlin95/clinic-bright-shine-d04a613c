@@ -22,6 +22,7 @@ export interface QueueEntry {
   notes?: string;
   duration?: number;
   visitCategory?: VisitCategory;
+  remarksDetail?: string;
   checkInCode?: string;
   patientType?: PatientType;
   appointmentTime?: string;
