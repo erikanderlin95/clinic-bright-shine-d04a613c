@@ -1,6 +1,11 @@
 export type QueueStatus = "waiting" | "arrived" | "late" | "cancelled" | "no-show" | "completed" | "booked";
 
-export type VisitCategory = "Consultation" | "Follow-up" | "General Treatment" | "Standard Visit";
+export type VisitCategory = "Consultation" | "Follow-up" | "Others";
+
+export type RemarksInfo = {
+  category: VisitCategory;
+  othersDetail?: string;
+};
 
 export type PatientType = "walk-in" | "booking";
 
