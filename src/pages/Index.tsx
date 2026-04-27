@@ -379,6 +379,12 @@ const Index = () => {
             <TabsContent value="profiles" className="mt-5">
               <DoctorProfilesPanel />
             </TabsContent>
+
+            {isAdmin && (
+              <TabsContent value="staff" className="mt-5">
+                <StaffManagementPanel />
+              </TabsContent>
+            )}
           </Tabs>
         </main>
 
