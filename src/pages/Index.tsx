@@ -13,11 +13,13 @@ import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPa
 import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
+import { StaffManagementPanel } from "@/components/StaffManagementPanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/hooks/useI18n";
+import { useAuth } from "@/hooks/useAuth";
 import type { QueueEntry, DailySummary as DailySummaryType, BookingLead, VisitCategory } from "@/types/queue";
 
 const generateCheckInCode = () => {
