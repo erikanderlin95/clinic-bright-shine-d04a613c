@@ -33,7 +33,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Plus, MoreHorizontal, KeyRound, Pencil, Power, ShieldAlert } from "lucide-react";
+import { Plus, MoreHorizontal, KeyRound, Pencil, Power, ShieldAlert, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
