@@ -332,7 +332,19 @@ export const StaffManagementPanel = () => {
             </h3>
             <p className="text-sm text-muted-foreground mt-1">Track all staff account changes</p>
           </div>
-          <Badge variant="secondary" className="text-xs">Read-only</Badge>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5"
+              onClick={downloadAuditLogCSV}
+              disabled={auditLog.length === 0}
+            >
+              <Download className="h-4 w-4" />
+              Download CSV
+            </Button>
+            <Badge variant="secondary" className="text-xs">Read-only</Badge>
+          </div>
         </div>
         <Table>
           <TableHeader>
