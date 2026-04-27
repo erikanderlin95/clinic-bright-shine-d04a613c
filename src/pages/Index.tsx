@@ -28,6 +28,7 @@ const generateCheckInCode = () => {
 
 const Index = () => {
   const { t } = useI18n();
+  const { isAdmin } = useAuth();
   const { toast } = useToast();
   const [isPaused, setIsPaused] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
