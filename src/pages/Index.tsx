@@ -13,11 +13,13 @@ import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPa
 import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
+import { StaffManagementPanel } from "@/components/StaffManagementPanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/hooks/useI18n";
+import { useAuth } from "@/hooks/useAuth";
 import type { QueueEntry, DailySummary as DailySummaryType, BookingLead, VisitCategory } from "@/types/queue";
 
 const generateCheckInCode = () => {
@@ -26,6 +28,7 @@ const generateCheckInCode = () => {
 
 const Index = () => {
   const { t } = useI18n();
+  const { isAdmin } = useAuth();
   const { toast } = useToast();
   const [isPaused, setIsPaused] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
@@ -298,6 +301,12 @@ const Index = () => {
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               <TabsTrigger value="schedule">{t("doctorSchedule")}</TabsTrigger>
               <TabsTrigger value="profiles">{t("doctorProfiles")}</TabsTrigger>
+              {isAdmin && (
+                <TabsTrigger value="staff" className="gap-1.5">
+                  <Users className="h-4 w-4" />
+                  Staff Management
+                </TabsTrigger>
+              )}
             </TabsList>
 
             <TabsContent value="queue" className="space-y-5 mt-5">
@@ -370,6 +379,12 @@ const Index = () => {
             <TabsContent value="profiles" className="mt-5">
               <DoctorProfilesPanel />
             </TabsContent>
+
+            {isAdmin && (
+              <TabsContent value="staff" className="mt-5">
+                <StaffManagementPanel />
+              </TabsContent>
+            )}
           </Tabs>
         </main>
 
