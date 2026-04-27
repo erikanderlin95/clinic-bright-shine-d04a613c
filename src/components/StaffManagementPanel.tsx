@@ -33,10 +33,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Plus, MoreHorizontal, KeyRound, Pencil, Power } from "lucide-react";
+import { Plus, MoreHorizontal, KeyRound, Pencil, Power, ShieldAlert } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { Navigate } from "react-router-dom";
 
-type StaffRole = "Doctor" | "Admin" | "Staff" | "Receptionist";
+type StaffRole = "Owner" | "Admin" | "Doctor" | "Staff" | "Receptionist";
 
 interface StaffMember {
   id: string;
@@ -47,6 +49,15 @@ interface StaffMember {
   lastLogin?: string;
 }
 
+interface AuditLogEntry {
+  id: string;
+  timestamp: string;
+  action: "Create" | "Edit" | "Disable" | "Enable" | "Password Reset";
+  performedBy: string;
+  target: string;
+  message: string;
+}
+
 const initialStaff: StaffMember[] = [
   { id: "1", name: "Dr. Emily Tan", email: "emily.tan@clinic.com", role: "Doctor", active: true, lastLogin: "2026-04-26 09:12" },
   { id: "2", name: "Admin User", email: "admin@clinic.com", role: "Admin", active: true, lastLogin: "2026-04-27 08:30" },
@@ -54,8 +65,33 @@ const initialStaff: StaffMember[] = [
   { id: "4", name: "Marcus Ong", email: "marcus.ong@clinic.com", role: "Staff", active: false, lastLogin: "2026-04-10 11:20" },
 ];
 
+const initialAuditLog: AuditLogEntry[] = [
+  {
+    id: "a1",
+    timestamp: "2026-04-25 14:22",
+    action: "Create",
+    performedBy: "Admin User",
+    target: "Marcus Ong",
+    message: "Admin created staff account for Marcus Ong",
+  },
+  {
+    id: "a2",
+    timestamp: "2026-04-26 09:01",
+    action: "Disable",
+    performedBy: "Admin User",
+    target: "Marcus Ong",
+    message: "Admin disabled account for Marcus Ong",
+  },
+];
+
 const generatePassword = () =>
   Math.random().toString(36).slice(-10) + Math.floor(Math.random() * 100);
+
+const formatTimestamp = () => {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
 
 interface StaffFormState {
   name: string;
@@ -77,10 +113,41 @@ const emptyForm: StaffFormState = {
 
 export const StaffManagementPanel = () => {
   const { toast } = useToast();
+  const { isAdmin, isLoading, user } = useAuth();
   const [staff, setStaff] = useState<StaffMember[]>(initialStaff);
+  const [auditLog, setAuditLog] = useState<AuditLogEntry[]>(initialAuditLog);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<StaffFormState>(emptyForm);
+
+  // Strict access control: only Owner/Admin (mapped to isAdmin) can view this panel.
+  if (isLoading) {
+    return <div className="p-8 text-sm text-muted-foreground">Loading…</div>;
+  }
+  if (!isAdmin) {
+    // Block direct access — redirect unauthorized users to dashboard
+    return <Navigate to="/" replace />;
+  }
+
+  const performerName = user?.email ?? "Admin";
+
+  const appendLog = (
+    action: AuditLogEntry["action"],
+    target: string,
+    message: string,
+  ) => {
+    setAuditLog((prev) => [
+      {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        timestamp: formatTimestamp(),
+        action,
+        performedBy: performerName,
+        target,
+        message,
+      },
+      ...prev,
+    ]);
+  };
 
   const openAdd = () => {
     setEditingId(null);
@@ -123,6 +190,7 @@ export const StaffManagementPanel = () => {
           s.id === editingId ? { ...s, name: form.name, email: form.email, role: form.role } : s
         )
       );
+      appendLog("Edit", form.name, `${performerName} edited staff account for ${form.name}`);
       toast({ title: "Staff updated" });
     } else {
       const newMember: StaffMember = {
@@ -133,6 +201,7 @@ export const StaffManagementPanel = () => {
         active: true,
       };
       setStaff((prev) => [...prev, newMember]);
+      appendLog("Create", form.name, `${performerName} created staff account for ${form.name}`);
       toast({
         title: "Staff created",
         description: form.sendCredentials ? "Login credentials sent via email." : undefined,
@@ -145,20 +214,40 @@ export const StaffManagementPanel = () => {
   };
 
   const toggleActive = (id: string) => {
-    setStaff((prev) => prev.map((s) => (s.id === id ? { ...s, active: !s.active } : s)));
     const member = staff.find((s) => s.id === id);
+    if (!member) return;
+    const willBeActive = !member.active;
+    setStaff((prev) => prev.map((s) => (s.id === id ? { ...s, active: willBeActive } : s)));
+    appendLog(
+      willBeActive ? "Enable" : "Disable",
+      member.name,
+      `${performerName} ${willBeActive ? "enabled" : "disabled"} account for ${member.name}`,
+    );
     toast({
-      title: member?.active ? "Account disabled" : "Account enabled",
-      description: member?.active ? "User can no longer log in." : "User can now log in.",
+      title: willBeActive ? "Account enabled" : "Account disabled",
+      description: willBeActive ? "User can now log in." : "User can no longer log in.",
     });
   };
 
   const resetPassword = (member: StaffMember) => {
     const newPwd = generatePassword();
+    appendLog("Password Reset", member.name, `${performerName} reset password for ${member.name}`);
     toast({
       title: "Password reset",
       description: `New temporary password for ${member.name}: ${newPwd}`,
     });
+  };
+
+  const actionBadgeVariant = (action: AuditLogEntry["action"]) => {
+    switch (action) {
+      case "Disable":
+        return "destructive" as const;
+      case "Create":
+      case "Enable":
+        return "default" as const;
+      default:
+        return "secondary" as const;
+    }
   };
 
   return (
@@ -233,6 +322,54 @@ export const StaffManagementPanel = () => {
         </Table>
       </div>
 
+      {/* Activity Log */}
+      <div className="rounded-lg border bg-card">
+        <div className="flex items-start justify-between gap-4 p-6 pb-4">
+          <div>
+            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <ShieldAlert className="h-4 w-4 text-muted-foreground" />
+              Activity Log
+            </h3>
+            <p className="text-sm text-muted-foreground mt-1">Track all staff account changes</p>
+          </div>
+          <Badge variant="secondary" className="text-xs">Read-only</Badge>
+        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[170px]">Date &amp; Time</TableHead>
+              <TableHead className="w-[140px]">Action</TableHead>
+              <TableHead className="w-[200px]">Performed By</TableHead>
+              <TableHead className="w-[180px]">Target</TableHead>
+              <TableHead>Details</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {auditLog.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                  No activity recorded yet.
+                </TableCell>
+              </TableRow>
+            ) : (
+              auditLog.map((log) => (
+                <TableRow key={log.id}>
+                  <TableCell className="text-muted-foreground font-mono text-xs">
+                    {log.timestamp}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={actionBadgeVariant(log.action)}>{log.action}</Badge>
+                  </TableCell>
+                  <TableCell>{log.performedBy}</TableCell>
+                  <TableCell>{log.target}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{log.message}</TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
@@ -276,12 +413,16 @@ export const StaffManagementPanel = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Doctor">Doctor</SelectItem>
+                  <SelectItem value="Owner">Owner</SelectItem>
                   <SelectItem value="Admin">Admin</SelectItem>
+                  <SelectItem value="Doctor">Doctor</SelectItem>
                   <SelectItem value="Staff">Staff</SelectItem>
                   <SelectItem value="Receptionist">Receptionist</SelectItem>
                 </SelectContent>
               </Select>
+              <p className="text-xs text-muted-foreground">
+                If a doctor is the clinic boss, assign them Owner/Admin instead of Doctor.
+              </p>
             </div>
 
             <div className="space-y-2">
