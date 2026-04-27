@@ -33,7 +33,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Plus, MoreHorizontal, KeyRound, Pencil, Power, ShieldAlert } from "lucide-react";
+import { Plus, MoreHorizontal, KeyRound, Pencil, Power, ShieldAlert, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
@@ -238,6 +238,23 @@ export const StaffManagementPanel = () => {
     });
   };
 
+  const downloadAuditLogCSV = () => {
+    const escape = (val: string) => `"${String(val).replace(/"/g, '""')}"`;
+    const headers = ["Date & Time", "Action", "Performed By", "Target", "Details"];
+    const rows = auditLog.map((log) =>
+      [log.timestamp, log.action, log.performedBy, log.target, log.message].map(escape).join(",")
+    );
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `activity-log-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({ title: "Activity log downloaded" });
+  };
+
   const actionBadgeVariant = (action: AuditLogEntry["action"]) => {
     switch (action) {
       case "Disable":
@@ -332,7 +349,19 @@ export const StaffManagementPanel = () => {
             </h3>
             <p className="text-sm text-muted-foreground mt-1">Track all staff account changes</p>
           </div>
-          <Badge variant="secondary" className="text-xs">Read-only</Badge>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5"
+              onClick={downloadAuditLogCSV}
+              disabled={auditLog.length === 0}
+            >
+              <Download className="h-4 w-4" />
+              Download CSV
+            </Button>
+            <Badge variant="secondary" className="text-xs">Read-only</Badge>
+          </div>
         </div>
         <Table>
           <TableHeader>
