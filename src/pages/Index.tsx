@@ -301,6 +301,12 @@ const Index = () => {
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               <TabsTrigger value="schedule">{t("doctorSchedule")}</TabsTrigger>
               <TabsTrigger value="profiles">{t("doctorProfiles")}</TabsTrigger>
+              {isAdmin && (
+                <TabsTrigger value="staff" className="gap-1.5">
+                  <Users className="h-4 w-4" />
+                  Staff Management
+                </TabsTrigger>
+              )}
             </TabsList>
 
             <TabsContent value="queue" className="space-y-5 mt-5">
