@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, CheckCircle, XCircle, AlertCircle, Clock, CalendarCheck } from "lucide-react";
+import { Users, CheckCircle, XCircle, AlertCircle, CalendarCheck } from "lucide-react";
 import type { DailySummary as DailySummaryType } from "@/types/queue";
 import { useI18n } from "@/hooks/useI18n";
 
@@ -16,11 +16,10 @@ export const DailySummary = ({ summary }: DailySummaryProps) => {
     { title: t("arrived"), value: summary.arrived, icon: CheckCircle, color: "text-status-arrived" },
     { title: t("cancelled"), value: summary.cancelled, icon: XCircle, color: "text-status-cancelled" },
     { title: t("noShows"), value: summary.noShows, icon: AlertCircle, color: "text-destructive" },
-    { title: t("avgWaitTime"), value: summary.avgWaitTime, icon: Clock, color: "text-accent" },
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
+    <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
       {stats.map((stat) => (
         <Card key={stat.title}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
