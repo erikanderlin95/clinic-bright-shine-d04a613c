@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, CheckCircle, XCircle, AlertCircle, Clock, CalendarCheck } from "lucide-react";
+import { Users, CheckCircle, XCircle, AlertCircle, CalendarCheck } from "lucide-react";
 import type { DailySummary as DailySummaryType } from "@/types/queue";
 import { useI18n } from "@/hooks/useI18n";
 
