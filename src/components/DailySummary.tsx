@@ -16,7 +16,6 @@ export const DailySummary = ({ summary }: DailySummaryProps) => {
     { title: t("arrived"), value: summary.arrived, icon: CheckCircle, color: "text-status-arrived" },
     { title: t("cancelled"), value: summary.cancelled, icon: XCircle, color: "text-status-cancelled" },
     { title: t("noShows"), value: summary.noShows, icon: AlertCircle, color: "text-destructive" },
-    { title: t("avgWaitTime"), value: summary.avgWaitTime, icon: Clock, color: "text-accent" },
   ];
 
   return (
