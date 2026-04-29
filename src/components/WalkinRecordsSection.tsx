@@ -84,12 +84,13 @@ export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => 
                   <TableHead>{t("queueNo")}</TableHead>
                   <TableHead>{t("arrivalTime")}</TableHead>
                   <TableHead>{t("status")}</TableHead>
+                  <TableHead>Reason / Notes</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {walkinRecords.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground">
+                    <TableCell colSpan={6} className="text-center text-muted-foreground">
                       {t("noWalkinRecords")}
                     </TableCell>
                   </TableRow>
@@ -115,9 +116,10 @@ export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => 
                             entry.status === "cancelled" && "bg-orange-500/10 text-orange-600 border-orange-500/20"
                           )}
                         >
-                          {entry.status === "completed" ? "Completed" : entry.status === "no-show" ? "No Show" : "Cancelled"}
+                          {entry.status === "completed" ? "Completed" : entry.status === "no-show" ? "No Show" : "Left Queue"}
                         </Badge>
                       </TableCell>
+                      <TableCell className="text-foreground text-sm">{entry.notes || "-"}</TableCell>
                     </TableRow>
                   ))
                 )}
