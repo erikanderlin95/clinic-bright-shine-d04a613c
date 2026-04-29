@@ -110,6 +110,20 @@ const Index = () => {
       checkInCode: "R5T1W4",
       patientType: "walk-in",
     },
+    {
+      id: "11",
+      queueNumber: "A101",
+      status: "cancelled",
+      joinedAt: "09:20",
+      name: "Daniel Koh",
+      mobile: "+65 9888 1122",
+      email: "daniel.koh@example.com",
+      queueSource: "Walk-in",
+      visitCategory: "Consultation",
+      notes: "Left queue at 10:35 — Reason: Wait time too long",
+      checkInCode: "L9F4J2",
+      patientType: "walk-in",
+    },
   ]);
 
   const [bookingLeads, setBookingLeads] = useState<BookingLead[]>([
