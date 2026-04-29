@@ -23,15 +23,16 @@ export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => 
   );
 
   const handleDownloadCSV = () => {
-    const headers = ["Patient Name", "Visit Date", "Queue Number", "Arrival Time", "Status"];
+    const headers = ["Patient Name", "Visit Date", "Queue Number", "Arrival Time", "Status", "Reason / Notes"];
     const rows = walkinRecords.map((entry) => [
       entry.name || "-",
       new Date().toLocaleDateString(),
       entry.queueNumber,
       entry.joinedAt,
       entry.status,
+      entry.notes || "-",
     ]);
-    const csv = [headers, ...rows].map((r) => r.join(",")).join("\n");
+    const csv = [headers, ...rows].map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
