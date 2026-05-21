@@ -404,6 +404,10 @@ const Index = () => {
                 <StaffManagementPanel />
               </TabsContent>
             )}
+
+            <TabsContent value="settings" className="mt-5">
+              <SettingsPanel />
+            </TabsContent>
           </Tabs>
         </main>
 
