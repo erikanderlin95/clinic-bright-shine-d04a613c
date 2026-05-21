@@ -49,19 +49,6 @@ const PatientArrival = () => {
         <CardContent className="space-y-6">
           {!arrived ? (
             <>
-              <div className="rounded-lg border bg-muted p-4 text-center">
-                <p className="text-sm font-medium text-foreground mb-1">Your Queue Token</p>
-                <p className="text-2xl font-bold text-primary">{token || "XXXX"}</p>
-              </div>
-              
-              <Button
-                size="lg"
-                className="w-full gap-2"
-                onClick={handleArrival}
-              >
-                <CheckCircle className="h-5 w-5" />
-                I've Arrived
-              </Button>
               
               <div className="rounded-lg border bg-muted p-4 text-center">
                 <p className="text-sm font-medium text-foreground mb-1">Your Queue Token</p>
