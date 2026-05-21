@@ -13,11 +13,10 @@ import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPa
 import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
-import { StaffManagementPanel } from "@/components/StaffManagementPanel";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Users, Settings } from "lucide-react";
+import { Plus, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/hooks/useI18n";
 import { useAuth } from "@/hooks/useAuth";
@@ -316,12 +315,6 @@ const Index = () => {
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               <TabsTrigger value="schedule">{t("doctorSchedule")}</TabsTrigger>
               <TabsTrigger value="profiles">{t("doctorProfiles")}</TabsTrigger>
-              {isAdmin && (
-                <TabsTrigger value="staff" className="gap-1.5">
-                  <Users className="h-4 w-4" />
-                  Staff Management
-                </TabsTrigger>
-              )}
               <TabsTrigger value="settings" className="gap-1.5">
                 <Settings className="h-4 w-4" />
                 Settings
@@ -399,11 +392,6 @@ const Index = () => {
               <DoctorProfilesPanel />
             </TabsContent>
 
-            {isAdmin && (
-              <TabsContent value="staff" className="mt-5">
-                <StaffManagementPanel />
-              </TabsContent>
-            )}
 
             <TabsContent value="settings" className="mt-5">
               <SettingsPanel />
