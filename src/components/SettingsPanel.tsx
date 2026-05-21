@@ -4,6 +4,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Eye, Gauge } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { StaffManagementPanel } from "./StaffManagementPanel";
 
 export type QueueVisibilityMode = "live" | "smart";
 
@@ -105,6 +106,8 @@ export const SettingsPanel = () => {
           </RadioGroup>
         </CardContent>
       </Card>
+
+      <StaffManagementPanel />
     </div>
   );
 };
