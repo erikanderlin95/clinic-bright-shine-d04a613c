@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Eye, Gauge } from "lucide-react";
+import { Eye, Gauge, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { StaffManagementPanel } from "./StaffManagementPanel";
 
@@ -104,6 +104,34 @@ export const SettingsPanel = () => {
               );
             })}
           </RadioGroup>
+
+          {mode === "smart" && (
+            <div className="mt-4 rounded-lg border border-border/60 bg-muted/40 p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Default Queue Grouping Logic
+                </span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="rounded-md bg-background/80 px-2 py-2">
+                  <div className="text-xs font-semibold text-foreground">Low Wait</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">0–5 active</div>
+                </div>
+                <div className="rounded-md bg-background/80 px-2 py-2">
+                  <div className="text-xs font-semibold text-foreground">Moderate Wait</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">6–9 active</div>
+                </div>
+                <div className="rounded-md bg-background/80 px-2 py-2">
+                  <div className="text-xs font-semibold text-foreground">Busy Now</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">10+ active</div>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
+                These are default operational ranges used by ClynicQ to simplify patient-facing wait visibility.
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
