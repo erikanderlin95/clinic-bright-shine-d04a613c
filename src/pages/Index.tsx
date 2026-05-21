@@ -322,6 +322,10 @@ const Index = () => {
                   Staff Management
                 </TabsTrigger>
               )}
+              <TabsTrigger value="settings" className="gap-1.5">
+                <Settings className="h-4 w-4" />
+                Settings
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="queue" className="space-y-5 mt-5">
