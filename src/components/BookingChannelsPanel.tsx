@@ -23,22 +23,6 @@ const channels: Channel[] = [
     accent: "text-green-600 bg-green-500/10 border-green-500/20",
   },
   {
-    id: "calendly",
-    name: "Calendly",
-    description: "Patients are redirected to the clinic's existing Calendly booking page.",
-    icon: CalendarDays,
-    active: true,
-    accent: "text-blue-600 bg-blue-500/10 border-blue-500/20",
-  },
-  {
-    id: "website",
-    name: "Clinic Website",
-    description: "Patients are redirected to the clinic's own website booking page.",
-    icon: Globe,
-    active: true,
-    accent: "text-primary bg-primary/10 border-primary/20",
-  },
-  {
     id: "external",
     name: "External Booking Link",
     description: "Patients are redirected to an external booking page configured for the clinic.",
