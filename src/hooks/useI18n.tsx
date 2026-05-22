@@ -6,7 +6,7 @@ const translations = {
   en: {
     // Header
     dashboardTitle: "ClynicQ Dashboard",
-    dashboardSubtitle: "Operational visibility for today's patients (walk-ins + bookings)",
+    dashboardSubtitle: "Operational visibility for walk-ins and patient booking traffic",
 
     // Tabs
     queueManagement: "Today's Patients",
