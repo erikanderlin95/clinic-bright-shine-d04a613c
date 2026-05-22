@@ -199,7 +199,7 @@ const translations = {
 
     // Daily Summary
     totalQueueToday: "现场排队",
-    bookingsToday: "预约",
+    bookingsToday: "预约转接",
     arrived: "已到达",
     cancelled: "已取消",
     noShows: "未到",
