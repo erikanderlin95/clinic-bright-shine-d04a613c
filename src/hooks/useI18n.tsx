@@ -82,7 +82,7 @@ const translations = {
     patientTypeCol: "Type",
     apptTimeCol: "Appt Time",
     typeWalkIn: "Walk-in",
-    typeBooking: "Booking",
+    typeBooking: "Expected Arrival",
     addToQueue: "Add to Queue",
 
     // Check-in Dialog
@@ -257,7 +257,7 @@ const translations = {
     patientTypeCol: "类型",
     apptTimeCol: "预约时间",
     typeWalkIn: "现场挂号",
-    typeBooking: "预约",
+    typeBooking: "预约到访",
     addToQueue: "加入排队",
 
     // Check-in Dialog
