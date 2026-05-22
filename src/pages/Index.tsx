@@ -5,7 +5,7 @@ import { DailySummary } from "@/components/DailySummary";
 import { QueueTable } from "@/components/QueueTable";
 import { PatientDetailPanel } from "@/components/PatientDetailPanel";
 import { WalkinRecordsSection } from "@/components/WalkinRecordsSection";
-import { BookingRecordsSection } from "@/components/BookingRecordsSection";
+import { BookingChannelsPanel } from "@/components/BookingChannelsPanel";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
 import { AdjustQueueDialog } from "@/components/AdjustQueueDialog";
@@ -311,7 +311,7 @@ const Index = () => {
             <TabsList>
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
               
-              <TabsTrigger value="appointments">{t("appointments")}</TabsTrigger>
+              <TabsTrigger value="appointments">Booking Channels</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               <TabsTrigger value="schedule">{t("doctorSchedule")}</TabsTrigger>
               <TabsTrigger value="profiles">{t("doctorProfiles")}</TabsTrigger>
@@ -354,13 +354,13 @@ const Index = () => {
               </div>
 
               <WalkinRecordsSection entries={queueEntries} />
-              <BookingRecordsSection entries={queueEntries} />
             </TabsContent>
 
 
 
+
             <TabsContent value="appointments" className="mt-5">
-              <AppointmentBookingPanel />
+              <BookingChannelsPanel />
             </TabsContent>
 
             <TabsContent value="automation" className="mt-5">
