@@ -82,7 +82,7 @@ const translations = {
     patientTypeCol: "Type",
     apptTimeCol: "Appt Time",
     typeWalkIn: "Walk-in",
-    typeBooking: "Booking",
+    typeBooking: "Expected Arrival",
     addToQueue: "Add to Queue",
 
     // Check-in Dialog
