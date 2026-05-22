@@ -354,8 +354,8 @@ const Index = () => {
               </div>
 
               <WalkinRecordsSection entries={queueEntries} />
-              <BookingRecordsSection entries={queueEntries} />
             </TabsContent>
+
 
 
 
