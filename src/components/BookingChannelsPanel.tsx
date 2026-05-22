@@ -112,46 +112,6 @@ export const BookingChannelsPanel = () => {
           </p>
         </CardContent>
       </Card>
-
-      <Card>
-        <CardHeader className="border-b border-border/50 bg-muted/30">
-          <CardTitle className="flex items-center gap-2 text-foreground">
-            <ExternalLink className="h-5 w-5" />
-            Booking Redirect Activity
-          </CardTitle>
-          <p className="text-sm text-muted-foreground mt-1">
-            Outbound visibility of patients routed to your booking channels. Tracks redirect intent only.
-          </p>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="rounded-lg border border-border bg-card shadow-sm">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/50 hover:bg-muted/50 border-b-2 border-primary/20">
-                  <TableHead>Patient Name</TableHead>
-                  <TableHead>Booking Channel</TableHead>
-                  <TableHead>Redirect Time</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {redirectActivity.map((r, i) => (
-                  <TableRow key={r.id} className={cn("hover:bg-muted/30", i % 2 === 0 ? "bg-accent/5" : "")}>
-                    <TableCell className="font-medium text-foreground">{r.patient}</TableCell>
-                    <TableCell className="text-foreground">{r.channel}</TableCell>
-                    <TableCell className="text-muted-foreground">{r.time}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/20">
-                        Redirected
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
