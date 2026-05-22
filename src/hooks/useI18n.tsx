@@ -24,7 +24,7 @@ const translations = {
 
     // Daily Summary
     totalQueueToday: "Live Queue",
-    bookingsToday: "Bookings",
+    bookingsToday: "Booking Redirects",
     arrived: "Arrived",
     cancelled: "Cancelled",
     noShows: "No Shows",
