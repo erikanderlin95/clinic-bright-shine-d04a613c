@@ -47,21 +47,6 @@ const channels: Channel[] = [
   },
 ];
 
-interface RedirectActivity {
-  id: string;
-  patient: string;
-  channel: string;
-  time: string;
-}
-
-const redirectActivity: RedirectActivity[] = [
-  { id: "1", patient: "Sarah Chen", channel: "WhatsApp Booking", time: "Today 10:32" },
-  { id: "2", patient: "Michael Tan", channel: "Calendly", time: "Today 09:48" },
-  { id: "3", patient: "Priya Kumar", channel: "Clinic Website", time: "Today 09:15" },
-  { id: "4", patient: "John Lim", channel: "WhatsApp Booking", time: "Yesterday 16:20" },
-  { id: "5", patient: "Alice Wong", channel: "External Booking Link", time: "Yesterday 14:05" },
-];
-
 export const BookingChannelsPanel = () => {
   return (
     <div className="space-y-6">
