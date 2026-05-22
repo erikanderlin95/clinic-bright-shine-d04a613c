@@ -311,7 +311,7 @@ const Index = () => {
             <TabsList>
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
               
-              <TabsTrigger value="appointments">{t("appointments")}</TabsTrigger>
+              <TabsTrigger value="appointments">Booking Channels</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               <TabsTrigger value="schedule">{t("doctorSchedule")}</TabsTrigger>
               <TabsTrigger value="profiles">{t("doctorProfiles")}</TabsTrigger>
