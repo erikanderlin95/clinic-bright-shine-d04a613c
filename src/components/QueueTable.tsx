@@ -83,7 +83,6 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
             <TableHead className="w-[120px]">{t("status")}</TableHead>
             <TableHead className="w-[90px]">{t("patientTypeCol")}</TableHead>
             <TableHead className="w-[120px]">Reason</TableHead>
-            <TableHead className="w-[100px]">{t("apptTimeCol")}</TableHead>
             <TableHead className="w-[110px]">{t("timeJoined")}</TableHead>
             <TableHead className="w-[110px]">{t("checkInCode")}</TableHead>
             <TableHead>{t("actions")}</TableHead>
@@ -93,7 +92,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
         <TableBody>
           {entries.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
+              <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
                 {t("noPatients")}
               </TableCell>
             </TableRow>
@@ -123,7 +122,6 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
                       : entry.visitCategory
                     : "—"}
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">{entry.appointmentTime || "—"}</TableCell>
                 <TableCell className="text-muted-foreground text-sm">{entry.joinedAt}</TableCell>
                 <TableCell className="font-mono text-sm text-muted-foreground">{entry.checkInCode || "—"}</TableCell>
                 <TableCell>{getActions(entry)}</TableCell>
