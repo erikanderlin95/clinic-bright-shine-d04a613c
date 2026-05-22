@@ -360,7 +360,7 @@ const Index = () => {
 
 
             <TabsContent value="appointments" className="mt-5">
-              <AppointmentBookingPanel />
+              <BookingChannelsPanel />
             </TabsContent>
 
             <TabsContent value="automation" className="mt-5">
