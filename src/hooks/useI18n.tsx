@@ -181,7 +181,7 @@ const translations = {
   zh: {
     // Header
     dashboardTitle: "ClynicQ 仪表板",
-    dashboardSubtitle: "今日患者的运营可视化（现场挂号 + 预约）",
+    dashboardSubtitle: "现场挂号与患者预约流量的运营可视化",
 
     // Tabs
     queueManagement: "今日患者",
