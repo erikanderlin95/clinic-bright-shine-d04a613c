@@ -70,7 +70,7 @@ const translations = {
 
     // Status Badges
     statusWaiting: "Waiting",
-    statusArrived: "Arrived",
+    statusArrived: "In Consultation",
     statusLate: "Late",
     statusCancelled: "Cancelled",
     statusNoShow: "No Show",
