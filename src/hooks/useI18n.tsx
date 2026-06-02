@@ -36,7 +36,7 @@ const translations = {
     timeJoined: "Queue Joined",
     checkInCode: "Check-in Code",
     actions: "Actions",
-    verifyAndArrive: "Verify & Arrived",
+    verifyAndArrive: "Enter Consultation",
     cancel: "Adjust",
     noShow: "No Show",
     completed: "Completed",
