@@ -245,7 +245,7 @@ const translations = {
 
     // Status Badges
     statusWaiting: "等待中",
-    statusArrived: "已到达",
+    statusArrived: "诊症中",
     statusLate: "迟到",
     statusCancelled: "已取消",
     statusNoShow: "未到",
