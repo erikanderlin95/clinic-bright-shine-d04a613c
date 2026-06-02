@@ -25,7 +25,7 @@ const translations = {
     // Daily Summary
     totalQueueToday: "Live Queue",
     bookingsToday: "Booking Redirects",
-    arrived: "Arrived",
+    arrived: "Completed",
     cancelled: "Cancelled",
     noShows: "No Shows",
     avgWaitTime: "Avg Wait Time",
@@ -36,7 +36,7 @@ const translations = {
     timeJoined: "Queue Joined",
     checkInCode: "Check-in Code",
     actions: "Actions",
-    verifyAndArrive: "Verify & Arrived",
+    verifyAndArrive: "Enter Consultation",
     cancel: "Adjust",
     noShow: "No Show",
     completed: "Completed",
@@ -70,7 +70,7 @@ const translations = {
 
     // Status Badges
     statusWaiting: "Waiting",
-    statusArrived: "Arrived",
+    statusArrived: "In Consultation",
     statusLate: "Late",
     statusCancelled: "Cancelled",
     statusNoShow: "No Show",
@@ -93,7 +93,7 @@ const translations = {
     checkInCodeLabel: "Check-in Code",
     enterCode: "Enter code",
     invalidCode: "Invalid code. Please try again.",
-    verifyAndMarkArrived: "Verify & Mark Arrived",
+    verifyAndMarkArrived: "Enter Consultation",
     markArrivedNoCode: "Mark as Arrived (No Code)",
 
     // Add to Queue Dialog
@@ -200,7 +200,7 @@ const translations = {
     // Daily Summary
     totalQueueToday: "现场排队",
     bookingsToday: "预约转接",
-    arrived: "已到达",
+    arrived: "已完成",
     cancelled: "已取消",
     noShows: "未到",
     avgWaitTime: "平均等候时间",
@@ -211,7 +211,7 @@ const translations = {
     timeJoined: "加入时间",
     checkInCode: "签到码",
     actions: "操作",
-    verifyAndArrive: "验证并到达",
+    verifyAndArrive: "进入诊症",
     cancel: "调整",
     noShow: "未到",
     completed: "已完成",
@@ -245,7 +245,7 @@ const translations = {
 
     // Status Badges
     statusWaiting: "等待中",
-    statusArrived: "已到达",
+    statusArrived: "诊症中",
     statusLate: "迟到",
     statusCancelled: "已取消",
     statusNoShow: "未到",
@@ -268,7 +268,7 @@ const translations = {
     checkInCodeLabel: "签到码",
     enterCode: "输入验证码",
     invalidCode: "验证码无效，请重试。",
-    verifyAndMarkArrived: "验证并标记到达",
+    verifyAndMarkArrived: "进入诊症",
     markArrivedNoCode: "标记到达（无验证码）",
 
     // Add to Queue Dialog
