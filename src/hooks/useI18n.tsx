@@ -268,7 +268,7 @@ const translations = {
     checkInCodeLabel: "签到码",
     enterCode: "输入验证码",
     invalidCode: "验证码无效，请重试。",
-    verifyAndMarkArrived: "验证并标记到达",
+    verifyAndMarkArrived: "进入诊症",
     markArrivedNoCode: "标记到达（无验证码）",
 
     // Add to Queue Dialog
