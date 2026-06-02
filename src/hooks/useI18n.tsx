@@ -211,7 +211,7 @@ const translations = {
     timeJoined: "加入时间",
     checkInCode: "签到码",
     actions: "操作",
-    verifyAndArrive: "验证并到达",
+    verifyAndArrive: "进入诊症",
     cancel: "调整",
     noShow: "未到",
     completed: "已完成",
