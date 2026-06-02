@@ -93,7 +93,7 @@ const translations = {
     checkInCodeLabel: "Check-in Code",
     enterCode: "Enter code",
     invalidCode: "Invalid code. Please try again.",
-    verifyAndMarkArrived: "Verify & Mark Arrived",
+    verifyAndMarkArrived: "Enter Consultation",
     markArrivedNoCode: "Mark as Arrived (No Code)",
 
     // Add to Queue Dialog
