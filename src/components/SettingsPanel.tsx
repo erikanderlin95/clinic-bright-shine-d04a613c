@@ -119,11 +119,11 @@ export const SettingsPanel = () => {
               </div>
               <div className="rounded-md bg-background/80 px-2 py-2">
                 <div className="text-xs font-semibold text-foreground">Moderate Wait</div>
-                <div className="text-[11px] text-muted-foreground mt-0.5">4–6 active</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">4–9 active</div>
               </div>
               <div className="rounded-md bg-background/80 px-2 py-2">
                 <div className="text-xs font-semibold text-foreground">Busy Now</div>
-                <div className="text-[11px] text-muted-foreground mt-0.5">7+ active</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">10+ active</div>
               </div>
             </div>
             <p className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
