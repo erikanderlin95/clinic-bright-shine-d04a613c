@@ -11,7 +11,7 @@ const MOCK_PEOPLE_AHEAD = 7;
 
 const getSmartWaitLabel = (count: number) => {
   if (count <= 3) return { label: "Low Wait", tone: "text-green-600 bg-green-50 border-green-200" };
-  if (count <= 8) return { label: "Moderate Wait", tone: "text-amber-700 bg-amber-50 border-amber-200" };
+  if (count <= 6) return { label: "Moderate Wait", tone: "text-amber-700 bg-amber-50 border-amber-200" };
   return { label: "Busy Now", tone: "text-red-600 bg-red-50 border-red-200" };
 };
 
