@@ -115,15 +115,15 @@ export const SettingsPanel = () => {
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="rounded-md bg-background/80 px-2 py-2">
                 <div className="text-xs font-semibold text-foreground">Low Wait</div>
-                <div className="text-[11px] text-muted-foreground mt-0.5">0–5 active</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">0–3 active</div>
               </div>
               <div className="rounded-md bg-background/80 px-2 py-2">
                 <div className="text-xs font-semibold text-foreground">Moderate Wait</div>
-                <div className="text-[11px] text-muted-foreground mt-0.5">6–9 active</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">4–6 active</div>
               </div>
               <div className="rounded-md bg-background/80 px-2 py-2">
                 <div className="text-xs font-semibold text-foreground">Busy Now</div>
-                <div className="text-[11px] text-muted-foreground mt-0.5">10+ active</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">7+ active</div>
               </div>
             </div>
             <p className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
