@@ -296,34 +296,34 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-5 py-4">Name</TableHead>
-              <TableHead className="px-5 py-4">Email / Login ID</TableHead>
-              <TableHead className="px-5 py-4">Role</TableHead>
-              <TableHead className="px-5 py-4">Status</TableHead>
-              <TableHead className="px-5 py-4">Last Login</TableHead>
-              <TableHead className="w-[80px] px-5 py-4 text-right">Actions</TableHead>
+              <TableHead className="px-6 py-5">Name</TableHead>
+              <TableHead className="px-6 py-5">Email / Login ID</TableHead>
+              <TableHead className="px-6 py-5">Role</TableHead>
+              <TableHead className="px-6 py-5">Status</TableHead>
+              <TableHead className="px-6 py-5">Last Login</TableHead>
+              <TableHead className="w-[80px] px-6 py-5 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {staff.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground py-10 px-5">
+                <TableCell colSpan={6} className="text-center text-muted-foreground py-10 px-6">
                   No staff members yet.
                 </TableCell>
               </TableRow>
             ) : (
               staff.map((member) => (
                 <TableRow key={member.id}>
-                  <TableCell className="font-medium px-5 py-4">{member.name}</TableCell>
-                  <TableCell className="px-5 py-4">{member.email}</TableCell>
-                  <TableCell className="px-5 py-4">{member.role}</TableCell>
-                  <TableCell className="px-5 py-4">
+                  <TableCell className="font-medium px-6 py-5">{member.name}</TableCell>
+                  <TableCell className="px-6 py-5">{member.email}</TableCell>
+                  <TableCell className="px-6 py-5">{member.role}</TableCell>
+                  <TableCell className="px-6 py-5">
                     <Badge variant={member.active ? "default" : "secondary"}>
                       {member.active ? "Active" : "Inactive"}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-muted-foreground px-5 py-4">{member.lastLogin ?? "—"}</TableCell>
-                  <TableCell className="text-right px-5 py-4">
+                  <TableCell className="text-muted-foreground px-6 py-5">{member.lastLogin ?? "—"}</TableCell>
+                  <TableCell className="text-right px-6 py-5">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -389,32 +389,32 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-5 py-4 w-[180px]">Date &amp; Time</TableHead>
-              <TableHead className="px-5 py-4 w-[120px]">Action</TableHead>
-              <TableHead className="px-5 py-4 w-[220px]">Performed By</TableHead>
-              <TableHead className="px-5 py-4 w-[200px]">Target</TableHead>
-              <TableHead className="px-5 py-4">Details</TableHead>
+              <TableHead className="px-6 py-5 w-[160px]">Date &amp; Time</TableHead>
+              <TableHead className="px-6 py-5 w-[110px]">Action</TableHead>
+              <TableHead className="px-6 py-5 w-[180px]">Performed By</TableHead>
+              <TableHead className="px-6 py-5 w-[160px]">Target</TableHead>
+              <TableHead className="px-6 py-5">Details</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {visibleLog.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground py-10 px-5">
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-10 px-6">
                   No activity recorded yet.
                 </TableCell>
               </TableRow>
             ) : (
               visibleLog.map((log) => (
                 <TableRow key={log.id}>
-                  <TableCell className="text-muted-foreground font-mono text-xs px-5 py-4">
+                  <TableCell className="text-muted-foreground font-mono text-xs px-6 py-5">
                     {log.timestamp}
                   </TableCell>
-                  <TableCell className="px-5 py-4">
+                  <TableCell className="px-6 py-5">
                     <Badge variant={actionBadgeVariant(log.action)}>{log.action}</Badge>
                   </TableCell>
-                  <TableCell className="px-5 py-4">{log.performedBy}</TableCell>
-                  <TableCell className="px-5 py-4">{log.target}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground px-5 py-4">{log.message}</TableCell>
+                  <TableCell className="px-6 py-5">{log.performedBy}</TableCell>
+                  <TableCell className="px-6 py-5">{log.target}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground px-6 py-5">{log.message}</TableCell>
                 </TableRow>
               ))
             )}
