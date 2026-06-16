@@ -66,7 +66,7 @@ export const SettingsPanel = () => {
   const visibleSections = sections.filter((s) => (s.id === "billing" ? isAdmin : true));
 
   return (
-    <div className="max-w-[1480px] mx-auto space-y-8">
+    <div className="space-y-8 px-8">
       <div>
         <h2 className="text-2xl font-semibold text-foreground tracking-tight">Settings</h2>
         <p className="text-sm text-muted-foreground mt-2">
@@ -74,9 +74,9 @@ export const SettingsPanel = () => {
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-[200px_1fr]">
+      <div className="flex gap-6">
         {/* Secondary nav */}
-        <nav className="md:sticky md:top-6 md:self-start">
+        <nav className="w-[200px] flex-shrink-0 md:sticky md:top-6 md:self-start">
           <div className="rounded-xl bg-muted/40 p-4 flex gap-2.5 overflow-x-auto md:flex-col">
             {visibleSections.map((s) => {
               const Icon = s.icon;
