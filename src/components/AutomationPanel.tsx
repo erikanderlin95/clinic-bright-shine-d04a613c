@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Megaphone, Users, Plus, Trash2, Edit2, Check, X, Database,
-  AlertTriangle, AlertCircle, Send,
+  AlertTriangle, AlertCircle, Send, Clock, Inbox, Info, Sparkles,
 } from "lucide-react";
 import type { AudiencePatient } from "./BroadcastAudienceTable";
 
@@ -286,75 +286,121 @@ export const AutomationPanel = ({
   const isTemplateSelected = selectedTemplateId !== "custom" && selectedTemplateId !== "custom-marketing";
   const activeQueueDisabled = !clinicIntegrationActive && activeQueuePatients.length === 0;
 
+  // Helpers for redesigned UI
+  const getInitials = (name: string) =>
+    (name || "?")
+      .split(" ")
+      .map((p) => p[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
+
+  const statusPillClass = (status?: string) => {
+    if (status === "arrived") return "bg-emerald-100 text-emerald-700";
+    if (status === "called") return "bg-blue-100 text-blue-700";
+    return "bg-slate-100 text-slate-600";
+  };
+
+  const selectedCount = selectedPatientIds.size;
+
   return (
-    <div className="max-w-[1455px] space-y-4">
-      {/* Row 1 — Full Width System Alert Banner */}
-      {!clinicIntegrationActive && (
-        <div className="flex items-center justify-between gap-3 p-3 rounded-md bg-muted/60 border border-dashed">
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4 shrink-0" style={{ color: "hsl(220, 80%, 40%)" }} />
-            <p className="text-[16px] font-semibold leading-normal" style={{ color: "hsl(220, 80%, 40%)" }}>
-              Clinic system not connected. Active queue uses ClynicQ session data.
-            </p>
+    <div className="max-w-[1455px] space-y-6">
+      {/* HERO HEADER */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 rounded-2xl bg-gradient-to-br from-teal-50 via-white to-white p-6 shadow-sm">
+        <div className="space-y-1.5">
+          <div className="inline-flex items-center gap-2 text-[13px] font-medium text-teal-700">
+            <Sparkles className="h-3.5 w-3.5" />
+            Automation Workspace
           </div>
-          <Button variant="outline" size="sm" className="shrink-0 text-[14px] pointer-events-none opacity-80" style={{ color: "black", borderWidth: "2px", borderColor: "hsl(215, 25%, 40%)" }}>
-            Connect CMS
-          </Button>
+          <h1 className="text-[28px] font-semibold tracking-tight text-foreground">Automation</h1>
+          <p className="text-[15px] text-muted-foreground">
+            Send operational updates and automate patient communication.
+          </p>
         </div>
-      )}
+        <div
+          className={`flex items-center gap-3 rounded-xl px-4 py-3 shadow-sm ${
+            clinicIntegrationActive ? "bg-emerald-50" : "bg-amber-50"
+          }`}
+        >
+          <span
+            className={`inline-block h-2.5 w-2.5 rounded-full ${
+              clinicIntegrationActive ? "bg-emerald-500" : "bg-amber-500"
+            }`}
+          />
+          <div className="flex flex-col">
+            <span className="text-[12px] font-medium uppercase tracking-wide text-muted-foreground">
+              Clinic System
+            </span>
+            <span className="text-[14px] font-semibold text-foreground">
+              {clinicIntegrationActive ? "Connected" : "Not Connected"}
+            </span>
+          </div>
+          {!clinicIntegrationActive && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="ml-2 h-9 rounded-lg border-amber-300 bg-white text-[13px] font-semibold text-amber-800 hover:bg-amber-100 pointer-events-none"
+            >
+              Connect CMS
+            </Button>
+          )}
+        </div>
+      </div>
 
-      {/* Row 2 — Two Columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-4 items-start">
-        {/* LEFT COLUMN — Operational Broadcast */}
-        <Card>
-          <CardHeader className="pb-3 pt-4 px-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-lg font-semibold">Operational Broadcast</CardTitle>
-                <CardDescription className="text-[14px] mt-1">Select audience and send announcements</CardDescription>
-              </div>
-              <Badge variant="outline" className="gap-1 text-[12px] font-normal px-2 py-0.5">
-                <Database className="h-3.5 w-3.5" />
-                {clinicIntegrationActive ? "Clinic Assist" : "ClynicQ"}
-              </Badge>
-            </div>
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 items-start">
+        {/* LEFT — Broadcast Message */}
+        <Card className="rounded-2xl border-0 shadow-sm">
+          <CardHeader className="px-6 pt-6 pb-2">
+            <CardTitle className="text-[20px] font-semibold tracking-tight">Broadcast Message</CardTitle>
+            <CardDescription className="text-[14px]">
+              Select patients and send an operational update.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="px-4 pb-4 pt-0">
-            {/* Block 1: Audience Selection */}
-            <div className="space-y-3">
-              <div className="flex gap-2.5">
-                <Button
-                  variant={audienceMode === "active-queue" ? "default" : "outline"}
-                  size="sm"
-                  className="flex-1 gap-1.5 text-[16px] h-10"
-                  onClick={() => setAudienceMode("active-queue")}
-                  disabled={activeQueueDisabled}
+          <CardContent className="px-6 pb-6 pt-4 space-y-6">
+            {/* Segment switcher */}
+            <div className="flex flex-col sm:flex-row gap-2 rounded-xl bg-muted/50 p-1.5">
+              <button
+                type="button"
+                onClick={() => setAudienceMode("active-queue")}
+                disabled={activeQueueDisabled}
+                className={`flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[15px] font-medium transition-all ${
+                  audienceMode === "active-queue"
+                    ? "bg-white text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                } disabled:opacity-40 disabled:cursor-not-allowed`}
+              >
+                <Users className="h-4 w-4" />
+                Active Queue
+                <span
+                  className={`ml-1 rounded-full px-2 py-0.5 text-[12px] font-semibold ${
+                    audienceMode === "active-queue" ? "bg-teal-100 text-teal-700" : "bg-muted text-muted-foreground"
+                  }`}
                 >
-                  <Megaphone className="h-4 w-4" />
-                  Active Queue Patients
-                </Button>
-                <Button
-                  variant={audienceMode === "recent-customers" ? "default" : "outline"}
-                  size="sm"
-                  className="flex-1 gap-1.5 text-[16px] h-10"
-                  onClick={() => setAudienceMode("recent-customers")}
-                >
-                  <Users className="h-4 w-4" />
-                  Recent Customers (60 Days)
-                </Button>
-              </div>
-              <p className="text-[13px] text-muted-foreground/60">
-                Audience source: {clinicIntegrationActive ? "Clinic system" : "ClynicQ session data"}
-              </p>
+                  {activeQueuePatients.length}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setAudienceMode("recent-customers")}
+                className={`flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[15px] font-medium transition-all ${
+                  audienceMode === "recent-customers"
+                    ? "bg-white text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Clock className="h-4 w-4" />
+                Recent Patients
+              </button>
             </div>
 
-            {/* Block 2: Filters + Table */}
-            <div className="mt-4 space-y-3">
+            {/* Filter bar */}
+            <div className="flex flex-wrap items-center gap-3">
               {audienceMode === "active-queue" && (
-                <div className="flex items-center gap-3">
+                <>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-[140px] h-9 text-[16px]">
-                      <SelectValue placeholder="Filter status" />
+                    <SelectTrigger className="w-[150px] h-10 rounded-lg text-[14px]">
+                      <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Statuses</SelectItem>
@@ -363,120 +409,120 @@ export const AutomationPanel = ({
                     </SelectContent>
                   </Select>
                   <div className="flex items-center gap-2">
-                    <span className="text-[14px] text-muted-foreground whitespace-nowrap">Ahead ≤</span>
+                    <span className="text-[13px] text-muted-foreground whitespace-nowrap">Ahead ≤</span>
                     <Input
                       type="number"
                       min={0}
                       value={maxAhead}
                       onChange={(e) => setMaxAhead(e.target.value)}
-                      className="w-[60px] h-9 text-[16px]"
+                      className="w-[72px] h-10 rounded-lg text-[14px]"
                       placeholder="—"
                     />
                   </div>
-                </div>
+                </>
               )}
-
-              <div className="border rounded-md max-h-[230px] overflow-y-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="h-11">
-                      <TableHead className="w-[40px] px-3 py-2">
-                        <Checkbox
-                          checked={allFilteredSelected}
-                          onCheckedChange={(checked) => handleSelectAll(!!checked)}
-                          aria-label="Select all"
-                        />
-                      </TableHead>
-                      <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Name</TableHead>
-                      {audienceMode === "active-queue" && (
-                        <>
-                          <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Queue #</TableHead>
-                          <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Ahead</TableHead>
-                          <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Status</TableHead>
-                        </>
-                      )}
-                      {audienceMode === "recent-customers" && (
-                        <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Last Visit</TableHead>
-                      )}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredAudience.length === 0 ? (
-                      <TableRow>
-                        <TableCell
-                          colSpan={audienceMode === "active-queue" ? 5 : 3}
-                          className="text-center text-[16px] text-muted-foreground py-8"
-                        >
-                          {audienceMode === "active-queue"
-                            ? "No active queue patients"
-                            : "No recent customers found"}
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      filteredAudience.map((patient) => (
-                        <TableRow key={patient.id} className="h-[44px]">
-                          <TableCell className="px-3 py-2">
-                            <Checkbox
-                              checked={selectedPatientIds.has(patient.id)}
-                              onCheckedChange={(checked) => handleTogglePatient(patient.id, !!checked)}
-                            />
-                          </TableCell>
-                          <TableCell className="text-[16px] font-medium px-3 py-2">{patient.name || "—"}</TableCell>
-                          {audienceMode === "active-queue" && (
-                            <>
-                              <TableCell className="text-[16px] px-3 py-2">{patient.queueNumber || "—"}</TableCell>
-                              <TableCell className="text-[16px] px-3 py-2">{patient.patientsAhead ?? "—"}</TableCell>
-                              <TableCell className="px-3 py-2">
-                                <Badge
-                                  variant={patient.status === "arrived" ? "default" : "secondary"}
-                                  className="text-[12px] px-1.5 py-0"
-                                >
-                                  {patient.status === "arrived" ? "Arrived" : "Waiting"}
-                                </Badge>
-                              </TableCell>
-                            </>
-                          )}
-                          {audienceMode === "recent-customers" && (
-                            <TableCell className="text-[16px] text-muted-foreground px-3 py-2">
-                              {patient.lastVisitDate || "—"}
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
+              <div className="ml-auto flex items-center gap-2">
+                {filteredAudience.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => handleSelectAll(!allFilteredSelected)}
+                    className="text-[13px] font-medium text-teal-700 hover:underline"
+                  >
+                    {allFilteredSelected ? "Clear all" : "Select all"}
+                  </button>
+                )}
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-semibold ${
+                    selectedCount > 0 ? "bg-emerald-100 text-emerald-700" : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  <Check className="h-3.5 w-3.5" />
+                  {selectedCount} {selectedCount === 1 ? "Patient" : "Patients"} Selected
+                </span>
               </div>
-
-              <p className="text-[13px] text-muted-foreground/60">
-                {selectedPatientIds.size} of {filteredAudience.length} selected
-              </p>
             </div>
 
-            {/* Block 3: Message Selection */}
-            <div className="mt-5 border-t pt-5 space-y-3">
+            {/* Patient list */}
+            <div className="space-y-2 max-h-[340px] overflow-y-auto pr-1">
+              {filteredAudience.length === 0 ? (
+                <div className="flex flex-col items-center justify-center gap-2 rounded-xl bg-muted/30 py-10 text-center">
+                  <Inbox className="h-8 w-8 text-muted-foreground/60" />
+                  <p className="text-[15px] font-medium text-muted-foreground">No patients available</p>
+                </div>
+              ) : (
+                filteredAudience.map((patient) => {
+                  const selected = selectedPatientIds.has(patient.id);
+                  return (
+                    <label
+                      key={patient.id}
+                      className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition-all ${
+                        selected
+                          ? "border-teal-300 bg-teal-50/60 shadow-sm"
+                          : "border-transparent bg-muted/30 hover:bg-muted/60"
+                      }`}
+                    >
+                      <Checkbox
+                        checked={selected}
+                        onCheckedChange={(checked) => handleTogglePatient(patient.id, !!checked)}
+                      />
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-100 text-[13px] font-semibold text-teal-700">
+                        {getInitials(patient.name)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[15px] font-semibold text-foreground truncate">
+                          {patient.name || "—"}
+                        </div>
+                        <div className="text-[13px] text-muted-foreground">
+                          {audienceMode === "active-queue" ? (
+                            <>
+                              Queue {patient.queueNumber || "—"} · {patient.patientsAhead ?? 0}{" "}
+                              {patient.patientsAhead === 1 ? "patient" : "patients"} ahead
+                            </>
+                          ) : (
+                            <>Last visit: {patient.lastVisitDate || "—"}</>
+                          )}
+                        </div>
+                      </div>
+                      {audienceMode === "active-queue" && (
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[12px] font-medium ${statusPillClass(
+                            patient.status
+                          )}`}
+                        >
+                          <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
+                          {patient.status === "arrived" ? "Arrived" : "Waiting"}
+                        </span>
+                      )}
+                    </label>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Message section */}
+            <div className="space-y-4 pt-2">
               <div className="space-y-2">
-                <Label className="text-[16px] font-medium">Select Message</Label>
+                <Label className="text-[14px] font-semibold text-foreground">Choose Template</Label>
                 <Select value={selectedTemplateId} onValueChange={handleTemplateSelection}>
-                  <SelectTrigger className="w-full h-10 text-[16px]">
-                    <SelectValue placeholder="Choose a message template..." />
+                  <SelectTrigger className="w-full h-11 rounded-lg text-[15px]">
+                    <SelectValue placeholder="Select a saved template..." />
                   </SelectTrigger>
                   <SelectContent>
                     {templates.map((template) => (
-                      <SelectItem key={template.id} value={template.id} className="text-[16px]">
+                      <SelectItem key={template.id} value={template.id} className="text-[15px]">
                         {template.message}
                       </SelectItem>
                     ))}
-                    <SelectItem value="custom" className="text-[16px]">Custom Operational Message</SelectItem>
+                    <SelectItem value="custom" className="text-[15px]">Custom Operational Message</SelectItem>
                     {businessType === "wellness" && (
-                      <SelectItem value="custom-marketing" className="text-[16px]">Custom Marketing Message</SelectItem>
+                      <SelectItem value="custom-marketing" className="text-[15px]">Custom Marketing Message</SelectItem>
                     )}
                   </SelectContent>
                 </Select>
               </div>
 
               {isTemplateSelected && (
-                <div className="p-3 rounded border bg-muted/40 text-[16px] leading-relaxed">
+                <div className="rounded-xl bg-muted/40 p-4 text-[15px] leading-relaxed">
                   {templates.find((t) => t.id === selectedTemplateId)?.message}
                 </div>
               )}
@@ -484,8 +530,8 @@ export const AutomationPanel = ({
               {showCustomInput && (
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <Label className="text-[16px] font-medium">Your Message</Label>
-                    <span className="text-[13px] text-muted-foreground">{customMessage.length}/200</span>
+                    <Label className="text-[14px] font-semibold text-foreground">Message</Label>
+                    <span className="text-[12px] text-muted-foreground">{customMessage.length}/200</span>
                   </div>
                   <Textarea
                     value={customMessage}
@@ -495,18 +541,9 @@ export const AutomationPanel = ({
                         setValidationError(null);
                       }
                     }}
-                    placeholder={
-                      selectedTemplateId === "custom-marketing"
-                        ? "Enter your marketing message..."
-                        : "Enter operational notice..."
-                    }
-                    className="min-h-[100px] text-[16px] p-3"
+                    placeholder="Type an operational update..."
+                    className="min-h-[130px] rounded-xl text-[15px] p-4 resize-none"
                   />
-                  {selectedTemplateId === "custom" && (
-                    <p className="text-[13px] text-muted-foreground/70">
-                      Only operational notices are allowed. Marketing, promotions, and medical advice are prohibited.
-                    </p>
-                  )}
                   {selectedTemplateId === "custom-marketing" && (
                     <div className="space-y-2 mt-1">
                       <Alert className="py-2">
@@ -529,76 +566,114 @@ export const AutomationPanel = ({
                   )}
                 </div>
               )}
+
+              {/* Info card */}
+              <div className="rounded-xl bg-sky-50 p-4">
+                <div className="flex items-start gap-3">
+                  <Info className="h-5 w-5 shrink-0 text-sky-600 mt-0.5" />
+                  <div className="space-y-2 text-[14px]">
+                    <p className="font-semibold text-sky-900">Operational messages only</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[13px]">
+                      <div>
+                        <p className="font-medium text-emerald-700 mb-1">Allowed</p>
+                        <ul className="space-y-0.5 text-foreground/80">
+                          <li>• Queue updates</li>
+                          <li>• Delays</li>
+                          <li>• Clinic announcements</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-medium text-rose-700 mb-1">Not allowed</p>
+                        <ul className="space-y-0.5 text-foreground/80">
+                          <li>• Marketing</li>
+                          <li>• Promotions</li>
+                          <li>• Medical advice</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {validationError && (
+                <Alert variant="destructive" className="rounded-xl py-2">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  <AlertDescription className="text-[14px]">{validationError}</AlertDescription>
+                </Alert>
+              )}
             </div>
 
-            {/* Validation Error */}
-            {validationError && (
-              <div className="mt-4">
-                <Alert variant="destructive" className="py-2">
-                  <AlertTriangle className="h-3.5 w-3.5" />
-                  <AlertDescription className="text-[16px]">{validationError}</AlertDescription>
-                </Alert>
-              </div>
-            )}
-
-            {/* Block 4: Send Button */}
-            <div className="mt-5">
-              <Button onClick={handleSendBroadcast} className="w-full gap-2 h-11 text-[16px]" disabled={selectedPatientIds.size === 0}>
-                <Send className="h-4 w-4" />
-                Send Broadcast to {selectedPatientIds.size} {selectedPatientIds.size === 1 ? "Patient" : "Patients"}
+            {/* Primary CTA */}
+            <div className="sticky bottom-0 -mx-6 -mb-6 px-6 py-4 bg-gradient-to-t from-white via-white to-white/80 backdrop-blur">
+              <Button
+                onClick={handleSendBroadcast}
+                disabled={selectedCount === 0}
+                className="w-full gap-2 h-14 rounded-2xl text-[16px] font-semibold bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg shadow-teal-500/30 disabled:opacity-50 disabled:shadow-none"
+              >
+                <Send className="h-5 w-5" />
+                Send Message to {selectedCount} {selectedCount === 1 ? "Patient" : "Patients"}
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* RIGHT COLUMN — Automation Log + Message Templates */}
-        <div className="space-y-4">
+        {/* RIGHT — Automation Log + Templates */}
+        <div className="space-y-6">
           {/* Automation Log */}
-          <Card>
-            <CardHeader className="pb-3 pt-4 px-4">
-              <CardTitle className="text-lg font-semibold">Automation Log</CardTitle>
-              <CardDescription className="text-[14px] mt-1">Recent automated actions</CardDescription>
-            </CardHeader>
-            <CardContent className="px-4 pb-4 pt-0">
-              <div className="border rounded-md max-h-[220px] overflow-y-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="h-11">
-                      <TableHead className="w-[110px] text-[16px] font-semibold text-foreground/80 px-3 py-2">Time</TableHead>
-                      <TableHead className="text-[16px] font-semibold text-foreground/80 px-3 py-2">Bot Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {automationLog.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={2} className="text-center text-[16px] text-muted-foreground py-8">
-                          No actions logged yet
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      automationLog.map((log) => (
-                        <TableRow key={log.id} className="h-[44px]">
-                          <TableCell className="text-[16px] font-medium px-3 py-2">{log.time}</TableCell>
-                          <TableCell className="text-[16px] px-3 py-2">{log.action}</TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
+          <Card className="rounded-2xl border-0 shadow-sm">
+            <CardHeader className="px-6 pt-6 pb-2 flex flex-row items-start justify-between space-y-0">
+              <div>
+                <CardTitle className="text-[18px] font-semibold tracking-tight">Automation Log</CardTitle>
+                <CardDescription className="text-[14px]">Recent automated actions</CardDescription>
               </div>
+              <Button variant="ghost" size="sm" className="h-8 rounded-lg text-[13px] text-teal-700 hover:bg-teal-50 hover:text-teal-800">
+                View All
+              </Button>
+            </CardHeader>
+            <CardContent className="px-6 pb-6 pt-4">
+              {automationLog.length === 0 ? (
+                <div className="flex flex-col items-center justify-center gap-2 rounded-xl bg-muted/30 py-10 text-center">
+                  <Inbox className="h-8 w-8 text-muted-foreground/60" />
+                  <p className="text-[14px] font-medium text-muted-foreground">No automation activity yet.</p>
+                </div>
+              ) : (
+                <ol className="relative space-y-3 max-h-[280px] overflow-y-auto pr-1">
+                  {automationLog.map((log) => (
+                    <li
+                      key={log.id}
+                      className="flex items-start gap-3 rounded-xl bg-muted/30 p-3"
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-100 text-teal-700">
+                        <Send className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[12px] font-medium text-muted-foreground">{log.time}</div>
+                        <div className="text-[14px] text-foreground leading-snug">{log.action}</div>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              )}
             </CardContent>
           </Card>
 
           {/* Message Templates */}
-          <Card>
-            <CardHeader className="pb-3 pt-4 px-4">
-              <CardTitle className="text-lg font-semibold">Message Templates</CardTitle>
-              <CardDescription className="text-[14px] mt-1">Create and manage reusable message templates</CardDescription>
+          <Card className="rounded-2xl border-0 shadow-sm">
+            <CardHeader className="px-6 pt-6 pb-2 flex flex-row items-start justify-between space-y-0">
+              <div>
+                <CardTitle className="text-[18px] font-semibold tracking-tight">Message Templates</CardTitle>
+                <CardDescription className="text-[14px]">Save reusable operational messages</CardDescription>
+              </div>
+              <span className="text-[12px] font-semibold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">
+                {templates.length} / {MAX_TEMPLATES} Used
+              </span>
             </CardHeader>
-            <CardContent className="px-4 pb-4 pt-0 space-y-4">
-              {/* Saved Templates — Dropdown with edit */}
-              <div className="space-y-3">
-                <Label className="text-[16px] font-medium">Saved Templates</Label>
+            <CardContent className="px-6 pb-6 pt-4 space-y-5">
+              {/* Saved templates */}
+              <div className="rounded-xl bg-muted/30 p-4 space-y-3">
+                <Label className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  Saved Templates
+                </Label>
                 {templates.length > 0 ? (
                   <>
                     <Select
@@ -608,12 +683,12 @@ export const AutomationPanel = ({
                         if (t) handleStartEdit(t);
                       }}
                     >
-                      <SelectTrigger className="w-full h-10 text-[16px]">
-                        <SelectValue placeholder="View / edit a template..." />
+                      <SelectTrigger className="w-full h-11 rounded-lg text-[15px] bg-white">
+                        <SelectValue placeholder="Preview / edit a template..." />
                       </SelectTrigger>
                       <SelectContent>
                         {templates.map((template) => (
-                          <SelectItem key={template.id} value={template.id} className="text-[16px]">
+                          <SelectItem key={template.id} value={template.id} className="text-[15px]">
                             {template.message}
                           </SelectItem>
                         ))}
@@ -621,11 +696,11 @@ export const AutomationPanel = ({
                     </Select>
 
                     {editingId && (
-                      <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/40">
+                      <div className="flex items-center gap-2 p-3 rounded-xl border bg-white">
                         <Input
                           value={editingValue}
                           onChange={(e) => setEditingValue(e.target.value)}
-                          className="flex-1 h-10 text-[16px]"
+                          className="flex-1 h-10 rounded-lg text-[15px]"
                           maxLength={200}
                           autoFocus
                         />
@@ -642,39 +717,48 @@ export const AutomationPanel = ({
                     )}
                   </>
                 ) : (
-                  <p className="text-[16px] text-muted-foreground text-center py-6">
-                    No templates created yet. Add your first template below.
+                  <p className="text-[14px] text-muted-foreground text-center py-4">
+                    No templates yet. Create one below.
                   </p>
                 )}
               </div>
 
-              {/* Divider */}
-              <div className="border-t" />
-
-              {/* Add New Template */}
+              {/* Create new */}
               {templates.length < MAX_TEMPLATES && (
-                <div className="space-y-2">
-                  <Label className="text-[16px] font-medium">Create New Template</Label>
+                <div className="rounded-xl bg-muted/30 p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground">
+                      Create Template
+                    </Label>
+                    <span className="text-[12px] text-muted-foreground">{newTemplate.length}/200</span>
+                  </div>
                   <div className="flex gap-2">
                     <Input
-                      placeholder="Enter a new message template..."
+                      placeholder="Type a new message..."
                       value={newTemplate}
                       onChange={(e) => setNewTemplate(e.target.value)}
                       maxLength={200}
-                      className="text-[16px] h-10"
+                      className="text-[15px] h-11 rounded-lg bg-white"
                       onKeyDown={(e) => { if (e.key === "Enter") handleAddTemplate(); }}
                     />
-                    <Button size="sm" onClick={handleAddTemplate} disabled={!newTemplate.trim()} className="h-10 text-[16px] px-4">
+                    <Button
+                      onClick={handleAddTemplate}
+                      disabled={!newTemplate.trim()}
+                      className="h-11 rounded-lg text-[15px] px-4 bg-teal-600 hover:bg-teal-700 text-white"
+                    >
                       <Plus className="h-4 w-4 mr-1.5" />
                       Add
                     </Button>
                   </div>
+                  {/* progress bar */}
+                  <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                    <div
+                      className="h-full bg-teal-500 transition-all"
+                      style={{ width: `${(templates.length / MAX_TEMPLATES) * 100}%` }}
+                    />
+                  </div>
                 </div>
               )}
-
-              <p className="text-[14px] text-muted-foreground/60">
-                {templates.length}/{MAX_TEMPLATES} templates used
-              </p>
             </CardContent>
           </Card>
         </div>
