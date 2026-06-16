@@ -350,8 +350,10 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
           </TableBody>
         </Table>
       </div>
+        </>
+      )}
 
-      {/* Activity Log */}
+      {showSecurity && (
       <div className="rounded-lg border bg-card">
         <div className="flex items-start justify-between gap-4 p-6 pb-4">
           <div>
@@ -372,6 +374,15 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
               <Download className="h-4 w-4" />
               Download CSV
             </Button>
+            {activityLimit && auditLog.length > activityLimit && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowAllLog((s) => !s)}
+              >
+                {showAllLog ? "Show Less" : "View Full Log"}
+              </Button>
+            )}
             <Badge variant="secondary" className="text-xs">Read-only</Badge>
           </div>
         </div>
@@ -386,14 +397,14 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
             </TableRow>
           </TableHeader>
           <TableBody>
-            {auditLog.length === 0 ? (
+            {visibleLog.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                   No activity recorded yet.
                 </TableCell>
               </TableRow>
             ) : (
-              auditLog.map((log) => (
+              visibleLog.map((log) => (
                 <TableRow key={log.id}>
                   <TableCell className="text-muted-foreground font-mono text-xs">
                     {log.timestamp}
@@ -408,6 +419,9 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
               ))
             )}
           </TableBody>
+        </Table>
+      </div>
+      )}
         </Table>
       </div>
 
