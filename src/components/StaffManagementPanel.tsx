@@ -422,8 +422,7 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
         </Table>
       </div>
       )}
-        </Table>
-      </div>
+
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[480px]">
