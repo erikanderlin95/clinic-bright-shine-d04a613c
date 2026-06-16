@@ -37,7 +37,7 @@ const sections: { id: SettingsSection; label: string; icon: typeof SettingsIcon 
   { id: "general", label: "General", icon: SettingsIcon },
   { id: "team", label: "Team", icon: Users },
   { id: "billing", label: "Billing", icon: CreditCard },
-  { id: "security", label: "Security", icon: ShieldCheck },
+  { id: "security", label: "Activity Log", icon: Activity },
 ];
 
 export const SettingsPanel = () => {
