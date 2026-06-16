@@ -254,11 +254,10 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   };
 
   const resetPassword = (member: StaffMember) => {
-    const newPwd = generatePassword();
-    appendLog("Password Reset", member.name, `${performerName} reset password for ${member.name}`);
+    appendLog("Password Reset", member.name, `${performerName} sent password reset email to ${member.name}`);
     toast({
-      title: "Password reset",
-      description: `New temporary password for ${member.name}: ${newPwd}`,
+      title: "Reset email sent",
+      description: `A password reset link was sent to ${member.email}.`,
     });
   };
 
