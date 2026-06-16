@@ -388,7 +388,6 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
                         const canDelete =
                           currentRole === "Owner" &&
                           !member.active &&
-                          member.role !== "Owner" &&
                           member.role !== "Admin";
                         return (
                           <DropdownMenu>
