@@ -111,16 +111,39 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
         <div className="space-y-2 border-t border-border pt-4">
           <Label className="text-xs font-semibold text-muted-foreground">{t("quickActions")}</Label>
           <div className="flex flex-col gap-2">
-            <Button variant="outline" className="w-full justify-start gap-2">
+            <Button
+              variant="outline"
+              className="w-full justify-start gap-2"
+              onClick={() => setMessageOpen((v) => !v)}
+            >
               <MessageSquare className="h-4 w-4" />
               {t("sendMessage")}
             </Button>
-            <Button variant="outline" className="w-full justify-start gap-2">
-              <FileText className="h-4 w-4" />
-              {t("logVisit")}
-            </Button>
+            {messageOpen && (
+              <div className="space-y-2 rounded-lg border bg-muted/30 p-3">
+                <Textarea
+                  placeholder="Type a message to the patient..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value.slice(0, 200))}
+                  className="min-h-[100px] bg-background"
+                />
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">{message.length}/200</span>
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="sm" onClick={() => { setMessage(""); setMessageOpen(false); }}>
+                      Cancel
+                    </Button>
+                    <Button size="sm" className="gap-1.5" onClick={handleSendMessage} disabled={!message.trim()}>
+                      <Send className="h-3.5 w-3.5" />
+                      Send
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
+
       </CardContent>
     </Card>
   );
