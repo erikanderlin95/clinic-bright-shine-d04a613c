@@ -651,6 +651,58 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteTarget(null);
+            setDeleteConfirm("");
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-[460px]">
+          <DialogHeader>
+            <DialogTitle>Delete Account</DialogTitle>
+            <DialogDescription>
+              This permanently removes the staff account and cannot be undone.
+              Audit logs and historical activity will be retained.
+            </DialogDescription>
+          </DialogHeader>
+          {deleteTarget && (
+            <div className="space-y-3 py-2">
+              <div className="rounded-md border bg-muted/40 px-3 py-2 text-sm">
+                <div className="font-medium">{deleteTarget.name}</div>
+                <div className="text-muted-foreground text-xs">
+                  {deleteTarget.email} • {deleteTarget.role}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="delete-confirm">
+                  Type <span className="font-mono font-semibold">DELETE</span> to continue
+                </Label>
+                <Input
+                  id="delete-confirm"
+                  autoFocus
+                  value={deleteConfirm}
+                  onChange={(e) => setDeleteConfirm(e.target.value)}
+                  placeholder="DELETE"
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>Cancel</Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={deleteConfirm !== "DELETE"}
+            >
+              Delete Account
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
