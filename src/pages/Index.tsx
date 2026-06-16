@@ -306,7 +306,7 @@ const Index = () => {
       <QueueHeader />
 
       <div className="flex">
-        <main className={`flex-1 p-6 ${selectedEntry ? "mr-80" : ""} transition-all duration-300`}>
+        <main className={`flex-1 p-8 ${selectedEntry ? "mr-80" : ""} transition-all duration-300`}>
           <Tabs defaultValue="queue" className="w-full">
             <TabsList>
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>

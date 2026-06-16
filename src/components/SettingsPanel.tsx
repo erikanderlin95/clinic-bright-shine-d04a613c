@@ -66,7 +66,7 @@ export const SettingsPanel = () => {
   const visibleSections = sections.filter((s) => (s.id === "billing" ? isAdmin : true));
 
   return (
-    <div className="max-w-[1480px] mx-auto space-y-8">
+    <div className="space-y-8 px-8">
       <div>
         <h2 className="text-2xl font-semibold text-foreground tracking-tight">Settings</h2>
         <p className="text-sm text-muted-foreground mt-2">
@@ -74,9 +74,9 @@ export const SettingsPanel = () => {
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-[200px_1fr]">
+      <div className="flex gap-6">
         {/* Secondary nav */}
-        <nav className="md:sticky md:top-6 md:self-start">
+        <nav className="w-[200px] flex-shrink-0 md:sticky md:top-6 md:self-start">
           <div className="rounded-xl bg-muted/40 p-4 flex gap-2.5 overflow-x-auto md:flex-col">
             {visibleSections.map((s) => {
               const Icon = s.icon;
@@ -101,7 +101,7 @@ export const SettingsPanel = () => {
         </nav>
 
         {/* Content */}
-        <div className="min-w-0 space-y-6">
+        <div className="flex-1 min-w-0 space-y-6">
           {active === "general" && (
             <GeneralSection mode={mode} onChange={handleChange} />
           )}
@@ -124,7 +124,6 @@ const GeneralSection = ({
   const summaryItems = [
     { label: "Clinic Name", value: "ClynicQ Demo Clinic", icon: Building2 },
     { label: "Current Plan", value: "Professional" },
-    { label: "CMS Status", value: "Connected", tone: "ok" as const },
     { label: "Stripe Status", value: "Active", tone: "ok" as const },
     { label: "Last Sync", value: "2 min ago" },
   ];
@@ -134,7 +133,7 @@ const GeneralSection = ({
       {/* Summary */}
       <Card className="border-border/60 bg-card/60">
         <CardContent className="px-8 py-7">
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-5">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {summaryItems.map((it) => (
               <div key={it.label} className="min-w-0">
                 <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
