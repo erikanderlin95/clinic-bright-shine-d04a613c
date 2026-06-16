@@ -33,7 +33,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Plus, MoreHorizontal, KeyRound, Pencil, Power, ShieldAlert, Download } from "lucide-react";
+import { Plus, MoreHorizontal, KeyRound, Pencil, Power, ShieldAlert, Download, Trash2 } from "lucide-react";
+import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
@@ -52,7 +53,7 @@ interface StaffMember {
 interface AuditLogEntry {
   id: string;
   timestamp: string;
-  action: "Create" | "Edit" | "Disable" | "Enable" | "Password Reset";
+  action: "Create" | "Edit" | "Disable" | "Enable" | "Password Reset" | "Delete";
   performedBy: string;
   target: string;
   message: string;
@@ -127,6 +128,8 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   const [form, setForm] = useState<StaffFormState>(emptyForm);
   const [reauthOpen, setReauthOpen] = useState(false);
   const [reauthPassword, setReauthPassword] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<StaffMember | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
 
   // Strict access control: only Owner/Admin (mapped to isAdmin) can view this panel.
   if (isLoading) {
@@ -261,6 +264,38 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
     });
   };
 
+  const requestDelete = (member: StaffMember) => {
+    setDeleteTarget(member);
+    setDeleteConfirm("");
+  };
+
+  const confirmDelete = () => {
+    if (!deleteTarget) return;
+    // Guardrails — UI-level enforcement (server should re-check).
+    if (currentRole !== "Owner") {
+      toast({ title: "Not allowed", description: "Only the Clinic Owner can delete accounts.", variant: "destructive" });
+      return;
+    }
+    if (deleteTarget.role === "Owner" || deleteTarget.role === "Admin") {
+      toast({ title: "Not allowed", description: "Owner and Admin accounts cannot be deleted.", variant: "destructive" });
+      return;
+    }
+    if (deleteTarget.active) {
+      toast({ title: "Disable first", description: "Account must be disabled before it can be deleted.", variant: "destructive" });
+      return;
+    }
+    if (deleteConfirm !== "DELETE") {
+      toast({ title: "Type DELETE to confirm", variant: "destructive" });
+      return;
+    }
+    const name = deleteTarget.name;
+    setStaff((prev) => prev.filter((s) => s.id !== deleteTarget.id));
+    appendLog("Delete", name, `${performerName} deleted account for ${name}`);
+    toast({ title: "Account deleted", description: `${name}'s account has been permanently removed. Audit history retained.` });
+    setDeleteTarget(null);
+    setDeleteConfirm("");
+  };
+
   const downloadAuditLogCSV = () => {
     const escape = (val: string) => `"${String(val).replace(/"/g, '""')}"`;
     const headers = ["Date & Time", "Action", "Performed By", "Target", "Details"];
@@ -281,6 +316,7 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   const actionBadgeVariant = (action: AuditLogEntry["action"]) => {
     switch (action) {
       case "Disable":
+      case "Delete":
         return "destructive" as const;
       case "Create":
       case "Enable":
@@ -347,8 +383,12 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
                       </span>
                     ) : (
                       (() => {
-                        // Admin viewer cannot disable another Admin (other than themselves not allowed either).
+                        // Admin viewer cannot disable or delete another Admin.
                         const canDisable = !(currentRole === "Admin" && member.role === "Admin");
+                        const canDelete =
+                          currentRole === "Owner" &&
+                          !member.active &&
+                          member.role !== "Admin";
                         return (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -361,13 +401,24 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
                                 <Pencil className="h-4 w-4 mr-2" /> Edit
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => resetPassword(member)}>
-                                <KeyRound className="h-4 w-4 mr-2" /> Reset Password
+                                <KeyRound className="h-4 w-4 mr-2" /> Send Password Reset Email
                               </DropdownMenuItem>
                               {canDisable && (
                                 <DropdownMenuItem onClick={() => toggleActive(member.id)}>
                                   <Power className="h-4 w-4 mr-2" />
                                   {member.active ? "Disable Account" : "Enable Account"}
                                 </DropdownMenuItem>
+                              )}
+                              {canDelete && (
+                                <>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    onClick={() => requestDelete(member)}
+                                    className="text-destructive focus:text-destructive"
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-2" /> Delete Account
+                                  </DropdownMenuItem>
+                                </>
                               )}
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -597,6 +648,58 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
           <DialogFooter>
             <Button variant="outline" onClick={() => setReauthOpen(false)}>Cancel</Button>
             <Button onClick={confirmReauth}>Verify &amp; Continue</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteTarget(null);
+            setDeleteConfirm("");
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-[460px]">
+          <DialogHeader>
+            <DialogTitle>Delete Account</DialogTitle>
+            <DialogDescription>
+              This permanently removes the staff account and cannot be undone.
+              Audit logs and historical activity will be retained.
+            </DialogDescription>
+          </DialogHeader>
+          {deleteTarget && (
+            <div className="space-y-3 py-2">
+              <div className="rounded-md border bg-muted/40 px-3 py-2 text-sm">
+                <div className="font-medium">{deleteTarget.name}</div>
+                <div className="text-muted-foreground text-xs">
+                  {deleteTarget.email} • {deleteTarget.role}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="delete-confirm">
+                  Type <span className="font-mono font-semibold">DELETE</span> to continue
+                </Label>
+                <Input
+                  id="delete-confirm"
+                  autoFocus
+                  value={deleteConfirm}
+                  onChange={(e) => setDeleteConfirm(e.target.value)}
+                  placeholder="DELETE"
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>Cancel</Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={deleteConfirm !== "DELETE"}
+            >
+              Delete Account
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
