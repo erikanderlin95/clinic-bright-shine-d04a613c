@@ -10,7 +10,7 @@ import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
 import { AdjustQueueDialog } from "@/components/AdjustQueueDialog";
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
-import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
+
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { SettingsPanel } from "@/components/SettingsPanel";
