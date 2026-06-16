@@ -66,18 +66,18 @@ export const SettingsPanel = () => {
   const visibleSections = sections.filter((s) => (s.id === "billing" ? isAdmin : true));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
         <h2 className="text-2xl font-semibold text-foreground tracking-tight">Settings</h2>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-sm text-muted-foreground mt-2">
           Manage your clinic, team, billing, and security preferences.
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-[220px_1fr]">
+      <div className="grid gap-8 md:grid-cols-[240px_1fr]">
         {/* Secondary nav */}
         <nav className="md:sticky md:top-4 md:self-start">
-          <div className="flex gap-1 overflow-x-auto md:flex-col md:gap-0.5">
+          <div className="flex gap-1 overflow-x-auto md:flex-col md:gap-1">
             {visibleSections.map((s) => {
               const Icon = s.icon;
               const isActive = active === s.id;
@@ -86,13 +86,13 @@ export const SettingsPanel = () => {
                   key={s.id}
                   onClick={() => setActive(s.id)}
                   className={cn(
-                    "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium whitespace-nowrap transition-colors",
+                    "flex items-center gap-3 rounded-lg px-4 py-3.5 text-base font-medium whitespace-nowrap transition-colors",
                     isActive
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-5 w-5" />
                   {s.label}
                 </button>
               );
@@ -101,7 +101,7 @@ export const SettingsPanel = () => {
         </nav>
 
         {/* Content */}
-        <div className="min-w-0 space-y-6">
+        <div className="min-w-0 space-y-8">
           {active === "general" && (
             <GeneralSection mode={mode} onChange={handleChange} />
           )}
