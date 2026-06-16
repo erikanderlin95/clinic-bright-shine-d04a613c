@@ -5,6 +5,8 @@ import { Label } from "@/components/ui/label";
 import { Eye, Gauge, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { StaffManagementPanel } from "./StaffManagementPanel";
+import { BillingSubscriptionPanel } from "./BillingSubscriptionPanel";
+import { useAuth } from "@/hooks/useAuth";
 
 export type QueueVisibilityMode = "live" | "smart";
 
@@ -17,6 +19,7 @@ export const getQueueVisibilityMode = (): QueueVisibilityMode => {
 
 export const SettingsPanel = () => {
   const { toast } = useToast();
+  const { isAdmin } = useAuth();
   const [mode, setMode] = useState<QueueVisibilityMode>("live");
 
   useEffect(() => {
@@ -135,6 +138,8 @@ export const SettingsPanel = () => {
       </Card>
 
       <StaffManagementPanel />
+
+      {isAdmin && <BillingSubscriptionPanel />}
     </div>
   );
 };
