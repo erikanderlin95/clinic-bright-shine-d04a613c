@@ -69,15 +69,15 @@ export const BillingSubscriptionPanel = () => {
   return (
     <>
       <Card>
-        <CardHeader>
+        <CardHeader className="px-8 pt-8 pb-4">
           <CardTitle className="text-lg">Billing & Subscription</CardTitle>
           <CardDescription>
             Manage your ClynicQ plan, payment method, and billing history.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-8 px-8 pb-8">
           {/* Current Plan */}
-          <div className="rounded-lg border border-border p-4">
+          <div className="rounded-lg border border-border p-6">
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
@@ -87,7 +87,7 @@ export const BillingSubscriptionPanel = () => {
                   </Badge>
                 </div>
                 <div className="text-xl font-semibold text-foreground">Professional Plan</div>
-                <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-sm pt-1">
+                <div className="grid grid-cols-2 gap-x-10 gap-y-1 text-sm pt-2">
                   <div>
                     <div className="text-muted-foreground">Next billing date</div>
                     <div className="font-medium text-foreground">1 July 2026</div>
@@ -105,7 +105,7 @@ export const BillingSubscriptionPanel = () => {
           </div>
 
           {/* Payment Method */}
-          <div className="rounded-lg border border-border p-4 space-y-3">
+          <div className="rounded-lg border border-border p-6 space-y-4">
             <div className="flex items-center justify-between gap-4 flex-wrap">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-14 items-center justify-center rounded-md bg-muted">
@@ -125,7 +125,7 @@ export const BillingSubscriptionPanel = () => {
                 </Button>
               </div>
             </div>
-            <div className="flex items-start gap-2 rounded-md bg-muted/60 p-3 text-xs text-muted-foreground">
+            <div className="flex items-start gap-2 rounded-md bg-muted/60 p-4 text-xs text-muted-foreground">
               <ShieldCheck className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
               <span>Payments are securely processed by Stripe. ClynicQ does not store your card information.</span>
             </div>
@@ -133,7 +133,7 @@ export const BillingSubscriptionPanel = () => {
 
           {/* Billing History */}
           <div className="rounded-lg border border-border">
-            <div className="flex items-center justify-between p-4 pb-2">
+            <div className="flex items-center justify-between p-6 pb-3">
               <div className="text-sm font-medium text-foreground">Billing History</div>
               <Button variant="link" size="sm" className="h-auto p-0">
                 View All Invoices
@@ -142,25 +142,25 @@ export const BillingSubscriptionPanel = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Invoice</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Action</TableHead>
+                  <TableHead className="px-5 py-4">Invoice</TableHead>
+                  <TableHead className="px-5 py-4">Date</TableHead>
+                  <TableHead className="px-5 py-4">Amount</TableHead>
+                  <TableHead className="px-5 py-4">Status</TableHead>
+                  <TableHead className="text-right px-5 py-4">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {invoices.map((inv) => (
                   <TableRow key={inv.id}>
-                    <TableCell className="font-medium">{inv.id}</TableCell>
-                    <TableCell>{inv.date}</TableCell>
-                    <TableCell>{inv.amount}</TableCell>
-                    <TableCell>
+                    <TableCell className="font-medium px-5 py-4">{inv.id}</TableCell>
+                    <TableCell className="px-5 py-4">{inv.date}</TableCell>
+                    <TableCell className="px-5 py-4">{inv.amount}</TableCell>
+                    <TableCell className="px-5 py-4">
                       <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
                         {inv.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right px-5 py-4">
                       <Button variant="ghost" size="sm" onClick={() => handleDownload(inv)} className="gap-1.5">
                         <Download className="h-3.5 w-3.5" />
                         PDF
@@ -173,8 +173,8 @@ export const BillingSubscriptionPanel = () => {
           </div>
 
           {/* Subscription Actions */}
-          <div className="border-t border-border pt-4">
-            <div className="text-sm font-medium text-foreground mb-3">Subscription Actions</div>
+          <div className="border-t border-border pt-6">
+            <div className="text-sm font-medium text-foreground mb-4">Subscription Actions</div>
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" className="gap-1.5" onClick={() => requireConfirm("Upgrade Plan")}>
                 <ArrowUpCircle className="h-4 w-4" />
