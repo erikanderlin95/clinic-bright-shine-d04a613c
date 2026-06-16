@@ -52,7 +52,7 @@ interface StaffMember {
 interface AuditLogEntry {
   id: string;
   timestamp: string;
-  action: "Create" | "Edit" | "Disable" | "Enable" | "Password Reset";
+  action: "Create" | "Edit" | "Disable" | "Enable" | "Password Reset" | "Delete";
   performedBy: string;
   target: string;
   message: string;
