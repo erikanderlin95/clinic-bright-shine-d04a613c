@@ -10,7 +10,7 @@ import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
 import { AdjustQueueDialog } from "@/components/AdjustQueueDialog";
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
-import { DoctorSchedulePanel } from "@/components/DoctorSchedulePanel";
+
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { SettingsPanel } from "@/components/SettingsPanel";
@@ -313,7 +313,7 @@ const Index = () => {
               
               <TabsTrigger value="appointments">Booking Channels</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
-              <TabsTrigger value="schedule">{t("doctorSchedule")}</TabsTrigger>
+              
               <TabsTrigger value="profiles">{t("doctorProfiles")}</TabsTrigger>
               <TabsTrigger value="settings" className="gap-1.5">
                 <Settings className="h-4 w-4" />
@@ -388,9 +388,6 @@ const Index = () => {
               />
             </TabsContent>
 
-            <TabsContent value="schedule" className="mt-5">
-              <DoctorSchedulePanel />
-            </TabsContent>
 
             <TabsContent value="profiles" className="mt-5">
               <DoctorProfilesPanel />

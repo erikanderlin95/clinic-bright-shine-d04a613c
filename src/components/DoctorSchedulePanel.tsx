@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -27,10 +27,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Plus, Pencil, Trash2, Calendar, Clock, User, Eye, CalendarDays, List, ChevronDown } from "lucide-react";
+import { Plus, Pencil, Trash2, Calendar, Clock, User, Eye, ChevronDown } from "lucide-react";
 import { useDoctorShifts, DoctorShift } from "@/hooks/useDoctorShifts";
 import { useDoctorProfiles } from "@/hooks/useDoctorProfiles";
-import { WeeklyCalendarView } from "./WeeklyCalendarView";
 
 const DAYS_OF_WEEK = [
   "Monday",
@@ -219,329 +218,202 @@ export const DoctorSchedulePanel = () => {
 
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="calendar" className="w-full">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-foreground">Doctor Schedule</h2>
-          <TabsList>
-            <TabsTrigger value="calendar" className="gap-2">
-              <CalendarDays className="h-4 w-4" />
-              Calendar
-            </TabsTrigger>
-            <TabsTrigger value="list" className="gap-2">
-              <List className="h-4 w-4" />
-              List
-            </TabsTrigger>
-          </TabsList>
-        </div>
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-xl font-semibold text-foreground">Doctor Schedule</h2>
+      </div>
 
-        {/* Calendar View */}
-        <TabsContent value="calendar" className="space-y-6 mt-0">
-          <WeeklyCalendarView
-            shifts={calendarShifts}
-            onShiftMove={handleShiftMove}
-            onShiftClick={handleCalendarShiftClick}
-          />
-          
-          {/* Compact Add Form */}
-          <Card className="shadow-md">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Plus className="h-4 w-4 text-primary" />
-                {editingId ? "Edit Shift" : "Quick Add Shift"}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-3">
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-                  {/* Doctor Multi-Select */}
-                  <div className="space-y-1.5 lg:col-span-2">
-                    <Label className="text-xs">Doctors</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className="w-full justify-between h-9 font-normal">
-                          {selectedDoctorIds.length === 0 ? (
-                            <span className="text-muted-foreground">Select doctors...</span>
-                          ) : (
-                            <span className="truncate">
-                              {selectedDoctorIds.length} doctor(s) selected
-                            </span>
-                          )}
-                          <ChevronDown className="h-4 w-4 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-64 p-2" align="start">
-                        {profiles.length === 0 ? (
-                          <p className="text-sm text-muted-foreground p-2">
-                            No doctors found. Add profiles first.
-                          </p>
+      <div className="space-y-6">
+        <Card className="shadow-md">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Calendar className="h-5 w-5 text-primary" />
+              {editingId ? "Edit Shift" : "Add Doctor Shift"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                {/* Doctor Multi-Select */}
+                <div className="space-y-2 lg:col-span-2">
+                  <Label>Doctors *</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full justify-between font-normal">
+                        {selectedDoctorIds.length === 0 ? (
+                          <span className="text-muted-foreground">Select doctors...</span>
                         ) : (
-                          <div className="space-y-1 max-h-48 overflow-y-auto">
-                            {profiles.map((doc) => (
-                              <label
-                                key={doc.id}
-                                className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer"
-                              >
-                                <Checkbox
-                                  checked={selectedDoctorIds.includes(doc.id)}
-                                  onCheckedChange={() => toggleDoctor(doc.id)}
-                                />
-                                <span className="text-sm">{doc.name}</span>
-                              </label>
-                            ))}
-                          </div>
+                          <span className="truncate">
+                            {selectedDoctorIds.length} doctor(s) selected
+                          </span>
                         )}
-                      </PopoverContent>
-                    </Popover>
-                    {selectedDoctorIds.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {selectedDoctorIds.map((id) => {
-                          const doc = profiles.find((p) => p.id === id);
-                          return doc ? (
-                            <Badge key={id} variant="secondary" className="text-xs">
-                              {doc.name}
-                            </Badge>
-                          ) : null;
-                        })}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label htmlFor="dayOfWeekCal" className="text-xs">Day</Label>
-                    <Select value={formData.dayOfWeek} onValueChange={(v) => setFormData((prev) => ({ ...prev, dayOfWeek: v }))}>
-                      <SelectTrigger id="dayOfWeekCal" className="h-9">
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {DAYS_OF_WEEK.map((day) => (
-                          <SelectItem key={day} value={day}>{day}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label htmlFor="startTimeCal" className="text-xs">Start</Label>
-                    <Input id="startTimeCal" type="time" value={formData.startTime} onChange={(e) => setFormData((prev) => ({ ...prev, startTime: e.target.value }))} className="h-9" />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label htmlFor="endTimeCal" className="text-xs">End</Label>
-                    <Input id="endTimeCal" type="time" value={formData.endTime} onChange={(e) => setFormData((prev) => ({ ...prev, endTime: e.target.value }))} className="h-9" />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">&nbsp;</Label>
-                    <div className="flex gap-2">
-                      <Button type="submit" size="sm" className="h-9" disabled={createShift.isPending || updateShift.isPending}>
-                        {editingId ? "Update" : "Add"}
+                        <ChevronDown className="h-4 w-4 opacity-50" />
                       </Button>
-                      {editingId && (
-                        <Button type="button" variant="outline" size="sm" onClick={resetForm} className="h-9">
-                          Cancel
-                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-72 p-2" align="start">
+                      {profiles.length === 0 ? (
+                        <p className="text-sm text-muted-foreground p-2">
+                          No doctors found. Add profiles in the Doctor Profiles section first.
+                        </p>
+                      ) : (
+                        <div className="space-y-1 max-h-64 overflow-y-auto">
+                          {profiles.map((doc) => (
+                            <label
+                              key={doc.id}
+                              className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer"
+                            >
+                              <Checkbox
+                                checked={selectedDoctorIds.includes(doc.id)}
+                                onCheckedChange={() => toggleDoctor(doc.id)}
+                              />
+                              <div>
+                                <span className="text-sm font-medium">{doc.name}</span>
+                                {doc.specialization && (
+                                  <span className="text-xs text-muted-foreground ml-2">
+                                    ({doc.specialization})
+                                  </span>
+                                )}
+                              </div>
+                            </label>
+                          ))}
+                        </div>
                       )}
+                    </PopoverContent>
+                  </Popover>
+                  {selectedDoctorIds.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {selectedDoctorIds.map((id) => {
+                        const doc = profiles.find((p) => p.id === id);
+                        return doc ? (
+                          <Badge key={id} variant="secondary" className="gap-1">
+                            {doc.name}
+                          </Badge>
+                        ) : null;
+                      })}
                     </div>
-                  </div>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* List View */}
-        <TabsContent value="list" className="space-y-6 mt-0">
-          <Card className="shadow-md">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Calendar className="h-5 w-5 text-primary" />
-                {editingId ? "Edit Shift" : "Add Doctor Shift"}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                  {/* Doctor Multi-Select */}
-                  <div className="space-y-2 lg:col-span-2">
-                    <Label>Doctors *</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className="w-full justify-between font-normal">
-                          {selectedDoctorIds.length === 0 ? (
-                            <span className="text-muted-foreground">Select doctors...</span>
-                          ) : (
-                            <span className="truncate">
-                              {selectedDoctorIds.length} doctor(s) selected
-                            </span>
-                          )}
-                          <ChevronDown className="h-4 w-4 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-72 p-2" align="start">
-                        {profiles.length === 0 ? (
-                          <p className="text-sm text-muted-foreground p-2">
-                            No doctors found. Add profiles in the Doctor Profiles tab first.
-                          </p>
-                        ) : (
-                          <div className="space-y-1 max-h-64 overflow-y-auto">
-                            {profiles.map((doc) => (
-                              <label
-                                key={doc.id}
-                                className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer"
-                              >
-                                <Checkbox
-                                  checked={selectedDoctorIds.includes(doc.id)}
-                                  onCheckedChange={() => toggleDoctor(doc.id)}
-                                />
-                                <div>
-                                  <span className="text-sm font-medium">{doc.name}</span>
-                                  {doc.specialization && (
-                                    <span className="text-xs text-muted-foreground ml-2">
-                                      ({doc.specialization})
-                                    </span>
-                                  )}
-                                </div>
-                              </label>
-                            ))}
-                          </div>
-                        )}
-                      </PopoverContent>
-                    </Popover>
-                    {selectedDoctorIds.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 pt-1">
-                        {selectedDoctorIds.map((id) => {
-                          const doc = profiles.find((p) => p.id === id);
-                          return doc ? (
-                            <Badge key={id} variant="secondary" className="gap-1">
-                              {doc.name}
-                            </Badge>
-                          ) : null;
-                        })}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="dayOfWeek">Day of Week *</Label>
-                    <Select value={formData.dayOfWeek} onValueChange={(v) => setFormData((prev) => ({ ...prev, dayOfWeek: v }))}>
-                      <SelectTrigger id="dayOfWeek">
-                        <SelectValue placeholder="Select day" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {DAYS_OF_WEEK.map((day) => (
-                          <SelectItem key={day} value={day}>{day}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="startTime">Start Time *</Label>
-                    <Input id="startTime" type="time" value={formData.startTime} onChange={(e) => setFormData((prev) => ({ ...prev, startTime: e.target.value }))} />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="endTime">End Time *</Label>
-                    <Input id="endTime" type="time" value={formData.endTime} onChange={(e) => setFormData((prev) => ({ ...prev, endTime: e.target.value }))} />
-                  </div>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                  <div className="space-y-2">
-                    <Label htmlFor="serviceType">Service Type</Label>
-                    <Select value={formData.serviceType} onValueChange={(v) => setFormData((prev) => ({ ...prev, serviceType: v }))}>
-                      <SelectTrigger id="serviceType">
-                        <SelectValue placeholder="Optional" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {SERVICE_TYPES.map((type) => (
-                          <SelectItem key={type} value={type}>{type}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="flex gap-2 pt-2">
-                  <Button type="submit" className="gap-2" disabled={createShift.isPending || updateShift.isPending}>
-                    <Plus className="h-4 w-4" />
-                    {editingId ? "Update Shift" : "Add Shift"}
-                  </Button>
-                  {editingId && (
-                    <Button type="button" variant="outline" onClick={resetForm}>
-                      Cancel
-                    </Button>
                   )}
                 </div>
-              </form>
-            </CardContent>
-          </Card>
 
-          {/* Schedule List Table */}
-          <Card className="shadow-md">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <User className="h-5 w-5 text-primary" />
-                Doctor Shifts ({shifts.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {shifts.length === 0 ? (
-                <div className="py-8 text-center text-muted-foreground">
-                  No shifts scheduled. Add a shift above to get started.
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Doctors</TableHead>
-                        <TableHead>Day</TableHead>
-                        <TableHead>Start Time</TableHead>
-                        <TableHead>End Time</TableHead>
-                        <TableHead>Services</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {shifts.map((shift) => (
-                        <TableRow key={shift.id}>
-                          <TableCell>
-                            <div className="flex flex-wrap gap-1">
-                              {shift.doctors.map((doc) => (
-                                <Badge key={doc.id} variant="outline" className="font-medium">{doc.name}</Badge>
-                              ))}
-                              {shift.doctors.length === 0 && (
-                                <span className="text-muted-foreground text-sm">No doctors assigned</span>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell>{shift.day_of_week}</TableCell>
-                          <TableCell>{shift.start_time.slice(0, 5)}</TableCell>
-                          <TableCell>{shift.end_time.slice(0, 5)}</TableCell>
-                          <TableCell>
-                            <span className="text-muted-foreground">{shift.service_type || "—"}</span>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-1">
-                              <Button variant="ghost" size="icon" onClick={() => handleEdit(shift)} className="h-8 w-8">
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon" onClick={() => handleDelete(shift.id)} className="h-8 w-8 text-destructive hover:text-destructive">
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
+                <div className="space-y-2">
+                  <Label htmlFor="dayOfWeek">Day of Week *</Label>
+                  <Select value={formData.dayOfWeek} onValueChange={(v) => setFormData((prev) => ({ ...prev, dayOfWeek: v }))}>
+                    <SelectTrigger id="dayOfWeek">
+                      <SelectValue placeholder="Select day" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DAYS_OF_WEEK.map((day) => (
+                        <SelectItem key={day} value={day}>{day}</SelectItem>
                       ))}
-                    </TableBody>
-                  </Table>
+                    </SelectContent>
+                  </Select>
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+
+                <div className="space-y-2">
+                  <Label htmlFor="startTime">Start Time *</Label>
+                  <Input id="startTime" type="time" value={formData.startTime} onChange={(e) => setFormData((prev) => ({ ...prev, startTime: e.target.value }))} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="endTime">End Time *</Label>
+                  <Input id="endTime" type="time" value={formData.endTime} onChange={(e) => setFormData((prev) => ({ ...prev, endTime: e.target.value }))} />
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                <div className="space-y-2">
+                  <Label htmlFor="serviceType">Service Type</Label>
+                  <Select value={formData.serviceType} onValueChange={(v) => setFormData((prev) => ({ ...prev, serviceType: v }))}>
+                    <SelectTrigger id="serviceType">
+                      <SelectValue placeholder="Optional" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SERVICE_TYPES.map((type) => (
+                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <Button type="submit" className="gap-2" disabled={createShift.isPending || updateShift.isPending}>
+                  <Plus className="h-4 w-4" />
+                  {editingId ? "Update Shift" : "Add Shift"}
+                </Button>
+                {editingId && (
+                  <Button type="button" variant="outline" onClick={resetForm}>
+                    Cancel
+                  </Button>
+                )}
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+
+        {/* Schedule List Table */}
+        <Card className="shadow-md">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <User className="h-5 w-5 text-primary" />
+              Doctor Shifts ({shifts.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {shifts.length === 0 ? (
+              <div className="py-8 text-center text-muted-foreground">
+                No shifts scheduled. Add a shift above to get started.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Doctors</TableHead>
+                      <TableHead>Day</TableHead>
+                      <TableHead>Start Time</TableHead>
+                      <TableHead>End Time</TableHead>
+                      <TableHead>Services</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {shifts.map((shift) => (
+                      <TableRow key={shift.id}>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {shift.doctors.map((doc) => (
+                              <Badge key={doc.id} variant="outline" className="font-medium">{doc.name}</Badge>
+                            ))}
+                            {shift.doctors.length === 0 && (
+                              <span className="text-muted-foreground text-sm">No doctors assigned</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>{shift.day_of_week}</TableCell>
+                        <TableCell>{shift.start_time.slice(0, 5)}</TableCell>
+                        <TableCell>{shift.end_time.slice(0, 5)}</TableCell>
+                        <TableCell>
+                          <span className="text-muted-foreground">{shift.service_type || "—"}</span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button variant="ghost" size="icon" onClick={() => handleEdit(shift)} className="h-8 w-8">
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon" onClick={() => handleDelete(shift.id)} className="h-8 w-8 text-destructive hover:text-destructive">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
 
       {/* Marketplace Display Preview */}
       <Card className="shadow-md">

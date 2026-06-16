@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { DoctorSchedulePanel } from "./DoctorSchedulePanel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -300,6 +301,11 @@ export const DoctorProfilesPanel = () => {
           ))}
         </div>
       )}
+
+      {/* Doctor Schedule (merged from former Schedule tab) */}
+      <div className="pt-6 mt-2 border-t border-border">
+        <DoctorSchedulePanel />
+      </div>
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
