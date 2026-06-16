@@ -66,18 +66,18 @@ export const SettingsPanel = () => {
   const visibleSections = sections.filter((s) => (s.id === "billing" ? isAdmin : true));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
         <h2 className="text-2xl font-semibold text-foreground tracking-tight">Settings</h2>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-sm text-muted-foreground mt-2">
           Manage your clinic, team, billing, and security preferences.
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-[220px_1fr]">
+      <div className="grid gap-8 md:grid-cols-[240px_1fr]">
         {/* Secondary nav */}
         <nav className="md:sticky md:top-4 md:self-start">
-          <div className="flex gap-1 overflow-x-auto md:flex-col md:gap-0.5">
+          <div className="flex gap-1 overflow-x-auto md:flex-col md:gap-1">
             {visibleSections.map((s) => {
               const Icon = s.icon;
               const isActive = active === s.id;
@@ -86,13 +86,13 @@ export const SettingsPanel = () => {
                   key={s.id}
                   onClick={() => setActive(s.id)}
                   className={cn(
-                    "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium whitespace-nowrap transition-colors",
+                    "flex items-center gap-3 rounded-lg px-4 py-3.5 text-base font-medium whitespace-nowrap transition-colors",
                     isActive
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-5 w-5" />
                   {s.label}
                 </button>
               );
@@ -101,7 +101,7 @@ export const SettingsPanel = () => {
         </nav>
 
         {/* Content */}
-        <div className="min-w-0 space-y-6">
+        <div className="min-w-0 space-y-8">
           {active === "general" && (
             <GeneralSection mode={mode} onChange={handleChange} />
           )}
@@ -130,17 +130,17 @@ const GeneralSection = ({
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Summary */}
       <Card className="border-border/60 bg-card/60">
-        <CardContent className="p-5">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+        <CardContent className="p-8">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-5">
             {summaryItems.map((it) => (
               <div key={it.label} className="min-w-0">
                 <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   {it.label}
                 </div>
-                <div className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-foreground truncate">
+                <div className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-foreground truncate">
                   {it.tone === "ok" && (
                     <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 flex-shrink-0" />
                   )}
@@ -153,10 +153,10 @@ const GeneralSection = ({
       </Card>
 
       {/* Queue Visibility */}
-      <section className="space-y-3">
+      <section className="space-y-5">
         <div>
           <h3 className="text-lg font-semibold text-foreground">Queue Visibility</h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
             Choose how queue information is shown to patients. Clinic queue logic stays the same.
           </p>
         </div>
@@ -164,7 +164,7 @@ const GeneralSection = ({
         <RadioGroup
           value={mode}
           onValueChange={onChange}
-          className="grid gap-3 sm:grid-cols-2"
+          className="grid gap-4 sm:grid-cols-2"
         >
           <VisibilityCard
             value="live"
@@ -186,24 +186,24 @@ const GeneralSection = ({
         </RadioGroup>
 
         {/* Smart Wait info card */}
-        <div className="rounded-xl bg-muted/40 p-4">
-          <div className="flex items-center gap-2 mb-3">
+        <div className="rounded-xl bg-muted/40 p-6">
+          <div className="flex items-center gap-2 mb-4">
             <Info className="h-3.5 w-3.5 text-muted-foreground" />
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Smart Wait Groups
             </span>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-6">
             {[
               { label: "Low Wait", range: "0–3 active", dot: "bg-emerald-500" },
               { label: "Moderate Wait", range: "4–9 active", dot: "bg-amber-500" },
               { label: "Busy Now", range: "10+ active", dot: "bg-rose-500" },
             ].map((g) => (
-              <div key={g.label} className="flex items-start gap-2">
-                <span className={cn("mt-1.5 h-2 w-2 rounded-full flex-shrink-0", g.dot)} />
+              <div key={g.label} className="flex items-start gap-3">
+                <span className={cn("mt-1.5 h-2.5 w-2.5 rounded-full flex-shrink-0", g.dot)} />
                 <div>
                   <div className="text-sm font-semibold text-foreground">{g.label}</div>
-                  <div className="text-xs text-muted-foreground">{g.range}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{g.range}</div>
                 </div>
               </div>
             ))}
@@ -235,7 +235,7 @@ const VisibilityCard = ({
     <Label
       htmlFor={`qv-${value}`}
       className={cn(
-        "relative flex cursor-pointer flex-col gap-3 rounded-xl border bg-card p-5 transition-all",
+        "relative flex cursor-pointer flex-col gap-4 rounded-xl border bg-card p-7 transition-all",
         selected
           ? "border-primary ring-2 ring-primary/20 shadow-sm"
           : "border-border/60 hover:border-border hover:bg-muted/30"
@@ -243,7 +243,7 @@ const VisibilityCard = ({
     >
       <div className="flex items-start justify-between">
         <div className={cn(
-          "flex h-10 w-10 items-center justify-center rounded-lg",
+          "flex h-11 w-11 items-center justify-center rounded-lg",
           selected ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
         )}>
           <Icon className="h-5 w-5" />
@@ -257,11 +257,11 @@ const VisibilityCard = ({
           <RadioGroupItem value={value} id={`qv-${value}`} />
         </div>
       </div>
-      <div className="space-y-1">
+      <div className="space-y-2">
         <div className="text-base font-semibold text-foreground">{title}</div>
         <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
       </div>
-      <div className="inline-flex w-fit items-center rounded-md bg-muted px-2.5 py-1 text-xs text-muted-foreground">
+      <div className="inline-flex w-fit items-center rounded-md bg-muted px-3 py-1.5 text-xs text-muted-foreground">
         Patient sees:&nbsp;<span className="font-medium text-foreground">{preview}</span>
       </div>
     </Label>

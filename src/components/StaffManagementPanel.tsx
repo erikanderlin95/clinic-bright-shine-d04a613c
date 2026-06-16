@@ -278,13 +278,13 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   const visibleLog = showSecurity && activityLimit && !showAllLog ? auditLog.slice(0, activityLimit) : auditLog;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {showTeam && (
         <>
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="text-2xl font-semibold text-foreground">Staff Management</h2>
-              <p className="text-sm text-muted-foreground mt-1">Manage staff and doctor access</p>
+              <p className="text-sm text-muted-foreground mt-2">Manage staff and doctor access</p>
             </div>
             <Button onClick={openAdd} className="gap-1.5">
               <Plus className="h-4 w-4" />
@@ -296,34 +296,34 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email / Login ID</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Last Login</TableHead>
-              <TableHead className="w-[80px] text-right">Actions</TableHead>
+              <TableHead className="px-5 py-4">Name</TableHead>
+              <TableHead className="px-5 py-4">Email / Login ID</TableHead>
+              <TableHead className="px-5 py-4">Role</TableHead>
+              <TableHead className="px-5 py-4">Status</TableHead>
+              <TableHead className="px-5 py-4">Last Login</TableHead>
+              <TableHead className="w-[80px] px-5 py-4 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {staff.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={6} className="text-center text-muted-foreground py-10 px-5">
                   No staff members yet.
                 </TableCell>
               </TableRow>
             ) : (
               staff.map((member) => (
                 <TableRow key={member.id}>
-                  <TableCell className="font-medium">{member.name}</TableCell>
-                  <TableCell>{member.email}</TableCell>
-                  <TableCell>{member.role}</TableCell>
-                  <TableCell>
+                  <TableCell className="font-medium px-5 py-4">{member.name}</TableCell>
+                  <TableCell className="px-5 py-4">{member.email}</TableCell>
+                  <TableCell className="px-5 py-4">{member.role}</TableCell>
+                  <TableCell className="px-5 py-4">
                     <Badge variant={member.active ? "default" : "secondary"}>
                       {member.active ? "Active" : "Inactive"}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{member.lastLogin ?? "—"}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-muted-foreground px-5 py-4">{member.lastLogin ?? "—"}</TableCell>
+                  <TableCell className="text-right px-5 py-4">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -355,13 +355,13 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
 
       {showSecurity && (
       <div className="rounded-lg border bg-card">
-        <div className="flex items-start justify-between gap-4 p-6 pb-4">
+        <div className="flex items-start justify-between gap-4 p-8 pb-6">
           <div>
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <ShieldAlert className="h-4 w-4 text-muted-foreground" />
               Activity Log
             </h3>
-            <p className="text-sm text-muted-foreground mt-1">Track all staff account changes</p>
+            <p className="text-sm text-muted-foreground mt-2">Track all staff account changes</p>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -389,32 +389,32 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[170px]">Date &amp; Time</TableHead>
-              <TableHead className="w-[140px]">Action</TableHead>
-              <TableHead className="w-[200px]">Performed By</TableHead>
-              <TableHead className="w-[180px]">Target</TableHead>
-              <TableHead>Details</TableHead>
+              <TableHead className="px-5 py-4 w-[180px]">Date &amp; Time</TableHead>
+              <TableHead className="px-5 py-4 w-[120px]">Action</TableHead>
+              <TableHead className="px-5 py-4 w-[220px]">Performed By</TableHead>
+              <TableHead className="px-5 py-4 w-[200px]">Target</TableHead>
+              <TableHead className="px-5 py-4">Details</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {visibleLog.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-10 px-5">
                   No activity recorded yet.
                 </TableCell>
               </TableRow>
             ) : (
               visibleLog.map((log) => (
                 <TableRow key={log.id}>
-                  <TableCell className="text-muted-foreground font-mono text-xs">
+                  <TableCell className="text-muted-foreground font-mono text-xs px-5 py-4">
                     {log.timestamp}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-5 py-4">
                     <Badge variant={actionBadgeVariant(log.action)}>{log.action}</Badge>
                   </TableCell>
-                  <TableCell>{log.performedBy}</TableCell>
-                  <TableCell>{log.target}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{log.message}</TableCell>
+                  <TableCell className="px-5 py-4">{log.performedBy}</TableCell>
+                  <TableCell className="px-5 py-4">{log.target}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground px-5 py-4">{log.message}</TableCell>
                 </TableRow>
               ))
             )}
