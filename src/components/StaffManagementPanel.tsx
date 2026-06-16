@@ -111,13 +111,19 @@ const emptyForm: StaffFormState = {
   sendCredentials: true,
 };
 
-export const StaffManagementPanel = () => {
+interface StaffManagementPanelProps {
+  view?: "all" | "team" | "security";
+  activityLimit?: number;
+}
+
+export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManagementPanelProps = {}) => {
   const { toast } = useToast();
   const { isAdmin, isLoading, user } = useAuth();
   const [staff, setStaff] = useState<StaffMember[]>(initialStaff);
   const [auditLog, setAuditLog] = useState<AuditLogEntry[]>(initialAuditLog);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [showAllLog, setShowAllLog] = useState(false);
   const [form, setForm] = useState<StaffFormState>(emptyForm);
 
   // Strict access control: only Owner/Admin (mapped to isAdmin) can view this panel.
@@ -267,18 +273,24 @@ export const StaffManagementPanel = () => {
     }
   };
 
+  const showTeam = view === "all" || view === "team";
+  const showSecurity = view === "all" || view === "security";
+  const visibleLog = showSecurity && activityLimit && !showAllLog ? auditLog.slice(0, activityLimit) : auditLog;
+
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold text-foreground">Staff Management</h2>
-          <p className="text-sm text-muted-foreground mt-1">Manage staff and doctor access</p>
-        </div>
-        <Button onClick={openAdd} className="gap-1.5">
-          <Plus className="h-4 w-4" />
-          Add Staff
-        </Button>
-      </div>
+      {showTeam && (
+        <>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-semibold text-foreground">Staff Management</h2>
+              <p className="text-sm text-muted-foreground mt-1">Manage staff and doctor access</p>
+            </div>
+            <Button onClick={openAdd} className="gap-1.5">
+              <Plus className="h-4 w-4" />
+              Add Staff
+            </Button>
+          </div>
 
       <div className="rounded-lg border bg-card">
         <Table>
@@ -338,8 +350,10 @@ export const StaffManagementPanel = () => {
           </TableBody>
         </Table>
       </div>
+        </>
+      )}
 
-      {/* Activity Log */}
+      {showSecurity && (
       <div className="rounded-lg border bg-card">
         <div className="flex items-start justify-between gap-4 p-6 pb-4">
           <div>
@@ -360,6 +374,15 @@ export const StaffManagementPanel = () => {
               <Download className="h-4 w-4" />
               Download CSV
             </Button>
+            {activityLimit && auditLog.length > activityLimit && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowAllLog((s) => !s)}
+              >
+                {showAllLog ? "Show Less" : "View Full Log"}
+              </Button>
+            )}
             <Badge variant="secondary" className="text-xs">Read-only</Badge>
           </div>
         </div>
@@ -374,14 +397,14 @@ export const StaffManagementPanel = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {auditLog.length === 0 ? (
+            {visibleLog.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                   No activity recorded yet.
                 </TableCell>
               </TableRow>
             ) : (
-              auditLog.map((log) => (
+              visibleLog.map((log) => (
                 <TableRow key={log.id}>
                   <TableCell className="text-muted-foreground font-mono text-xs">
                     {log.timestamp}
@@ -398,6 +421,8 @@ export const StaffManagementPanel = () => {
           </TableBody>
         </Table>
       </div>
+      )}
+
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[480px]">
