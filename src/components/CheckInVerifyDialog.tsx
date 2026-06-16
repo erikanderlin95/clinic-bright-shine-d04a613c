@@ -65,9 +65,6 @@ export const CheckInVerifyDialog = ({ open, onOpenChange, entry, onVerified, onB
               <CheckCircle className="h-4 w-4 mr-2" />
               {t("verifyAndMarkArrived")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={handleBypass} className="text-muted-foreground">
-              {t("markArrivedNoCode")}
-            </Button>
           </div>
         </div>
       </DialogContent>
