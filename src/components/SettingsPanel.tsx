@@ -74,41 +74,37 @@ export const SettingsPanel = () => {
         </p>
       </div>
 
-      <div className="flex gap-6">
-        {/* Secondary nav */}
-        <nav className="w-[200px] flex-shrink-0 md:sticky md:top-6 md:self-start">
-          <div className="rounded-xl bg-muted/40 p-4 flex gap-2.5 overflow-x-auto md:flex-col">
-            {visibleSections.map((s) => {
-              const Icon = s.icon;
-              const isActive = active === s.id;
-              return (
-                <button
-                  key={s.id}
-                  onClick={() => setActive(s.id)}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-4 h-12 text-base font-medium whitespace-nowrap transition-colors w-full",
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <Icon className="h-5 w-5" />
-                  {s.label}
-                </button>
-              );
-            })}
-          </div>
-        </nav>
+      {/* Horizontal nav */}
+      <nav className="flex gap-2 overflow-x-auto">
+        {visibleSections.map((s) => {
+          const Icon = s.icon;
+          const isActive = active === s.id;
+          return (
+            <button
+              key={s.id}
+              onClick={() => setActive(s.id)}
+              className={cn(
+                "flex items-center gap-2 rounded-lg px-5 h-10 text-sm font-medium whitespace-nowrap transition-colors",
+                isActive
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              {s.label}
+            </button>
+          );
+        })}
+      </nav>
 
-        {/* Content */}
-        <div className="flex-1 min-w-0 space-y-6">
-          {active === "general" && (
-            <GeneralSection mode={mode} onChange={handleChange} />
-          )}
-          {active === "team" && <StaffManagementPanel view="team" />}
-          {active === "security" && <StaffManagementPanel view="security" activityLimit={5} />}
-          {active === "billing" && isAdmin && <BillingSubscriptionPanel />}
-        </div>
+      {/* Content */}
+      <div className="space-y-6">
+        {active === "general" && (
+          <GeneralSection mode={mode} onChange={handleChange} />
+        )}
+        {active === "team" && <StaffManagementPanel view="team" />}
+        {active === "security" && <StaffManagementPanel view="security" activityLimit={5} />}
+        {active === "billing" && isAdmin && <BillingSubscriptionPanel />}
       </div>
     </div>
   );
