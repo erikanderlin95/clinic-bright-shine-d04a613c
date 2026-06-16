@@ -138,6 +138,10 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   }
 
   const performerName = user?.email ?? "Admin";
+  // Determine current user's effective role within the staff table.
+  // Owner is identified by matching email; otherwise Admin (gate above ensures Owner/Admin only).
+  const currentMember = staff.find((s) => s.email.toLowerCase() === (user?.email ?? "").toLowerCase());
+  const currentRole: StaffRole = currentMember?.role === "Owner" ? "Owner" : "Admin";
 
   const appendLog = (
     action: AuditLogEntry["action"],
@@ -157,7 +161,19 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
     ]);
   };
 
-  const openAdd = () => {
+  const requestAdd = () => {
+    setReauthPassword("");
+    setReauthOpen(true);
+  };
+
+  const confirmReauth = () => {
+    if (reauthPassword.length < 6) {
+      toast({ title: "Verification failed", description: "Enter your account password to continue.", variant: "destructive" });
+      return;
+    }
+    // Simulated re-authentication — in production verify against the auth provider.
+    setReauthOpen(false);
+    setReauthPassword("");
     setEditingId(null);
     setForm(emptyForm);
     setDialogOpen(true);
