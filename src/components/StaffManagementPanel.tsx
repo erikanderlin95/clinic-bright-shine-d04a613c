@@ -125,6 +125,8 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showAllLog, setShowAllLog] = useState(false);
   const [form, setForm] = useState<StaffFormState>(emptyForm);
+  const [reauthOpen, setReauthOpen] = useState(false);
+  const [reauthPassword, setReauthPassword] = useState("");
 
   // Strict access control: only Owner/Admin (mapped to isAdmin) can view this panel.
   if (isLoading) {
