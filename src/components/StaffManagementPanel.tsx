@@ -303,7 +303,7 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
               <h2 className="text-2xl font-semibold text-foreground">Staff Management</h2>
               <p className="text-sm text-muted-foreground mt-2">Manage staff and doctor access</p>
             </div>
-            <Button onClick={openAdd} className="gap-1.5">
+            <Button onClick={requestAdd} className="gap-1.5">
               <Plus className="h-4 w-4" />
               Add Staff
             </Button>
