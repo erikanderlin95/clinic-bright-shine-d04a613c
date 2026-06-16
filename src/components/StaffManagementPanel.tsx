@@ -39,7 +39,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
 
-type StaffRole = "Owner" | "Admin" | "Doctor" | "Staff" | "Receptionist";
+type StaffRole = "Doctor" | "Admin" | "Staff";
 
 interface StaffMember {
   id: string;
@@ -62,7 +62,7 @@ interface AuditLogEntry {
 const initialStaff: StaffMember[] = [
   { id: "1", name: "Dr. Emily Tan", email: "emily.tan@clinic.com", role: "Doctor", active: true, lastLogin: "2026-04-26 09:12" },
   { id: "2", name: "Admin User", email: "admin@clinic.com", role: "Admin", active: true, lastLogin: "2026-04-27 08:30" },
-  { id: "3", name: "Jasmine Lee", email: "jasmine.lee@clinic.com", role: "Receptionist", active: true, lastLogin: "2026-04-26 17:45" },
+  { id: "3", name: "Jasmine Lee", email: "jasmine.lee@clinic.com", role: "Staff", active: true, lastLogin: "2026-04-26 17:45" },
   { id: "4", name: "Marcus Ong", email: "marcus.ong@clinic.com", role: "Staff", active: false, lastLogin: "2026-04-10 11:20" },
 ];
 
@@ -131,7 +131,7 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   const [deleteTarget, setDeleteTarget] = useState<StaffMember | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState("");
 
-  // Strict access control: only Owner/Admin (mapped to isAdmin) can view this panel.
+  // Strict access control: only Admin can view this panel.
   if (isLoading) {
     return <div className="p-8 text-sm text-muted-foreground">Loading…</div>;
   }
@@ -142,9 +142,8 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
 
   const performerName = user?.email ?? "Admin";
   // Determine current user's effective role within the staff table.
-  // Owner is identified by matching email; otherwise Admin (gate above ensures Owner/Admin only).
   const currentMember = staff.find((s) => s.email.toLowerCase() === (user?.email ?? "").toLowerCase());
-  const currentRole: StaffRole = currentMember?.role === "Owner" ? "Owner" : "Admin";
+  const currentRole: StaffRole = currentMember?.role ?? "Admin";
 
   const appendLog = (
     action: AuditLogEntry["action"],
@@ -272,12 +271,12 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   const confirmDelete = () => {
     if (!deleteTarget) return;
     // Guardrails — UI-level enforcement (server should re-check).
-    if (currentRole !== "Owner") {
-      toast({ title: "Not allowed", description: "Only the Clinic Owner can delete accounts.", variant: "destructive" });
+    if (currentRole !== "Admin") {
+      toast({ title: "Not allowed", description: "Only an Admin can delete accounts.", variant: "destructive" });
       return;
     }
-    if (deleteTarget.role === "Owner" || deleteTarget.role === "Admin") {
-      toast({ title: "Not allowed", description: "Owner and Admin accounts cannot be deleted.", variant: "destructive" });
+    if (deleteTarget.role === "Admin") {
+      toast({ title: "Not allowed", description: "Admin accounts cannot be deleted.", variant: "destructive" });
       return;
     }
     if (deleteTarget.active) {
@@ -377,54 +376,48 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
                   </TableCell>
                   <TableCell className="text-muted-foreground px-6 py-5">{member.lastLogin ?? "—"}</TableCell>
                   <TableCell className="text-right px-6 py-5">
-                    {member.role === "Owner" ? (
-                      <span className="text-xs text-muted-foreground whitespace-nowrap">
-                        Owner • Protected
-                      </span>
-                    ) : (
-                      (() => {
-                        // Admin viewer cannot disable or delete another Admin.
-                        const canDisable = !(currentRole === "Admin" && member.role === "Admin");
-                        const canDelete =
-                          currentRole === "Owner" &&
-                          !member.active &&
-                          member.role !== "Admin";
-                        return (
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => openEdit(member)}>
-                                <Pencil className="h-4 w-4 mr-2" /> Edit
+                    {(() => {
+                      // Admin viewer cannot disable or delete another Admin.
+                      const canDisable = !(currentRole === "Admin" && member.role === "Admin");
+                      const canDelete =
+                        currentRole === "Admin" &&
+                        !member.active &&
+                        member.role !== "Admin";
+                      return (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => openEdit(member)}>
+                              <Pencil className="h-4 w-4 mr-2" /> Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => resetPassword(member)}>
+                              <KeyRound className="h-4 w-4 mr-2" /> Send Password Reset Email
+                            </DropdownMenuItem>
+                            {canDisable && (
+                              <DropdownMenuItem onClick={() => toggleActive(member.id)}>
+                                <Power className="h-4 w-4 mr-2" />
+                                {member.active ? "Disable Account" : "Enable Account"}
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => resetPassword(member)}>
-                                <KeyRound className="h-4 w-4 mr-2" /> Send Password Reset Email
-                              </DropdownMenuItem>
-                              {canDisable && (
-                                <DropdownMenuItem onClick={() => toggleActive(member.id)}>
-                                  <Power className="h-4 w-4 mr-2" />
-                                  {member.active ? "Disable Account" : "Enable Account"}
+                            )}
+                            {canDelete && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() => requestDelete(member)}
+                                  className="text-destructive focus:text-destructive"
+                                >
+                                  <Trash2 className="h-4 w-4 mr-2" /> Delete Account
                                 </DropdownMenuItem>
-                              )}
-                              {canDelete && (
-                                <>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem
-                                    onClick={() => requestDelete(member)}
-                                    className="text-destructive focus:text-destructive"
-                                  >
-                                    <Trash2 className="h-4 w-4 mr-2" /> Delete Account
-                                  </DropdownMenuItem>
-                                </>
-                              )}
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        );
-                      })()
-                    )}
+                              </>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      );
+                    })()}
                   </TableCell>
                 </TableRow>
               ))
@@ -549,15 +542,13 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Owner">Owner</SelectItem>
                   <SelectItem value="Admin">Admin</SelectItem>
                   <SelectItem value="Doctor">Doctor</SelectItem>
                   <SelectItem value="Staff">Staff</SelectItem>
-                  <SelectItem value="Receptionist">Receptionist</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                If a doctor is the clinic boss, assign them Owner/Admin instead of Doctor.
+                Assign Admin for full management access, Doctor for clinical staff, or Staff for general roles.
               </p>
             </div>
 
