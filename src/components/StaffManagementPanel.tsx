@@ -355,13 +355,13 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
 
       {showSecurity && (
       <div className="rounded-lg border bg-card">
-        <div className="flex items-start justify-between gap-4 p-6 pb-4">
+        <div className="flex items-start justify-between gap-4 p-8 pb-6">
           <div>
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <ShieldAlert className="h-4 w-4 text-muted-foreground" />
               Activity Log
             </h3>
-            <p className="text-sm text-muted-foreground mt-1">Track all staff account changes</p>
+            <p className="text-sm text-muted-foreground mt-2">Track all staff account changes</p>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -389,32 +389,32 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[170px]">Date &amp; Time</TableHead>
-              <TableHead className="w-[140px]">Action</TableHead>
-              <TableHead className="w-[200px]">Performed By</TableHead>
-              <TableHead className="w-[180px]">Target</TableHead>
-              <TableHead>Details</TableHead>
+              <TableHead className="px-5 py-4 w-[180px]">Date &amp; Time</TableHead>
+              <TableHead className="px-5 py-4 w-[120px]">Action</TableHead>
+              <TableHead className="px-5 py-4 w-[220px]">Performed By</TableHead>
+              <TableHead className="px-5 py-4 w-[200px]">Target</TableHead>
+              <TableHead className="px-5 py-4">Details</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {visibleLog.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-10 px-5">
                   No activity recorded yet.
                 </TableCell>
               </TableRow>
             ) : (
               visibleLog.map((log) => (
                 <TableRow key={log.id}>
-                  <TableCell className="text-muted-foreground font-mono text-xs">
+                  <TableCell className="text-muted-foreground font-mono text-xs px-5 py-4">
                     {log.timestamp}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-5 py-4">
                     <Badge variant={actionBadgeVariant(log.action)}>{log.action}</Badge>
                   </TableCell>
-                  <TableCell>{log.performedBy}</TableCell>
-                  <TableCell>{log.target}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{log.message}</TableCell>
+                  <TableCell className="px-5 py-4">{log.performedBy}</TableCell>
+                  <TableCell className="px-5 py-4">{log.target}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground px-5 py-4">{log.message}</TableCell>
                 </TableRow>
               ))
             )}
