@@ -4,9 +4,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
-import { X, MessageSquare, FileText } from "lucide-react";
+import { X, MessageSquare, Send } from "lucide-react";
 import { useState } from "react";
 import { useI18n } from "@/hooks/useI18n";
+import { toast } from "sonner";
 
 interface PatientDetailPanelProps {
   entry: QueueEntry;
@@ -16,11 +17,21 @@ interface PatientDetailPanelProps {
 
 export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDetailPanelProps) => {
   const [notes, setNotes] = useState(entry.notes || "");
+  const [messageOpen, setMessageOpen] = useState(false);
+  const [message, setMessage] = useState("");
   const { t } = useI18n();
 
   const handleSaveNotes = () => {
     onUpdateNotes(entry.id, notes);
   };
+
+  const handleSendMessage = () => {
+    if (!message.trim()) return;
+    toast.success(`Message sent to ${entry.name || "patient"}`);
+    setMessage("");
+    setMessageOpen(false);
+  };
+
 
   return (
     <Card className="h-full border-l">
