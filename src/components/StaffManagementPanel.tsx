@@ -264,6 +264,38 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
     });
   };
 
+  const requestDelete = (member: StaffMember) => {
+    setDeleteTarget(member);
+    setDeleteConfirm("");
+  };
+
+  const confirmDelete = () => {
+    if (!deleteTarget) return;
+    // Guardrails — UI-level enforcement (server should re-check).
+    if (currentRole !== "Owner") {
+      toast({ title: "Not allowed", description: "Only the Clinic Owner can delete accounts.", variant: "destructive" });
+      return;
+    }
+    if (deleteTarget.role === "Owner" || deleteTarget.role === "Admin") {
+      toast({ title: "Not allowed", description: "Owner and Admin accounts cannot be deleted.", variant: "destructive" });
+      return;
+    }
+    if (deleteTarget.active) {
+      toast({ title: "Disable first", description: "Account must be disabled before it can be deleted.", variant: "destructive" });
+      return;
+    }
+    if (deleteConfirm !== "DELETE") {
+      toast({ title: "Type DELETE to confirm", variant: "destructive" });
+      return;
+    }
+    const name = deleteTarget.name;
+    setStaff((prev) => prev.filter((s) => s.id !== deleteTarget.id));
+    appendLog("Delete", name, `${performerName} deleted account for ${name}`);
+    toast({ title: "Account deleted", description: `${name}'s account has been permanently removed. Audit history retained.` });
+    setDeleteTarget(null);
+    setDeleteConfirm("");
+  };
+
   const downloadAuditLogCSV = () => {
     const escape = (val: string) => `"${String(val).replace(/"/g, '""')}"`;
     const headers = ["Date & Time", "Action", "Performed By", "Target", "Details"];
@@ -284,6 +316,7 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   const actionBadgeVariant = (action: AuditLogEntry["action"]) => {
     switch (action) {
       case "Disable":
+      case "Delete":
         return "destructive" as const;
       case "Create":
       case "Enable":
