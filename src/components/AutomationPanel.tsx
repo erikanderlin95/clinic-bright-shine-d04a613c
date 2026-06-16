@@ -46,6 +46,7 @@ interface AutomationPanelProps {
   onTemplatesChange?: (templates: MessageTemplate[]) => void;
   queueEntries?: QueueEntry[];
   clinicIntegrationActive?: boolean;
+  onSelectPatient?: (id: string) => void;
 }
 
 const MAX_TEMPLATES = 4;
