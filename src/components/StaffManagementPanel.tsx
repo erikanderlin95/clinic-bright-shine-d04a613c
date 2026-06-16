@@ -111,13 +111,19 @@ const emptyForm: StaffFormState = {
   sendCredentials: true,
 };
 
-export const StaffManagementPanel = () => {
+interface StaffManagementPanelProps {
+  view?: "all" | "team" | "security";
+  activityLimit?: number;
+}
+
+export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManagementPanelProps = {}) => {
   const { toast } = useToast();
   const { isAdmin, isLoading, user } = useAuth();
   const [staff, setStaff] = useState<StaffMember[]>(initialStaff);
   const [auditLog, setAuditLog] = useState<AuditLogEntry[]>(initialAuditLog);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [showAllLog, setShowAllLog] = useState(false);
   const [form, setForm] = useState<StaffFormState>(emptyForm);
 
   // Strict access control: only Owner/Admin (mapped to isAdmin) can view this panel.
@@ -267,18 +273,24 @@ export const StaffManagementPanel = () => {
     }
   };
 
+  const showTeam = view === "all" || view === "team";
+  const showSecurity = view === "all" || view === "security";
+  const visibleLog = showSecurity && activityLimit && !showAllLog ? auditLog.slice(0, activityLimit) : auditLog;
+
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold text-foreground">Staff Management</h2>
-          <p className="text-sm text-muted-foreground mt-1">Manage staff and doctor access</p>
-        </div>
-        <Button onClick={openAdd} className="gap-1.5">
-          <Plus className="h-4 w-4" />
-          Add Staff
-        </Button>
-      </div>
+      {showTeam && (
+        <>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-semibold text-foreground">Staff Management</h2>
+              <p className="text-sm text-muted-foreground mt-1">Manage staff and doctor access</p>
+            </div>
+            <Button onClick={openAdd} className="gap-1.5">
+              <Plus className="h-4 w-4" />
+              Add Staff
+            </Button>
+          </div>
 
       <div className="rounded-lg border bg-card">
         <Table>
