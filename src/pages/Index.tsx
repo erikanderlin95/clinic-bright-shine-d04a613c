@@ -381,6 +381,10 @@ const Index = () => {
                 templates={messageTemplates}
                 onTemplatesChange={setMessageTemplates}
                 queueEntries={queueEntries}
+                onSelectPatient={(id) => {
+                  const entry = queueEntries.find((e) => e.id === id);
+                  if (entry) setSelectedEntry(entry);
+                }}
               />
             </TabsContent>
 
