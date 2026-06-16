@@ -27,10 +27,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Plus, Pencil, Trash2, Calendar, Clock, User, Eye, CalendarDays, List, ChevronDown } from "lucide-react";
+import { Plus, Pencil, Trash2, Calendar, Clock, User, Eye, ChevronDown } from "lucide-react";
 import { useDoctorShifts, DoctorShift } from "@/hooks/useDoctorShifts";
 import { useDoctorProfiles } from "@/hooks/useDoctorProfiles";
-import { WeeklyCalendarView } from "./WeeklyCalendarView";
 
 const DAYS_OF_WEEK = [
   "Monday",
