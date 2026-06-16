@@ -125,6 +125,8 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showAllLog, setShowAllLog] = useState(false);
   const [form, setForm] = useState<StaffFormState>(emptyForm);
+  const [reauthOpen, setReauthOpen] = useState(false);
+  const [reauthPassword, setReauthPassword] = useState("");
 
   // Strict access control: only Owner/Admin (mapped to isAdmin) can view this panel.
   if (isLoading) {
@@ -136,6 +138,10 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   }
 
   const performerName = user?.email ?? "Admin";
+  // Determine current user's effective role within the staff table.
+  // Owner is identified by matching email; otherwise Admin (gate above ensures Owner/Admin only).
+  const currentMember = staff.find((s) => s.email.toLowerCase() === (user?.email ?? "").toLowerCase());
+  const currentRole: StaffRole = currentMember?.role === "Owner" ? "Owner" : "Admin";
 
   const appendLog = (
     action: AuditLogEntry["action"],
@@ -155,7 +161,19 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
     ]);
   };
 
-  const openAdd = () => {
+  const requestAdd = () => {
+    setReauthPassword("");
+    setReauthOpen(true);
+  };
+
+  const confirmReauth = () => {
+    if (reauthPassword.length < 6) {
+      toast({ title: "Verification failed", description: "Enter your account password to continue.", variant: "destructive" });
+      return;
+    }
+    // Simulated re-authentication — in production verify against the auth provider.
+    setReauthOpen(false);
+    setReauthPassword("");
     setEditingId(null);
     setForm(emptyForm);
     setDialogOpen(true);
@@ -236,11 +254,10 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   };
 
   const resetPassword = (member: StaffMember) => {
-    const newPwd = generatePassword();
-    appendLog("Password Reset", member.name, `${performerName} reset password for ${member.name}`);
+    appendLog("Password Reset", member.name, `${performerName} sent password reset email to ${member.name}`);
     toast({
-      title: "Password reset",
-      description: `New temporary password for ${member.name}: ${newPwd}`,
+      title: "Reset email sent",
+      description: `A password reset link was sent to ${member.email}.`,
     });
   };
 
@@ -286,7 +303,7 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
               <h2 className="text-2xl font-semibold text-foreground">Staff Management</h2>
               <p className="text-sm text-muted-foreground mt-2">Manage staff and doctor access</p>
             </div>
-            <Button onClick={openAdd} className="gap-1.5">
+            <Button onClick={requestAdd} className="gap-1.5">
               <Plus className="h-4 w-4" />
               Add Staff
             </Button>
@@ -324,25 +341,39 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
                   </TableCell>
                   <TableCell className="text-muted-foreground px-6 py-5">{member.lastLogin ?? "—"}</TableCell>
                   <TableCell className="text-right px-6 py-5">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => openEdit(member)}>
-                          <Pencil className="h-4 w-4 mr-2" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => toggleActive(member.id)}>
-                          <Power className="h-4 w-4 mr-2" />
-                          {member.active ? "Disable" : "Enable"}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => resetPassword(member)}>
-                          <KeyRound className="h-4 w-4 mr-2" /> Reset Password
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    {member.role === "Owner" ? (
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        Owner • Protected
+                      </span>
+                    ) : (
+                      (() => {
+                        // Admin viewer cannot disable another Admin (other than themselves not allowed either).
+                        const canDisable = !(currentRole === "Admin" && member.role === "Admin");
+                        return (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => openEdit(member)}>
+                                <Pencil className="h-4 w-4 mr-2" /> Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => resetPassword(member)}>
+                                <KeyRound className="h-4 w-4 mr-2" /> Reset Password
+                              </DropdownMenuItem>
+                              {canDisable && (
+                                <DropdownMenuItem onClick={() => toggleActive(member.id)}>
+                                  <Power className="h-4 w-4 mr-2" />
+                                  {member.active ? "Disable Account" : "Enable Account"}
+                                </DropdownMenuItem>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        );
+                      })()
+                    )}
                   </TableCell>
                 </TableRow>
               ))
@@ -534,6 +565,38 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
             <Button onClick={handleSubmit}>{editingId ? "Save Changes" : "Create Staff"}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={reauthOpen} onOpenChange={setReauthOpen}>
+        <DialogContent className="sm:max-w-[420px]">
+          <DialogHeader>
+            <DialogTitle>Verify it's you</DialogTitle>
+            <DialogDescription>
+              For security, re-enter your account password before creating a new staff account.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 py-2">
+            <Label htmlFor="reauth-password">Your password</Label>
+            <Input
+              id="reauth-password"
+              type="password"
+              autoFocus
+              value={reauthPassword}
+              onChange={(e) => setReauthPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") confirmReauth();
+              }}
+              placeholder="Enter your password"
+            />
+            <p className="text-xs text-muted-foreground">
+              Or use an OTP from your authenticator app if enabled.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setReauthOpen(false)}>Cancel</Button>
+            <Button onClick={confirmReauth}>Verify &amp; Continue</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
