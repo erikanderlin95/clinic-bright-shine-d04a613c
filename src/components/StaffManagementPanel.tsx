@@ -348,12 +348,12 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-6 py-5">Name</TableHead>
-              <TableHead className="px-6 py-5">Email / Login ID</TableHead>
-              <TableHead className="px-6 py-5">Role</TableHead>
-              <TableHead className="px-6 py-5">Status</TableHead>
-              <TableHead className="px-6 py-5">Last Login</TableHead>
-              <TableHead className="w-[80px] px-6 py-5 text-right">Actions</TableHead>
+              <TableHead className="min-w-[200px] px-5 py-5 whitespace-nowrap">Name</TableHead>
+              <TableHead className="min-w-[260px] px-5 py-5 whitespace-nowrap">Email / Login ID</TableHead>
+              <TableHead className="w-[100px] px-5 py-5 whitespace-nowrap">Role</TableHead>
+              <TableHead className="w-[100px] px-5 py-5 whitespace-nowrap">Status</TableHead>
+              <TableHead className="w-[160px] px-5 py-5 whitespace-nowrap">Last Login</TableHead>
+              <TableHead className="w-[80px] px-5 py-5 text-right whitespace-nowrap">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
