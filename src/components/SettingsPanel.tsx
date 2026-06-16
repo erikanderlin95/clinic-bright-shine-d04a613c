@@ -70,7 +70,7 @@ export const SettingsPanel = () => {
       <div>
         <h2 className="text-2xl font-semibold text-foreground tracking-tight">Settings</h2>
         <p className="text-sm text-muted-foreground mt-2">
-          Manage your clinic, team, billing, and security preferences.
+          Manage your clinic, team, billing, and activity log preferences.
         </p>
       </div>
 
