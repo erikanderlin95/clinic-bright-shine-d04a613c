@@ -383,8 +383,13 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
                       </span>
                     ) : (
                       (() => {
-                        // Admin viewer cannot disable another Admin (other than themselves not allowed either).
+                        // Admin viewer cannot disable or delete another Admin.
                         const canDisable = !(currentRole === "Admin" && member.role === "Admin");
+                        const canDelete =
+                          currentRole === "Owner" &&
+                          !member.active &&
+                          member.role !== "Owner" &&
+                          member.role !== "Admin";
                         return (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -397,13 +402,24 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
                                 <Pencil className="h-4 w-4 mr-2" /> Edit
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => resetPassword(member)}>
-                                <KeyRound className="h-4 w-4 mr-2" /> Reset Password
+                                <KeyRound className="h-4 w-4 mr-2" /> Send Password Reset Email
                               </DropdownMenuItem>
                               {canDisable && (
                                 <DropdownMenuItem onClick={() => toggleActive(member.id)}>
                                   <Power className="h-4 w-4 mr-2" />
                                   {member.active ? "Disable Account" : "Enable Account"}
                                 </DropdownMenuItem>
+                              )}
+                              {canDelete && (
+                                <>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    onClick={() => requestDelete(member)}
+                                    className="text-destructive focus:text-destructive"
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-2" /> Delete Account
+                                  </DropdownMenuItem>
+                                </>
                               )}
                             </DropdownMenuContent>
                           </DropdownMenu>
