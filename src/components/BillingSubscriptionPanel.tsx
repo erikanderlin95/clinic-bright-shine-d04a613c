@@ -155,9 +155,6 @@ export const BillingSubscriptionPanel = () => {
                 <Button variant="outline" size="sm" onClick={() => requireConfirm("Update Payment Method")}>
                   Update Payment Method
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => requireConfirm("Remove Card")}>
-                  Remove Card
-                </Button>
               </div>
             </div>
             <div className="flex items-start gap-2 rounded-md bg-muted/60 p-4 text-xs text-muted-foreground">
