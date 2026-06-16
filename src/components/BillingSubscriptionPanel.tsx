@@ -151,15 +151,15 @@ export const BillingSubscriptionPanel = () => {
   return (
     <>
       <Card>
-        <CardHeader className="px-8 pt-8 pb-4">
+        <CardHeader className="px-8 pt-8 pb-6">
           <CardTitle className="text-lg">Billing & Subscription</CardTitle>
           <CardDescription>
             Manage your ClynicQ plan, payment method, and billing history.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-8 px-8 pb-8">
+        <CardContent className="space-y-10 px-8 pb-8">
           {/* Current Plan */}
-          <div className="rounded-lg border border-border p-6">
+          <div className="rounded-lg border border-border p-8">
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
@@ -187,7 +187,7 @@ export const BillingSubscriptionPanel = () => {
           </div>
 
           {/* Payment Method */}
-          <div className="rounded-lg border border-border p-6 space-y-4">
+          <div className="rounded-lg border border-border p-8 space-y-5">
             <div className="flex items-center justify-between gap-4 flex-wrap">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-14 items-center justify-center rounded-md bg-muted">
@@ -212,7 +212,7 @@ export const BillingSubscriptionPanel = () => {
 
           {/* Billing History */}
           <div className="rounded-lg border border-border">
-            <div className="flex items-center justify-between p-6 pb-3">
+            <div className="flex items-center justify-between px-8 py-6 pb-4">
               <div className="text-sm font-medium text-foreground">Billing History</div>
               <Button variant="link" size="sm" className="h-auto p-0">
                 View All Invoices
@@ -221,25 +221,25 @@ export const BillingSubscriptionPanel = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="px-5 py-4">Invoice</TableHead>
-                  <TableHead className="px-5 py-4">Date</TableHead>
-                  <TableHead className="px-5 py-4">Amount</TableHead>
-                  <TableHead className="px-5 py-4">Status</TableHead>
-                  <TableHead className="text-right px-5 py-4">Action</TableHead>
+                  <TableHead className="px-6 py-5">Invoice</TableHead>
+                  <TableHead className="px-6 py-5">Date</TableHead>
+                  <TableHead className="px-6 py-5">Amount</TableHead>
+                  <TableHead className="px-6 py-5">Status</TableHead>
+                  <TableHead className="text-right px-6 py-5">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {invoices.map((inv) => (
                   <TableRow key={inv.id}>
-                    <TableCell className="font-medium px-5 py-4">{inv.id}</TableCell>
-                    <TableCell className="px-5 py-4">{inv.date}</TableCell>
-                    <TableCell className="px-5 py-4">{inv.amount}</TableCell>
-                    <TableCell className="px-5 py-4">
+                    <TableCell className="font-medium px-6 py-5">{inv.id}</TableCell>
+                    <TableCell className="px-6 py-5">{inv.date}</TableCell>
+                    <TableCell className="px-6 py-5">{inv.amount}</TableCell>
+                    <TableCell className="px-6 py-5">
                       <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
                         {inv.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right px-5 py-4">
+                    <TableCell className="text-right px-6 py-5">
                       <Button variant="ghost" size="sm" onClick={() => handleDownload(inv)} className="gap-1.5">
                         <Download className="h-3.5 w-3.5" />
                         PDF

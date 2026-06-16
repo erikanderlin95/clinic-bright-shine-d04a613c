@@ -66,7 +66,7 @@ export const SettingsPanel = () => {
   const visibleSections = sections.filter((s) => (s.id === "billing" ? isAdmin : true));
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-[1480px] mx-auto space-y-8">
       <div>
         <h2 className="text-2xl font-semibold text-foreground tracking-tight">Settings</h2>
         <p className="text-sm text-muted-foreground mt-2">
@@ -74,10 +74,10 @@ export const SettingsPanel = () => {
         </p>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-[240px_1fr]">
+      <div className="grid gap-6 md:grid-cols-[200px_1fr]">
         {/* Secondary nav */}
-        <nav className="md:sticky md:top-4 md:self-start">
-          <div className="flex gap-1 overflow-x-auto md:flex-col md:gap-1">
+        <nav className="md:sticky md:top-6 md:self-start">
+          <div className="rounded-xl bg-muted/40 p-4 flex gap-2.5 overflow-x-auto md:flex-col">
             {visibleSections.map((s) => {
               const Icon = s.icon;
               const isActive = active === s.id;
@@ -86,7 +86,7 @@ export const SettingsPanel = () => {
                   key={s.id}
                   onClick={() => setActive(s.id)}
                   className={cn(
-                    "flex items-center gap-3 rounded-lg px-4 py-3.5 text-base font-medium whitespace-nowrap transition-colors",
+                    "flex items-center gap-3 rounded-lg px-4 h-12 text-base font-medium whitespace-nowrap transition-colors w-full",
                     isActive
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -101,7 +101,7 @@ export const SettingsPanel = () => {
         </nav>
 
         {/* Content */}
-        <div className="min-w-0 space-y-8">
+        <div className="min-w-0 space-y-6">
           {active === "general" && (
             <GeneralSection mode={mode} onChange={handleChange} />
           )}
@@ -130,10 +130,10 @@ const GeneralSection = ({
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Summary */}
       <Card className="border-border/60 bg-card/60">
-        <CardContent className="p-8">
+        <CardContent className="px-8 py-7">
           <div className="grid grid-cols-2 gap-6 md:grid-cols-5">
             {summaryItems.map((it) => (
               <div key={it.label} className="min-w-0">
@@ -153,7 +153,7 @@ const GeneralSection = ({
       </Card>
 
       {/* Queue Visibility */}
-      <section className="space-y-5">
+      <section className="space-y-8">
         <div>
           <h3 className="text-lg font-semibold text-foreground">Queue Visibility</h3>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
@@ -186,7 +186,7 @@ const GeneralSection = ({
         </RadioGroup>
 
         {/* Smart Wait info card */}
-        <div className="rounded-xl bg-muted/40 p-6">
+        <div className="rounded-xl bg-muted/40 p-8">
           <div className="flex items-center gap-2 mb-4">
             <Info className="h-3.5 w-3.5 text-muted-foreground" />
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -235,7 +235,7 @@ const VisibilityCard = ({
     <Label
       htmlFor={`qv-${value}`}
       className={cn(
-        "relative flex cursor-pointer flex-col gap-4 rounded-xl border bg-card p-7 transition-all",
+        "relative flex cursor-pointer flex-col gap-4 rounded-xl border bg-card p-8 transition-all",
         selected
           ? "border-primary ring-2 ring-primary/20 shadow-sm"
           : "border-border/60 hover:border-border hover:bg-muted/30"
