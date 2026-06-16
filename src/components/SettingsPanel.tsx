@@ -101,7 +101,7 @@ export const SettingsPanel = () => {
         </nav>
 
         {/* Content */}
-        <div className="min-w-0 space-y-6">
+        <div className="flex-1 min-w-0 space-y-6">
           {active === "general" && (
             <GeneralSection mode={mode} onChange={handleChange} />
           )}
