@@ -133,7 +133,7 @@ const GeneralSection = ({
       {/* Summary */}
       <Card className="border-border/60 bg-card/60">
         <CardContent className="px-8 py-7">
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-5">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {summaryItems.map((it) => (
               <div key={it.label} className="min-w-0">
                 <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
