@@ -341,25 +341,39 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
                   </TableCell>
                   <TableCell className="text-muted-foreground px-6 py-5">{member.lastLogin ?? "—"}</TableCell>
                   <TableCell className="text-right px-6 py-5">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => openEdit(member)}>
-                          <Pencil className="h-4 w-4 mr-2" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => toggleActive(member.id)}>
-                          <Power className="h-4 w-4 mr-2" />
-                          {member.active ? "Disable" : "Enable"}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => resetPassword(member)}>
-                          <KeyRound className="h-4 w-4 mr-2" /> Reset Password
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    {member.role === "Owner" ? (
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        Owner • Protected
+                      </span>
+                    ) : (
+                      (() => {
+                        // Admin viewer cannot disable another Admin (other than themselves not allowed either).
+                        const canDisable = !(currentRole === "Admin" && member.role === "Admin");
+                        return (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => openEdit(member)}>
+                                <Pencil className="h-4 w-4 mr-2" /> Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => resetPassword(member)}>
+                                <KeyRound className="h-4 w-4 mr-2" /> Reset Password
+                              </DropdownMenuItem>
+                              {canDisable && (
+                                <DropdownMenuItem onClick={() => toggleActive(member.id)}>
+                                  <Power className="h-4 w-4 mr-2" />
+                                  {member.active ? "Disable Account" : "Enable Account"}
+                                </DropdownMenuItem>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        );
+                      })()
+                    )}
                   </TableCell>
                 </TableRow>
               ))
