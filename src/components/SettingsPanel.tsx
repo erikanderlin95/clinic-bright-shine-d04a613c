@@ -11,7 +11,6 @@ import {
   Settings as SettingsIcon,
   Users,
   CreditCard,
-  ShieldCheck,
   CheckCircle2,
   Building2,
   Activity,
