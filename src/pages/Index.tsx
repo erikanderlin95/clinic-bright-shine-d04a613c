@@ -313,7 +313,7 @@ const Index = () => {
               
               <TabsTrigger value="appointments">Booking Channels</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
-              <TabsTrigger value="schedule">{t("doctorSchedule")}</TabsTrigger>
+              
               <TabsTrigger value="profiles">{t("doctorProfiles")}</TabsTrigger>
               <TabsTrigger value="settings" className="gap-1.5">
                 <Settings className="h-4 w-4" />
