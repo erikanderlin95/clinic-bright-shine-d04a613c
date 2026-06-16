@@ -388,9 +388,6 @@ const Index = () => {
               />
             </TabsContent>
 
-            <TabsContent value="schedule" className="mt-5">
-              <DoctorSchedulePanel />
-            </TabsContent>
 
             <TabsContent value="profiles" className="mt-5">
               <DoctorProfilesPanel />
