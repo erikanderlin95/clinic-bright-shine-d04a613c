@@ -542,15 +542,13 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Owner">Owner</SelectItem>
                   <SelectItem value="Admin">Admin</SelectItem>
                   <SelectItem value="Doctor">Doctor</SelectItem>
                   <SelectItem value="Staff">Staff</SelectItem>
-                  <SelectItem value="Receptionist">Receptionist</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                If a doctor is the clinic boss, assign them Owner/Admin instead of Doctor.
+                Assign Admin for full management access, Doctor for clinical staff, or Staff for general roles.
               </p>
             </div>
 
