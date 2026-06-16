@@ -302,6 +302,11 @@ export const DoctorProfilesPanel = () => {
         </div>
       )}
 
+      {/* Doctor Schedule (merged from former Schedule tab) */}
+      <div className="pt-6 mt-2 border-t border-border">
+        <DoctorSchedulePanel />
+      </div>
+
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
