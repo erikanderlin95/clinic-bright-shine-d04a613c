@@ -124,7 +124,6 @@ const GeneralSection = ({
   const summaryItems = [
     { label: "Clinic Name", value: "ClynicQ Demo Clinic", icon: Building2 },
     { label: "Current Plan", value: "Professional" },
-    { label: "CMS Status", value: "Connected", tone: "ok" as const },
     { label: "Stripe Status", value: "Active", tone: "ok" as const },
     { label: "Last Sync", value: "2 min ago" },
   ];
