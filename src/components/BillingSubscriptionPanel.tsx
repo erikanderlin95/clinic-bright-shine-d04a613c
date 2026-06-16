@@ -20,8 +20,25 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CreditCard, Download, ShieldCheck, ArrowUpCircle, ArrowDownCircle, Check } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { CreditCard, Download, ShieldCheck, ArrowUpCircle, ArrowDownCircle, Check, AlertTriangle, Mail, CalendarX } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+const CANCEL_REASONS = [
+  "Too expensive",
+  "Missing features I need",
+  "Switching to another product",
+  "Not using it enough",
+  "Temporary pause / clinic closing",
+  "Other",
+];
+
+const formatEndOfMonth = () => {
+  const now = new Date();
+  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  return end.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+};
 
 interface Invoice {
   id: string;
