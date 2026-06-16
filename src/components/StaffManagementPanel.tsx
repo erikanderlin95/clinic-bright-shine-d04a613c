@@ -568,6 +568,38 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={reauthOpen} onOpenChange={setReauthOpen}>
+        <DialogContent className="sm:max-w-[420px]">
+          <DialogHeader>
+            <DialogTitle>Verify it's you</DialogTitle>
+            <DialogDescription>
+              For security, re-enter your account password before creating a new staff account.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 py-2">
+            <Label htmlFor="reauth-password">Your password</Label>
+            <Input
+              id="reauth-password"
+              type="password"
+              autoFocus
+              value={reauthPassword}
+              onChange={(e) => setReauthPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") confirmReauth();
+              }}
+              placeholder="Enter your password"
+            />
+            <p className="text-xs text-muted-foreground">
+              Or use an OTP from your authenticator app if enabled.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setReauthOpen(false)}>Cancel</Button>
+            <Button onClick={confirmReauth}>Verify &amp; Continue</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
