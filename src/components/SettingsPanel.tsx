@@ -130,17 +130,17 @@ const GeneralSection = ({
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Summary */}
       <Card className="border-border/60 bg-card/60">
-        <CardContent className="p-5">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+        <CardContent className="p-8">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-5">
             {summaryItems.map((it) => (
               <div key={it.label} className="min-w-0">
                 <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   {it.label}
                 </div>
-                <div className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-foreground truncate">
+                <div className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-foreground truncate">
                   {it.tone === "ok" && (
                     <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 flex-shrink-0" />
                   )}
@@ -153,10 +153,10 @@ const GeneralSection = ({
       </Card>
 
       {/* Queue Visibility */}
-      <section className="space-y-3">
+      <section className="space-y-5">
         <div>
           <h3 className="text-lg font-semibold text-foreground">Queue Visibility</h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
             Choose how queue information is shown to patients. Clinic queue logic stays the same.
           </p>
         </div>
@@ -164,7 +164,7 @@ const GeneralSection = ({
         <RadioGroup
           value={mode}
           onValueChange={onChange}
-          className="grid gap-3 sm:grid-cols-2"
+          className="grid gap-4 sm:grid-cols-2"
         >
           <VisibilityCard
             value="live"
@@ -186,24 +186,24 @@ const GeneralSection = ({
         </RadioGroup>
 
         {/* Smart Wait info card */}
-        <div className="rounded-xl bg-muted/40 p-4">
-          <div className="flex items-center gap-2 mb-3">
+        <div className="rounded-xl bg-muted/40 p-6">
+          <div className="flex items-center gap-2 mb-4">
             <Info className="h-3.5 w-3.5 text-muted-foreground" />
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Smart Wait Groups
             </span>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-6">
             {[
               { label: "Low Wait", range: "0–3 active", dot: "bg-emerald-500" },
               { label: "Moderate Wait", range: "4–9 active", dot: "bg-amber-500" },
               { label: "Busy Now", range: "10+ active", dot: "bg-rose-500" },
             ].map((g) => (
-              <div key={g.label} className="flex items-start gap-2">
-                <span className={cn("mt-1.5 h-2 w-2 rounded-full flex-shrink-0", g.dot)} />
+              <div key={g.label} className="flex items-start gap-3">
+                <span className={cn("mt-1.5 h-2.5 w-2.5 rounded-full flex-shrink-0", g.dot)} />
                 <div>
                   <div className="text-sm font-semibold text-foreground">{g.label}</div>
-                  <div className="text-xs text-muted-foreground">{g.range}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{g.range}</div>
                 </div>
               </div>
             ))}
