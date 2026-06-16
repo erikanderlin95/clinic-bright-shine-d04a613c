@@ -464,32 +464,32 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-6 py-5 w-[160px]">Date &amp; Time</TableHead>
-              <TableHead className="px-6 py-5 w-[110px]">Action</TableHead>
-              <TableHead className="px-6 py-5 w-[180px]">Performed By</TableHead>
-              <TableHead className="px-6 py-5 w-[160px]">Target</TableHead>
-              <TableHead className="px-6 py-5">Details</TableHead>
+              <TableHead className="px-5 py-5 w-[160px]">Date &amp; Time</TableHead>
+              <TableHead className="px-5 py-5 w-[110px]">Action</TableHead>
+              <TableHead className="px-5 py-5 w-[180px]">Performed By</TableHead>
+              <TableHead className="px-5 py-5 w-[160px]">Target</TableHead>
+              <TableHead className="px-5 py-5">Details</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {visibleLog.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground py-10 px-6">
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-10 px-5">
                   No activity recorded yet.
                 </TableCell>
               </TableRow>
             ) : (
               visibleLog.map((log) => (
                 <TableRow key={log.id}>
-                  <TableCell className="text-muted-foreground font-mono text-xs px-6 py-5">
+                  <TableCell className="text-muted-foreground font-mono text-xs px-5 py-5">
                     {log.timestamp}
                   </TableCell>
-                  <TableCell className="px-6 py-5">
+                  <TableCell className="px-5 py-5">
                     <Badge variant={actionBadgeVariant(log.action)}>{log.action}</Badge>
                   </TableCell>
-                  <TableCell className="px-6 py-5">{log.performedBy}</TableCell>
-                  <TableCell className="px-6 py-5">{log.target}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground px-6 py-5">{log.message}</TableCell>
+                  <TableCell className="px-5 py-5">{log.performedBy}</TableCell>
+                  <TableCell className="px-5 py-5">{log.target}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground px-5 py-5">{log.message}</TableCell>
                 </TableRow>
               ))
             )}
