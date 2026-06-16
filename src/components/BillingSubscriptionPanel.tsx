@@ -93,6 +93,10 @@ export const BillingSubscriptionPanel = () => {
   const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [password, setPassword] = useState("");
   const [manageOpen, setManageOpen] = useState(false);
+  const [cancelStep, setCancelStep] = useState<null | "reason" | "review" | "done">(null);
+  const [cancelReason, setCancelReason] = useState<string>("");
+  const [cancelNotes, setCancelNotes] = useState<string>("");
+  const endOfMonth = formatEndOfMonth();
 
   const requireConfirm = (action: string) => {
     setPendingAction(action);
@@ -105,13 +109,39 @@ export const BillingSubscriptionPanel = () => {
       toast({ title: "Password required", description: "Please enter your password to continue.", variant: "destructive" });
       return;
     }
-    toast({
-      title: "Identity confirmed",
-      description: `Proceeding with: ${pendingAction}`,
-    });
+    const action = pendingAction;
     setConfirmOpen(false);
     setPassword("");
     setPendingAction(null);
+
+    if (action === "Cancel Subscription") {
+      setCancelReason("");
+      setCancelNotes("");
+      setCancelStep("reason");
+      setManageOpen(false);
+      return;
+    }
+
+    toast({
+      title: "Identity confirmed",
+      description: `Proceeding with: ${action}`,
+    });
+  };
+
+  const handleSubmitReason = () => {
+    if (!cancelReason) {
+      toast({ title: "Please select a reason", variant: "destructive" });
+      return;
+    }
+    setCancelStep("review");
+  };
+
+  const handleFinalizeCancel = () => {
+    setCancelStep("done");
+    toast({
+      title: "Subscription cancelled",
+      description: `Active until ${endOfMonth}. Notification sent to hello@ealvon.com.`,
+    });
   };
 
   const handleDownload = (inv: Invoice) => {
