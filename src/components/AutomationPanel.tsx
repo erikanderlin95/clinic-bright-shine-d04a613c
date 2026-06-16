@@ -46,6 +46,7 @@ interface AutomationPanelProps {
   onTemplatesChange?: (templates: MessageTemplate[]) => void;
   queueEntries?: QueueEntry[];
   clinicIntegrationActive?: boolean;
+  onSelectPatient?: (id: string) => void;
 }
 
 const MAX_TEMPLATES = 4;
@@ -86,6 +87,7 @@ export const AutomationPanel = ({
   onTemplatesChange,
   queueEntries = [],
   clinicIntegrationActive = false,
+  onSelectPatient,
 }: AutomationPanelProps) => {
   // Template management
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -453,9 +455,9 @@ export const AutomationPanel = ({
                 filteredAudience.map((patient) => {
                   const selected = selectedPatientIds.has(patient.id);
                   return (
-                    <label
+                    <div
                       key={patient.id}
-                      className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition-all ${
+                      className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${
                         selected
                           ? "border-teal-300 bg-teal-50/60 shadow-sm"
                           : "border-transparent bg-muted/30 hover:bg-muted/60"
@@ -464,36 +466,43 @@ export const AutomationPanel = ({
                       <Checkbox
                         checked={selected}
                         onCheckedChange={(checked) => handleTogglePatient(patient.id, !!checked)}
+                        aria-label={`Select ${patient.name}`}
                       />
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-100 text-[13px] font-semibold text-teal-700">
-                        {getInitials(patient.name)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[15px] font-semibold text-foreground truncate">
-                          {patient.name || "—"}
+                      <button
+                        type="button"
+                        onClick={() => onSelectPatient?.(patient.id)}
+                        className="flex flex-1 items-center gap-3 min-w-0 text-left cursor-pointer rounded-lg -m-1 p-1 hover:bg-white/60 transition-colors"
+                      >
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-100 text-[13px] font-semibold text-teal-700">
+                          {getInitials(patient.name)}
                         </div>
-                        <div className="text-[13px] text-muted-foreground">
-                          {audienceMode === "active-queue" ? (
-                            <>
-                              Queue {patient.queueNumber || "—"} · {patient.patientsAhead ?? 0}{" "}
-                              {patient.patientsAhead === 1 ? "patient" : "patients"} ahead
-                            </>
-                          ) : (
-                            <>Last visit: {patient.lastVisitDate || "—"}</>
-                          )}
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[15px] font-semibold text-foreground truncate">
+                            {patient.name || "—"}
+                          </div>
+                          <div className="text-[13px] text-muted-foreground">
+                            {audienceMode === "active-queue" ? (
+                              <>
+                                Queue {patient.queueNumber || "—"} · {patient.patientsAhead ?? 0}{" "}
+                                {patient.patientsAhead === 1 ? "patient" : "patients"} ahead
+                              </>
+                            ) : (
+                              <>Last visit: {patient.lastVisitDate || "—"}</>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      {audienceMode === "active-queue" && (
-                        <span
-                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[12px] font-medium ${statusPillClass(
-                            patient.status
-                          )}`}
-                        >
-                          <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
-                          {patient.status === "arrived" ? "Arrived" : "Waiting"}
-                        </span>
-                      )}
-                    </label>
+                        {audienceMode === "active-queue" && (
+                          <span
+                            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[12px] font-medium ${statusPillClass(
+                              patient.status
+                            )}`}
+                          >
+                            <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
+                            {patient.status === "arrived" ? "Arrived" : "Waiting"}
+                          </span>
+                        )}
+                      </button>
+                    </div>
                   );
                 })
               )}
