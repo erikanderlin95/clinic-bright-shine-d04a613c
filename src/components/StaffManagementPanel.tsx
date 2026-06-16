@@ -359,23 +359,23 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
           <TableBody>
             {staff.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground py-10 px-6">
+                <TableCell colSpan={6} className="text-center text-muted-foreground py-10 px-5">
                   No staff members yet.
                 </TableCell>
               </TableRow>
             ) : (
               staff.map((member) => (
                 <TableRow key={member.id}>
-                  <TableCell className="font-medium px-6 py-5">{member.name}</TableCell>
-                  <TableCell className="px-6 py-5">{member.email}</TableCell>
-                  <TableCell className="px-6 py-5">{member.role}</TableCell>
-                  <TableCell className="px-6 py-5">
+                  <TableCell className="font-medium px-5 py-5 whitespace-nowrap">{member.name}</TableCell>
+                  <TableCell className="px-5 py-5 whitespace-nowrap">{member.email}</TableCell>
+                  <TableCell className="px-5 py-5 whitespace-nowrap">{member.role}</TableCell>
+                  <TableCell className="px-5 py-5 whitespace-nowrap">
                     <Badge variant={member.active ? "default" : "secondary"}>
                       {member.active ? "Active" : "Inactive"}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-muted-foreground px-6 py-5">{member.lastLogin ?? "—"}</TableCell>
-                  <TableCell className="text-right px-6 py-5">
+                  <TableCell className="text-muted-foreground px-5 py-5 whitespace-nowrap">{member.lastLogin ?? "—"}</TableCell>
+                  <TableCell className="text-right px-5 py-5">
                     {(() => {
                       // Admin viewer cannot disable or delete another Admin.
                       const canDisable = !(currentRole === "Admin" && member.role === "Admin");
