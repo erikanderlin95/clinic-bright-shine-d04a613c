@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Megaphone, Users, Plus, Trash2, Edit2, Check, X, Database,
-  AlertTriangle, AlertCircle, Send,
+  AlertTriangle, AlertCircle, Send, Clock, Inbox, Info, Sparkles,
 } from "lucide-react";
 import type { AudiencePatient } from "./BroadcastAudienceTable";
 
