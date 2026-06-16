@@ -87,6 +87,7 @@ export const AutomationPanel = ({
   onTemplatesChange,
   queueEntries = [],
   clinicIntegrationActive = false,
+  onSelectPatient,
 }: AutomationPanelProps) => {
   // Template management
   const [editingId, setEditingId] = useState<string | null>(null);
