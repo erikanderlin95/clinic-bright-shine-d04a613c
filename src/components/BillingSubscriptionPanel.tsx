@@ -417,6 +417,154 @@ export const BillingSubscriptionPanel = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Cancellation Flow Dialog */}
+      <Dialog
+        open={cancelStep !== null}
+        onOpenChange={(open) => {
+          if (!open) setCancelStep(null);
+        }}
+      >
+        <DialogContent className="max-w-lg">
+          {cancelStep === "reason" && (
+            <>
+              <DialogHeader>
+                <DialogTitle>Help us improve — why are you cancelling?</DialogTitle>
+                <DialogDescription>
+                  Your feedback helps us make ClynicQ better. Please select one reason.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="py-2 space-y-4">
+                <RadioGroup value={cancelReason} onValueChange={setCancelReason} className="space-y-2">
+                  {CANCEL_REASONS.map((r) => (
+                    <Label
+                      key={r}
+                      htmlFor={`reason-${r}`}
+                      className="flex items-center gap-3 rounded-md border border-border p-3 cursor-pointer hover:bg-muted/50"
+                    >
+                      <RadioGroupItem id={`reason-${r}`} value={r} />
+                      <span className="text-sm font-normal">{r}</span>
+                    </Label>
+                  ))}
+                </RadioGroup>
+                <div className="space-y-2">
+                  <Label htmlFor="cancel-notes" className="text-sm">
+                    Additional comments (optional)
+                  </Label>
+                  <Textarea
+                    id="cancel-notes"
+                    value={cancelNotes}
+                    onChange={(e) => setCancelNotes(e.target.value)}
+                    placeholder="Tell us more…"
+                    rows={3}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setCancelStep(null)}>
+                  Keep Subscription
+                </Button>
+                <Button variant="destructive" onClick={handleSubmitReason}>
+                  Continue
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+
+          {cancelStep === "review" && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-destructive" />
+                  Confirm cancellation
+                </DialogTitle>
+                <DialogDescription>
+                  Please review what happens next before confirming.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="py-2 space-y-3 text-sm">
+                <div className="rounded-md border border-border p-4 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <CalendarX className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                    <span>
+                      Your <span className="font-medium text-foreground">Professional Plan</span> will remain active until{" "}
+                      <span className="font-medium text-foreground">{endOfMonth}</span>, then end.
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-4 w-4 mt-0.5 text-destructive" />
+                    <span>
+                      Your clinic profile and associated data will be{" "}
+                      <span className="font-medium text-destructive">permanently deleted</span> after the period ends.
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Mail className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                    <span>
+                      A cancellation notification will be sent to{" "}
+                      <span className="font-medium text-foreground">hello@ealvon.com</span>.
+                    </span>
+                  </div>
+                </div>
+                <div className="rounded-md bg-muted/60 p-3 text-xs text-muted-foreground">
+                  <div><span className="font-medium text-foreground">Reason:</span> {cancelReason}</div>
+                  {cancelNotes && (
+                    <div className="mt-1"><span className="font-medium text-foreground">Notes:</span> {cancelNotes}</div>
+                  )}
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setCancelStep("reason")}>
+                  Back
+                </Button>
+                <Button variant="destructive" onClick={handleFinalizeCancel}>
+                  Confirm Cancellation
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+
+          {cancelStep === "done" && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-emerald-600" />
+                  Subscription cancelled
+                </DialogTitle>
+                <DialogDescription>
+                  We're sorry to see you go. Here's a summary of your cancellation.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="py-2 space-y-3 text-sm">
+                <div className="rounded-md border border-border p-4 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <CalendarX className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                    <span>
+                      Access ends on <span className="font-medium text-foreground">{endOfMonth}</span>.
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-4 w-4 mt-0.5 text-destructive" />
+                    <span>Your clinic profile will be deleted after this date.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Mail className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                    <span>
+                      Notification sent to <span className="font-medium text-foreground">hello@ealvon.com</span>.
+                    </span>
+                  </div>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Changed your mind? Contact support before {endOfMonth} to reactivate.
+                </div>
+              </div>
+              <DialogFooter>
+                <Button onClick={() => setCancelStep(null)}>Done</Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
