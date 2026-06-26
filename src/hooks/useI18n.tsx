@@ -83,6 +83,7 @@ const translations = {
     apptTimeCol: "Appt Time",
     typeWalkIn: "Walk-in",
     typeBooking: "Expected Arrival",
+    typeNonDigital: "Non Digital User",
     addToQueue: "Add to Queue",
 
     // Check-in Dialog

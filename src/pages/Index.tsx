@@ -201,6 +201,7 @@ const Index = () => {
     queueSource: "Walk-in" | "Phone Booking" | "Other";
     notes?: string;
     visitCategory?: VisitCategory;
+    patientType?: "walk-in" | "booking" | "non-digital";
   }) => {
     const nextNumber = queueEntries.length + 101;
     const newEntry: QueueEntry = {
@@ -212,7 +213,8 @@ const Index = () => {
         minute: "2-digit",
         hour12: false,
       }),
-      checkInCode: generateCheckInCode(),
+      checkInCode: data.patientType === "non-digital" ? undefined : generateCheckInCode(),
+      patientType: data.patientType || "walk-in",
       ...data,
     };
     setQueueEntries((prev) => [...prev, newEntry]);
