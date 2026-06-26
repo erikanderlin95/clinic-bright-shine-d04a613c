@@ -108,15 +108,11 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
                 <TableCell><StatusBadge status={entry.status} /></TableCell>
                 <TableCell className="text-sm">
                   <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                    entry.patientType === "booking"
-                      ? "bg-blue-500/10 text-blue-600 border border-blue-500/20"
-                      : entry.patientType === "non-digital"
+                    entry.patientType === "non-digital"
                       ? "bg-orange-500/10 text-orange-600 border border-orange-500/20"
                       : "bg-muted text-muted-foreground"
                   }`}>
-                    {entry.patientType === "booking"
-                      ? t("typeBooking")
-                      : entry.patientType === "non-digital"
+                    {entry.patientType === "non-digital"
                       ? t("typeNonDigital")
                       : t("typeWalkIn")}
                   </span>

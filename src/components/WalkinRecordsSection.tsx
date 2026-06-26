@@ -18,8 +18,7 @@ export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => 
 
   const walkinRecords = entries.filter(
     (entry) =>
-      entry.patientType !== "booking" &&
-      (entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show")
+      entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show"
   );
 
   const handleDownloadCSV = () => {

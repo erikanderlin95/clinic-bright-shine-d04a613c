@@ -7,7 +7,7 @@ export type RemarksInfo = {
   othersDetail?: string;
 };
 
-export type PatientType = "walk-in" | "booking" | "non-digital";
+export type PatientType = "walk-in" | "non-digital";
 
 export interface QueueEntry {
   id: string;

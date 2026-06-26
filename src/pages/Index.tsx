@@ -84,14 +84,13 @@ const Index = () => {
     },
     {
       id: "3",
-      queueNumber: "—",
+      queueNumber: "A105",
       status: "waiting",
-      joinedAt: "—",
+      joinedAt: "10:30",
       name: "Sarah Lim",
       mobile: "+65 9444 5566",
       queueSource: "Other",
-      patientType: "booking",
-      appointmentTime: "14:00",
+      patientType: "walk-in",
       visitCategory: "Others",
       remarksDetail: "Post-op review",
     },
@@ -201,7 +200,7 @@ const Index = () => {
     queueSource: "Walk-in" | "Phone Booking" | "Other";
     notes?: string;
     visitCategory?: VisitCategory;
-    patientType?: "walk-in" | "booking" | "non-digital";
+    patientType?: "walk-in" | "non-digital";
   }) => {
     const nextNumber = queueEntries.length + 101;
     const newEntry: QueueEntry = {
@@ -239,12 +238,9 @@ const Index = () => {
       (e) => e.status !== "completed" && e.status !== "cancelled" && e.status !== "no-show"
     );
 
-  // Today's patient flow: walk-ins first, then bookings
+  // Today's patient flow: all active queue entries
   const getTodaysPatientFlow = () => {
-    const active = getActiveQueue();
-    const walkIns = active.filter((e) => e.patientType !== "booking");
-    const bookings = active.filter((e) => e.patientType === "booking");
-    return [...walkIns, ...bookings];
+    return getActiveQueue();
   };
 
   const handleOpenAdjust = (entry: QueueEntry) => {
