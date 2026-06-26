@@ -339,7 +339,7 @@ const Index = () => {
                   <h3 className="text-lg font-semibold text-foreground">{t("liveQueueView")}</h3>
                   <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
                     <Plus className="h-4 w-4" />
-                    {t("addToQueue")}
+                    Add Patient (non digital)
                   </Button>
                 </div>
                 <QueueTable
