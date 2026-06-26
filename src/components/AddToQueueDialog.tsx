@@ -16,6 +16,7 @@ interface AddToQueueDialogProps {
     queueSource: "Walk-in" | "Phone Booking" | "Other";
     notes?: string;
     visitCategory?: VisitCategory;
+    patientType?: "walk-in" | "booking" | "non-digital";
   }) => void;
 }
 
@@ -36,6 +37,7 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
       queueSource: "Walk-in",
       notes: undefined,
       visitCategory: undefined,
+      patientType: "non-digital",
     });
 
     setName("");

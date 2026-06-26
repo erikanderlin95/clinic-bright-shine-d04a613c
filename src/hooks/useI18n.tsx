@@ -83,6 +83,7 @@ const translations = {
     apptTimeCol: "Appt Time",
     typeWalkIn: "Walk-in",
     typeBooking: "Expected Arrival",
+    typeNonDigital: "Non Digital User",
     addToQueue: "Add to Queue",
 
     // Check-in Dialog
@@ -258,6 +259,7 @@ const translations = {
     apptTimeCol: "预约时间",
     typeWalkIn: "现场挂号",
     typeBooking: "预约到访",
+    typeNonDigital: "非数码用户",
     addToQueue: "加入排队",
 
     // Check-in Dialog
