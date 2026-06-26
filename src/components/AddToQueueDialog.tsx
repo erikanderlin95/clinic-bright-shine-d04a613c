@@ -37,6 +37,7 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
       queueSource: "Walk-in",
       notes: undefined,
       visitCategory: undefined,
+      patientType: "non-digital",
     });
 
     setName("");
