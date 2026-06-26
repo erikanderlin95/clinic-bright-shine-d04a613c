@@ -16,6 +16,7 @@ interface AddToQueueDialogProps {
     queueSource: "Walk-in" | "Phone Booking" | "Other";
     notes?: string;
     visitCategory?: VisitCategory;
+    patientType?: "walk-in" | "booking" | "non-digital";
   }) => void;
 }
 
