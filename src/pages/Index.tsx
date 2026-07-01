@@ -8,7 +8,7 @@ import { WalkinRecordsSection } from "@/components/WalkinRecordsSection";
 import { BookingChannelsPanel } from "@/components/BookingChannelsPanel";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
-import { AdjustQueueDialog } from "@/components/AdjustQueueDialog";
+
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
 
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
