@@ -53,15 +53,6 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
         <Button
           size="sm"
           variant="outline"
-          onClick={(e) => { e.stopPropagation(); onAdjust?.(entry); }}
-          className="gap-1.5 h-8 text-xs"
-        >
-          <ArrowUpDown className="h-3.5 w-3.5" />
-          {t("cancel")}
-        </Button>
-        <Button
-          size="sm"
-          variant="outline"
           onClick={(e) => { e.stopPropagation(); onUpdateStatus(entry.id, "no-show"); }}
           className="gap-1.5 h-8 text-xs"
         >
