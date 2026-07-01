@@ -41,7 +41,7 @@ export const NotificationsTable = ({
         <TableBody>
           {entries.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+              <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                 No patients in queue.
               </TableCell>
             </TableRow>
@@ -57,6 +57,7 @@ export const NotificationsTable = ({
                 <TableCell className="text-sm text-muted-foreground">{entry.mobile}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{today}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{entry.joinedAt}</TableCell>
+                <TableCell className="text-sm text-muted-foreground">{entry.remarksDetail || entry.notes || "—"}</TableCell>
                 <TableCell className="font-mono text-sm text-muted-foreground">{entry.checkInCode || "—"}</TableCell>
                 <TableCell>
                   {entry.status === "notified" ? (
