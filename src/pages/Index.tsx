@@ -356,7 +356,6 @@ const Index = () => {
                       onSelectEntry={setSelectedEntry}
                       selectedEntry={selectedEntry}
                       onNotifyPatient={handleNotifyPatient}
-                      onRevertStatus={handleRevertStatus}
                     />
                   </div>
                 </>

@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CheckCircle, RotateCcw } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import type { QueueEntry } from "@/types/queue";
 
 interface NotificationsTableProps {
@@ -9,7 +8,6 @@ interface NotificationsTableProps {
   onSelectEntry: (entry: QueueEntry) => void;
   selectedEntry: QueueEntry | null;
   onNotifyPatient: (entry: QueueEntry) => void;
-  onRevertStatus: (id: string) => void;
 }
 
 const WhatsAppIcon = ({ className = "" }: { className?: string }) => (
@@ -23,7 +21,6 @@ export const NotificationsTable = ({
   onSelectEntry,
   selectedEntry,
   onNotifyPatient,
-  onRevertStatus,
 }: NotificationsTableProps) => {
   const today = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 
@@ -32,19 +29,18 @@ export const NotificationsTable = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="min-w-[180px]">Name</TableHead>
+            <TableHead className="min-w-[160px]">Name</TableHead>
             <TableHead className="min-w-[140px]">Mobile</TableHead>
-            <TableHead className="w-[130px]">Date</TableHead>
-            <TableHead className="w-[120px]">Time Joined</TableHead>
-            <TableHead className="w-[130px]">Check-in Code</TableHead>
-            <TableHead className="min-w-[180px]">Action</TableHead>
-            <TableHead className="w-[80px]" />
+            <TableHead>Date</TableHead>
+            <TableHead>Time Joined</TableHead>
+            <TableHead>Check-in Code</TableHead>
+            <TableHead className="min-w-[200px]">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {entries.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+              <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                 No patients in queue.
               </TableCell>
             </TableRow>
@@ -80,19 +76,6 @@ export const NotificationsTable = ({
                     >
                       <WhatsAppIcon className="h-4 w-4" />
                       WhatsApp
-                    </Button>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {entry.previousStatus && (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={(e) => { e.stopPropagation(); onRevertStatus(entry.id); }}
-                      className="gap-1.5 h-7 text-xs"
-                    >
-                      <RotateCcw className="h-3 w-3" />
-                      Undo
                     </Button>
                   )}
                 </TableCell>
