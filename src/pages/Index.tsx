@@ -36,8 +36,6 @@ const Index = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
   const [verifyEntry, setVerifyEntry] = useState<QueueEntry | null>(null);
-  const [adjustDialogOpen, setAdjustDialogOpen] = useState(false);
-  const [adjustEntry, setAdjustEntry] = useState<QueueEntry | null>(null);
 
   // Automation state
   const [messageTemplates, setMessageTemplates] = useState<MessageTemplate[]>([
