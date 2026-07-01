@@ -161,8 +161,17 @@ const GeneralSection = ({
         <RadioGroup
           value={mode}
           onValueChange={onChange}
-          className="grid gap-4 sm:grid-cols-2"
+          className="grid gap-4 sm:grid-cols-3"
         >
+          <VisibilityCard
+            value="notification"
+            selected={mode === "notification"}
+            icon={Bell}
+            title="Notification Mode"
+            description="One tap per patient. Clinic continues managing the queue in their existing CMS."
+            preview="We'll WhatsApp when it's your turn"
+            recommended
+          />
           <VisibilityCard
             value="live"
             selected={mode === "live"}
@@ -178,7 +187,6 @@ const GeneralSection = ({
             title="Smart Wait Indicator"
             description="Patients see simplified wait status instead of queue numbers."
             preview="Moderate Wait"
-            recommended
           />
         </RadioGroup>
 
