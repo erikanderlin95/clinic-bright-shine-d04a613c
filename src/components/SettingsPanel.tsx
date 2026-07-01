@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Building2,
   Activity,
+  Bell,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { StaffManagementPanel } from "./StaffManagementPanel";
@@ -21,13 +22,13 @@ import { BillingSubscriptionPanel } from "./BillingSubscriptionPanel";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
-export type QueueVisibilityMode = "live" | "smart";
+export type QueueVisibilityMode = "live" | "smart" | "notification";
 
 const STORAGE_KEY = "clynicq_queue_visibility_mode";
 
 export const getQueueVisibilityMode = (): QueueVisibilityMode => {
-  if (typeof window === "undefined") return "live";
-  return (localStorage.getItem(STORAGE_KEY) as QueueVisibilityMode) || "live";
+  if (typeof window === "undefined") return "notification";
+  return (localStorage.getItem(STORAGE_KEY) as QueueVisibilityMode) || "notification";
 };
 
 type SettingsSection = "general" | "team" | "billing" | "security";
