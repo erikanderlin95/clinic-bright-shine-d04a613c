@@ -242,14 +242,6 @@ const GeneralSection = () => {
               className="grid gap-3 sm:grid-cols-2"
             >
               <VisibilityCard
-                value="live"
-                selected={visibilityMode === "live"}
-                icon={Eye}
-                title="Live Queue View"
-                description="Patients see exact queue position."
-                preview="7 people ahead"
-              />
-              <VisibilityCard
                 value="smart"
                 selected={visibilityMode === "smart"}
                 icon={Gauge}
@@ -257,6 +249,14 @@ const GeneralSection = () => {
                 description="Simplified wait status without queue numbers."
                 preview="Moderate Wait"
                 recommended
+              />
+              <VisibilityCard
+                value="live"
+                selected={visibilityMode === "live"}
+                icon={Eye}
+                title="Live Queue View"
+                description="Patients see exact queue position."
+                preview="7 people ahead"
               />
             </RadioGroup>
 
