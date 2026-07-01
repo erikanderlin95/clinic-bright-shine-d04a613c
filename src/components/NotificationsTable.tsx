@@ -33,6 +33,7 @@ export const NotificationsTable = ({
             <TableHead className="min-w-[140px]">Mobile</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Time Joined</TableHead>
+            <TableHead>Remarks</TableHead>
             <TableHead>Check-in Code</TableHead>
             <TableHead className="min-w-[200px]">Action</TableHead>
           </TableRow>
