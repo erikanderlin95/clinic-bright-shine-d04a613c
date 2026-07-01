@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
-import { CheckCircle, UserX, RotateCcw, ShieldCheck } from "lucide-react";
+import { CheckCircle, UserX, RotateCcw, ShieldCheck, Bell } from "lucide-react";
 import { useI18n } from "@/hooks/useI18n";
+import { getQueueVisibilityMode, type QueueVisibilityMode } from "./SettingsPanel";
 
 interface QueueTableProps {
   entries: QueueEntry[];
@@ -14,10 +15,19 @@ interface QueueTableProps {
   onUpdateStatus: (id: string, status: QueueEntry["status"]) => void;
   onRevertStatus: (id: string) => void;
   onVerifyArrival?: (entry: QueueEntry) => void;
+  onNotifyPatient?: (entry: QueueEntry) => void;
 }
 
-export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival }: QueueTableProps) => {
+export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival, onNotifyPatient }: QueueTableProps) => {
   const { t } = useI18n();
+  const [mode, setMode] = useState<QueueVisibilityMode>("notification");
+
+  useEffect(() => {
+    setMode(getQueueVisibilityMode());
+    const onStorage = () => setMode(getQueueVisibilityMode());
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
   const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false);
   const [completeEntryId, setCompleteEntryId] = useState<string | null>(null);
 
@@ -25,6 +35,33 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
     if (entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show" || entry.status === "booked") {
       return null;
     }
+
+    if (mode === "notification") {
+      if (entry.status === "notified") {
+        return (
+          <div className="inline-flex flex-col gap-0.5">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 px-2.5 py-1 text-xs font-semibold">
+              <CheckCircle className="h-3.5 w-3.5" />
+              Notification Sent
+            </span>
+            {entry.notifiedAt && (
+              <span className="text-[11px] text-muted-foreground pl-1">Today, {entry.notifiedAt}</span>
+            )}
+          </div>
+        );
+      }
+      return (
+        <Button
+          size="sm"
+          onClick={(e) => { e.stopPropagation(); onNotifyPatient?.(entry); }}
+          className="gap-1.5 h-8 text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+        >
+          <Bell className="h-3.5 w-3.5" />
+          Notify Patient
+        </Button>
+      );
+    }
+
 
     if (entry.status === "arrived") {
       return (

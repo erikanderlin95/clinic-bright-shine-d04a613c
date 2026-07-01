@@ -1,4 +1,4 @@
-export type QueueStatus = "waiting" | "arrived" | "late" | "cancelled" | "no-show" | "completed" | "booked";
+export type QueueStatus = "waiting" | "arrived" | "late" | "cancelled" | "no-show" | "completed" | "booked" | "notified";
 
 export type VisitCategory = "Consultation" | "Follow-up" | "Others";
 
@@ -26,6 +26,7 @@ export interface QueueEntry {
   checkInCode?: string;
   patientType?: PatientType;
   appointmentTime?: string;
+  notifiedAt?: string;
 }
 
 export interface DailySummary {

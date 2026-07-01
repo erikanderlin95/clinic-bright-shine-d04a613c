@@ -19,7 +19,7 @@ const PatientArrival = () => {
   const { token } = useParams();
   const { toast } = useToast();
   const [arrived, setArrived] = useState(false);
-  const [mode, setMode] = useState<QueueVisibilityMode>("live");
+  const [mode, setMode] = useState<QueueVisibilityMode>("notification");
 
   useEffect(() => {
     setMode(getQueueVisibilityMode());
@@ -47,7 +47,24 @@ const PatientArrival = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {!arrived ? (
+          {mode === "notification" ? (
+            <div className="text-center space-y-5">
+              <div className="mx-auto h-16 w-16 rounded-full bg-emerald-100 flex items-center justify-center">
+                <CheckCircle className="h-8 w-8 text-emerald-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-1">Queue joined successfully</h3>
+                <p className="text-sm text-muted-foreground">
+                  We'll notify you via WhatsApp when it's your turn.
+                </p>
+              </div>
+              <div className="rounded-lg border bg-muted p-4 text-center">
+                <p className="text-xs text-muted-foreground mb-1">Your Queue Token</p>
+                <p className="text-xl font-bold text-primary">{token || "XXXX"}</p>
+              </div>
+              <p className="text-xs text-muted-foreground">No personal data is stored (PDPA-compliant).</p>
+            </div>
+          ) : !arrived ? (
             <>
               
               <div className="rounded-lg border bg-muted p-4 text-center">

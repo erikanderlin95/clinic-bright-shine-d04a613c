@@ -253,6 +253,23 @@ const Index = () => {
     setQueueEntries((prev) => moveEntryDownOne(prev, id));
   };
 
+  const handleNotifyPatient = (entry: QueueEntry) => {
+    const time = new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+    const message = encodeURIComponent(
+      `Hi${entry.name ? " " + entry.name : ""}, it's your turn at the clinic. Please head to the consultation room. — ClynicQ`
+    );
+    const phone = entry.mobile.replace(/\D/g, "");
+    window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+    setQueueEntries((prev) =>
+      prev.map((e) =>
+        e.id === entry.id
+          ? { ...e, previousStatus: e.status, status: "notified" as const, notifiedAt: time }
+          : e
+      )
+    );
+    toast({ title: "Notification sent", description: `WhatsApp opened for ${entry.name || entry.mobile}.` });
+  };
+
   // Active queue = walk-ins not completed/cancelled/no-show
   const getActiveQueue = () =>
     queueEntries.filter(
@@ -330,7 +347,7 @@ const Index = () => {
                   onUpdateStatus={handleUpdateStatus}
                   onRevertStatus={handleRevertStatus}
                   onVerifyArrival={handleVerifyArrival}
-                  
+                  onNotifyPatient={handleNotifyPatient}
                 />
               </div>
 

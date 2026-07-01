@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Building2,
   Activity,
+  Bell,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { StaffManagementPanel } from "./StaffManagementPanel";
@@ -21,13 +22,13 @@ import { BillingSubscriptionPanel } from "./BillingSubscriptionPanel";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
-export type QueueVisibilityMode = "live" | "smart";
+export type QueueVisibilityMode = "live" | "smart" | "notification";
 
 const STORAGE_KEY = "clynicq_queue_visibility_mode";
 
 export const getQueueVisibilityMode = (): QueueVisibilityMode => {
-  if (typeof window === "undefined") return "live";
-  return (localStorage.getItem(STORAGE_KEY) as QueueVisibilityMode) || "live";
+  if (typeof window === "undefined") return "notification";
+  return (localStorage.getItem(STORAGE_KEY) as QueueVisibilityMode) || "notification";
 };
 
 type SettingsSection = "general" | "team" | "billing" | "security";
@@ -42,7 +43,7 @@ const sections: { id: SettingsSection; label: string; icon: typeof SettingsIcon 
 export const SettingsPanel = () => {
   const { toast } = useToast();
   const { isAdmin } = useAuth();
-  const [mode, setMode] = useState<QueueVisibilityMode>("live");
+  const [mode, setMode] = useState<QueueVisibilityMode>("notification");
   const [active, setActive] = useState<SettingsSection>("general");
 
   useEffect(() => {
@@ -58,7 +59,9 @@ export const SettingsPanel = () => {
       description:
         next === "live"
           ? "Patients will see exact queue position."
-          : "Patients will see simplified wait status.",
+          : next === "smart"
+          ? "Patients will see simplified wait status."
+          : "One-tap Notify Patient mode. Clinic manages queue in existing CMS.",
     });
   };
 
@@ -158,8 +161,17 @@ const GeneralSection = ({
         <RadioGroup
           value={mode}
           onValueChange={onChange}
-          className="grid gap-4 sm:grid-cols-2"
+          className="grid gap-4 sm:grid-cols-3"
         >
+          <VisibilityCard
+            value="notification"
+            selected={mode === "notification"}
+            icon={Bell}
+            title="Notification Mode"
+            description="One tap per patient. Clinic continues managing the queue in their existing CMS."
+            preview="We'll WhatsApp when it's your turn"
+            recommended
+          />
           <VisibilityCard
             value="live"
             selected={mode === "live"}
@@ -175,7 +187,6 @@ const GeneralSection = ({
             title="Smart Wait Indicator"
             description="Patients see simplified wait status instead of queue numbers."
             preview="Moderate Wait"
-            recommended
           />
         </RadioGroup>
 

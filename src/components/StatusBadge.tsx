@@ -26,10 +26,13 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
         return { label: t("statusCompleted"), className: "bg-primary/10 text-primary border-primary/20" };
       case "booked":
         return { label: t("statusBooked"), className: "bg-blue-500/10 text-blue-600 border-blue-500/20" };
+      case "notified":
+        return { label: "Notification Sent", className: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20" };
     }
   };
 
   const config = getStatusConfig(status);
+  if (!config) return null;
 
   return (
     <Badge variant="outline" className={cn("font-medium", config.className)}>
