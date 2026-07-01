@@ -241,44 +241,6 @@ const Index = () => {
     return getActiveQueue();
   };
 
-  const handleOpenAdjust = (entry: QueueEntry) => {
-    setAdjustEntry(entry);
-    setAdjustDialogOpen(true);
-  };
-
-  const handleAdjustSave = (entryId: string, newPosition: number, reason: string, note: string) => {
-    const activeQueue = getActiveQueue();
-    const currentIndex = activeQueue.findIndex((e) => e.id === entryId);
-    if (currentIndex === -1) return;
-
-    const fromPos = currentIndex + 1;
-    const entry = activeQueue[currentIndex];
-
-    // Reorder: remove from current, insert at new position
-    const reordered = [...activeQueue];
-    reordered.splice(currentIndex, 1);
-    reordered.splice(newPosition - 1, 0, entry);
-
-    // Rebuild full list: keep non-active entries in place, replace active ordering
-    const nonActive = queueEntries.filter(
-      (e) => e.status === "completed" || e.status === "cancelled" || e.status === "no-show" || e.status === "booked"
-    );
-    setQueueEntries([...reordered, ...nonActive]);
-
-    // Audit log
-    const reasonLabel = t(reason as any) || reason;
-    const logMsg = t("adjustLogMessage")
-      .replace("{queue}", entry.queueNumber)
-      .replace("{from}", String(fromPos))
-      .replace("{to}", String(newPosition))
-      .replace("{reason}", reasonLabel);
-    const fullLog = note ? `${logMsg} ${note}` : logMsg;
-    addAutomationLog(fullLog);
-
-    setAdjustDialogOpen(false);
-    toast({ title: t("adjustToast") });
-  };
-
   const addAutomationLog = (action: string) => {
     const now = new Date();
     const timeString = now.toLocaleTimeString("en-US", {
