@@ -26,6 +26,7 @@ export interface QueueEntry {
   checkInCode?: string;
   patientType?: PatientType;
   appointmentTime?: string;
+  notifiedAt?: string;
 }
 
 export interface DailySummary {
