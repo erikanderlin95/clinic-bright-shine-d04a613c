@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CheckCircle, RotateCcw } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import type { QueueEntry } from "@/types/queue";
 
 interface NotificationsTableProps {
@@ -9,7 +8,6 @@ interface NotificationsTableProps {
   onSelectEntry: (entry: QueueEntry) => void;
   selectedEntry: QueueEntry | null;
   onNotifyPatient: (entry: QueueEntry) => void;
-  onRevertStatus: (id: string) => void;
 }
 
 const WhatsAppIcon = ({ className = "" }: { className?: string }) => (
