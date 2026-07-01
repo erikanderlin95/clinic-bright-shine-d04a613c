@@ -342,26 +342,48 @@ const Index = () => {
                 />
               </div>
 
-              <DailySummary summary={dailySummary} />
+              {queueMode === "notification" ? (
+                <>
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground mb-3">Clinic Operation Status</h3>
+                    <ClinicOperationStatus />
+                  </div>
 
-              <div>
-                <div className="mb-3 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-foreground">{t("liveQueueView")}</h3>
-                  <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
-                    <Plus className="h-4 w-4" />
-                    Add Patient (non digital)
-                  </Button>
-                </div>
-                <QueueTable
-                  entries={getTodaysPatientFlow()}
-                  onSelectEntry={setSelectedEntry}
-                  selectedEntry={selectedEntry}
-                  onUpdateStatus={handleUpdateStatus}
-                  onRevertStatus={handleRevertStatus}
-                  onVerifyArrival={handleVerifyArrival}
-                  onNotifyPatient={handleNotifyPatient}
-                />
-              </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground mb-3">Today's Notifications</h3>
+                    <NotificationsTable
+                      entries={getTodaysPatientFlow()}
+                      onSelectEntry={setSelectedEntry}
+                      selectedEntry={selectedEntry}
+                      onNotifyPatient={handleNotifyPatient}
+                      onRevertStatus={handleRevertStatus}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <DailySummary summary={dailySummary} />
+
+                  <div>
+                    <div className="mb-3 flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-foreground">{t("liveQueueView")}</h3>
+                      <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
+                        <Plus className="h-4 w-4" />
+                        Add Patient (non digital)
+                      </Button>
+                    </div>
+                    <QueueTable
+                      entries={getTodaysPatientFlow()}
+                      onSelectEntry={setSelectedEntry}
+                      selectedEntry={selectedEntry}
+                      onUpdateStatus={handleUpdateStatus}
+                      onRevertStatus={handleRevertStatus}
+                      onVerifyArrival={handleVerifyArrival}
+                      onNotifyPatient={handleNotifyPatient}
+                    />
+                  </div>
+                </>
+              )}
 
               <WalkinRecordsSection entries={queueEntries} />
             </TabsContent>
