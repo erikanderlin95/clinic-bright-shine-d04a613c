@@ -160,39 +160,74 @@ const GeneralSection = () => {
             Choose how patients are called from the queue. This controls the staff workflow on the dashboard.
           </p>
         </div>
-        <Card className="border-border/60 bg-card/60">
-          <CardContent className="px-8 py-7">
-            <div className="flex items-center justify-between gap-6">
-              <div className="flex items-start gap-4">
-                <div className={cn(
-                  "flex h-11 w-11 items-center justify-center rounded-lg flex-shrink-0",
-                  isNotificationMode ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-                )}>
-                  <Bell className="h-5 w-5" />
-                </div>
-                <div className="space-y-1">
-                  <div className="text-sm font-semibold text-foreground">
-                    {isNotificationMode ? "Notification Mode" : "Live Queue Mode"}
-                  </div>
-                  <p className="text-sm text-muted-foreground max-w-xl">
-                    {isNotificationMode
-                      ? "Staff send a WhatsApp message when it is the patient's turn. The clinic continues managing the queue in their existing CMS."
-                      : "Patients follow their queue position and status in real time on their own device."}
-                  </p>
-                </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {/* Live Queue Card */}
+          <button
+            type="button"
+            onClick={() => handleModeSwitch(false)}
+            className={cn(
+              "relative flex flex-col gap-5 rounded-xl border bg-card p-8 text-left transition-all",
+              !isNotificationMode
+                ? "border-primary ring-2 ring-primary/20 shadow-sm"
+                : "border-border/60 hover:border-border hover:bg-muted/30"
+            )}
+          >
+            <div className="flex items-start justify-between">
+              <div className={cn(
+                "flex h-12 w-12 items-center justify-center rounded-xl",
+                !isNotificationMode ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+              )}>
+                <Eye className="h-6 w-6" />
               </div>
-              <div className="flex items-center gap-3 flex-shrink-0">
-                <span className={cn("text-sm font-medium", !isNotificationMode && "text-foreground")}>
-                  Live Queue
-                </span>
-                <Switch checked={isNotificationMode} onCheckedChange={handleModeSwitch} />
-                <span className={cn("text-sm font-medium", isNotificationMode && "text-foreground")}>
-                  Notification
-                </span>
-              </div>
+              {!isNotificationMode && (
+                <Badge className="bg-primary text-primary-foreground">Active</Badge>
+              )}
             </div>
-          </CardContent>
-        </Card>
+            <div className="space-y-2">
+              <div className="text-base font-semibold text-foreground">Live Queue</div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Patients track their real-time queue position on their own device. Staff manage arrivals and completions inside ClynicQ.
+              </p>
+            </div>
+            <div className="inline-flex w-fit items-center rounded-md bg-muted px-3 py-1.5 text-xs text-muted-foreground">
+              Staff action per patient:&nbsp;<span className="font-medium text-foreground">Enter Consultation + Complete</span>
+            </div>
+          </button>
+
+          {/* Notification Card */}
+          <button
+            type="button"
+            onClick={() => handleModeSwitch(true)}
+            className={cn(
+              "relative flex flex-col gap-5 rounded-xl border bg-card p-8 text-left transition-all",
+              isNotificationMode
+                ? "border-primary ring-2 ring-primary/20 shadow-sm"
+                : "border-border/60 hover:border-border hover:bg-muted/30"
+            )}
+          >
+            <div className="flex items-start justify-between">
+              <div className={cn(
+                "flex h-12 w-12 items-center justify-center rounded-xl",
+                isNotificationMode ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+              )}>
+                <Bell className="h-6 w-6" />
+              </div>
+              {isNotificationMode && (
+                <Badge className="bg-primary text-primary-foreground">Active</Badge>
+              )}
+            </div>
+            <div className="space-y-2">
+              <div className="text-base font-semibold text-foreground">Notification</div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Staff send one WhatsApp when it is the patient's turn. The clinic continues managing the actual queue in their existing CMS.
+              </p>
+            </div>
+            <div className="inline-flex w-fit items-center rounded-md bg-muted px-3 py-1.5 text-xs text-muted-foreground">
+              Staff action per patient:&nbsp;<span className="font-medium text-foreground">Notify Patient only</span>
+            </div>
+          </button>
+        </div>
       </section>
 
       {/* Queue Visibility — only when Live Queue */}
