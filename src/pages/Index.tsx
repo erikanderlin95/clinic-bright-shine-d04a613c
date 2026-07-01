@@ -344,10 +344,7 @@ const Index = () => {
 
               {queueMode === "notification" ? (
                 <>
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground mb-3">Clinic Operation Status</h3>
-                    <ClinicOperationStatus />
-                  </div>
+                  <ClinicOperationStatus />
 
                   <div>
                     <h3 className="text-lg font-semibold text-foreground mb-3">Today's Notifications</h3>

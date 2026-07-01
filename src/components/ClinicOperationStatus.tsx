@@ -38,7 +38,7 @@ export const ClinicOperationStatus = () => {
         <div>
           <h3 className="text-base font-semibold text-foreground">Clinic Operation Status</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Shown to patients on the ClynicQ clinic page. Update anytime.
+            Click below to manually set how busy your clinic appears to patients.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
