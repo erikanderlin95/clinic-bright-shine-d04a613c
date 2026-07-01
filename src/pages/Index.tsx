@@ -347,7 +347,7 @@ const Index = () => {
                   onUpdateStatus={handleUpdateStatus}
                   onRevertStatus={handleRevertStatus}
                   onVerifyArrival={handleVerifyArrival}
-                  
+                  onNotifyPatient={handleNotifyPatient}
                 />
               </div>
 
