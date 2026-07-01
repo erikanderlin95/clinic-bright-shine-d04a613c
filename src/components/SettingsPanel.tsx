@@ -98,7 +98,7 @@ const GeneralSection = () => {
   const visibilityMode = isNotificationMode ? "live" : mode;
 
   const handleModeSwitch = (checked: boolean) => {
-    const next = checked ? "notification" : "live";
+    const next = checked ? "notification" : "smart";
     setMode(next);
     localStorage.setItem(STORAGE_KEY, next);
     toast({
