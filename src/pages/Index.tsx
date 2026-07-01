@@ -40,6 +40,14 @@ const Index = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
   const [verifyEntry, setVerifyEntry] = useState<QueueEntry | null>(null);
+  const [queueMode, setQueueMode] = useState<QueueVisibilityMode>("notification");
+
+  useEffect(() => {
+    setQueueMode(getQueueVisibilityMode());
+    const onStorage = () => setQueueMode(getQueueVisibilityMode());
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
 
   // Automation state
   const [messageTemplates, setMessageTemplates] = useState<MessageTemplate[]>([
