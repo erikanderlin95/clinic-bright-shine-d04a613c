@@ -222,12 +222,35 @@ const Index = () => {
     setVerifyDialogOpen(true);
   };
 
+  const moveEntryDownOne = (prev: QueueEntry[], id: string): QueueEntry[] => {
+    const updated = prev.map((entry) =>
+      entry.id === id
+        ? { ...entry, previousStatus: entry.status, status: "arrived" as const }
+        : entry
+    );
+    const activeQueue = updated.filter(
+      (e) => e.status !== "completed" && e.status !== "cancelled" && e.status !== "no-show"
+    );
+    const currentIndex = activeQueue.findIndex((e) => e.id === id);
+    if (currentIndex === -1 || currentIndex >= activeQueue.length - 1) {
+      return updated;
+    }
+    const entry = activeQueue[currentIndex];
+    const reordered = [...activeQueue];
+    reordered.splice(currentIndex, 1);
+    reordered.splice(currentIndex + 1, 0, entry);
+    const nonActive = updated.filter(
+      (e) => e.status === "completed" || e.status === "cancelled" || e.status === "no-show" || e.status === "booked"
+    );
+    return [...reordered, ...nonActive];
+  };
+
   const handleVerified = (id: string) => {
-    handleUpdateStatus(id, "arrived");
+    setQueueEntries((prev) => moveEntryDownOne(prev, id));
   };
 
   const handleBypass = (id: string) => {
-    handleUpdateStatus(id, "arrived");
+    setQueueEntries((prev) => moveEntryDownOne(prev, id));
   };
 
   // Active queue = walk-ins not completed/cancelled/no-show
