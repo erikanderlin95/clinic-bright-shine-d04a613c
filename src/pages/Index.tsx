@@ -423,14 +423,6 @@ const Index = () => {
         onBypass={handleBypass}
       />
 
-      <AdjustQueueDialog
-        open={adjustDialogOpen}
-        onOpenChange={setAdjustDialogOpen}
-        entry={adjustEntry}
-        currentPosition={adjustEntry ? getActiveQueue().findIndex((e) => e.id === adjustEntry.id) + 1 : 1}
-        totalPositions={getActiveQueue().length}
-        onSave={handleAdjustSave}
-      />
     </div>
   );
 };
