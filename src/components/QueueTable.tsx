@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
-import { CheckCircle, UserX, RotateCcw, ShieldCheck, ArrowUpDown } from "lucide-react";
+import { CheckCircle, UserX, RotateCcw, ShieldCheck } from "lucide-react";
 import { useI18n } from "@/hooks/useI18n";
 
 interface QueueTableProps {
