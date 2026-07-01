@@ -14,7 +14,6 @@ interface QueueTableProps {
   onUpdateStatus: (id: string, status: QueueEntry["status"]) => void;
   onRevertStatus: (id: string) => void;
   onVerifyArrival?: (entry: QueueEntry) => void;
-  onAdjust?: (entry: QueueEntry) => void;
 }
 
 export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival, onAdjust }: QueueTableProps) => {
