@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
-import { CheckCircle, UserX, RotateCcw, ShieldCheck, ArrowUpDown } from "lucide-react";
+import { CheckCircle, UserX, RotateCcw, ShieldCheck } from "lucide-react";
 import { useI18n } from "@/hooks/useI18n";
 
 interface QueueTableProps {
@@ -14,10 +14,9 @@ interface QueueTableProps {
   onUpdateStatus: (id: string, status: QueueEntry["status"]) => void;
   onRevertStatus: (id: string) => void;
   onVerifyArrival?: (entry: QueueEntry) => void;
-  onAdjust?: (entry: QueueEntry) => void;
 }
 
-export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival, onAdjust }: QueueTableProps) => {
+export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival }: QueueTableProps) => {
   const { t } = useI18n();
   const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false);
   const [completeEntryId, setCompleteEntryId] = useState<string | null>(null);
@@ -50,15 +49,6 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
         >
           <ShieldCheck className="h-3.5 w-3.5" />
           {t("verifyAndArrive")}
-        </Button>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={(e) => { e.stopPropagation(); onAdjust?.(entry); }}
-          className="gap-1.5 h-8 text-xs"
-        >
-          <ArrowUpDown className="h-3.5 w-3.5" />
-          {t("cancel")}
         </Button>
         <Button
           size="sm"

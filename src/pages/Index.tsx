@@ -8,7 +8,7 @@ import { WalkinRecordsSection } from "@/components/WalkinRecordsSection";
 import { BookingChannelsPanel } from "@/components/BookingChannelsPanel";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
-import { AdjustQueueDialog } from "@/components/AdjustQueueDialog";
+
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
 
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
@@ -36,8 +36,6 @@ const Index = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
   const [verifyEntry, setVerifyEntry] = useState<QueueEntry | null>(null);
-  const [adjustDialogOpen, setAdjustDialogOpen] = useState(false);
-  const [adjustEntry, setAdjustEntry] = useState<QueueEntry | null>(null);
 
   // Automation state
   const [messageTemplates, setMessageTemplates] = useState<MessageTemplate[]>([
@@ -224,12 +222,35 @@ const Index = () => {
     setVerifyDialogOpen(true);
   };
 
+  const moveEntryDownOne = (prev: QueueEntry[], id: string): QueueEntry[] => {
+    const updated = prev.map((entry) =>
+      entry.id === id
+        ? { ...entry, previousStatus: entry.status, status: "arrived" as const }
+        : entry
+    );
+    const activeQueue = updated.filter(
+      (e) => e.status !== "completed" && e.status !== "cancelled" && e.status !== "no-show"
+    );
+    const currentIndex = activeQueue.findIndex((e) => e.id === id);
+    if (currentIndex === -1 || currentIndex >= activeQueue.length - 1) {
+      return updated;
+    }
+    const entry = activeQueue[currentIndex];
+    const reordered = [...activeQueue];
+    reordered.splice(currentIndex, 1);
+    reordered.splice(currentIndex + 1, 0, entry);
+    const nonActive = updated.filter(
+      (e) => e.status === "completed" || e.status === "cancelled" || e.status === "no-show" || e.status === "booked"
+    );
+    return [...reordered, ...nonActive];
+  };
+
   const handleVerified = (id: string) => {
-    handleUpdateStatus(id, "arrived");
+    setQueueEntries((prev) => moveEntryDownOne(prev, id));
   };
 
   const handleBypass = (id: string) => {
-    handleUpdateStatus(id, "arrived");
+    setQueueEntries((prev) => moveEntryDownOne(prev, id));
   };
 
   // Active queue = walk-ins not completed/cancelled/no-show
@@ -241,44 +262,6 @@ const Index = () => {
   // Today's patient flow: all active queue entries
   const getTodaysPatientFlow = () => {
     return getActiveQueue();
-  };
-
-  const handleOpenAdjust = (entry: QueueEntry) => {
-    setAdjustEntry(entry);
-    setAdjustDialogOpen(true);
-  };
-
-  const handleAdjustSave = (entryId: string, newPosition: number, reason: string, note: string) => {
-    const activeQueue = getActiveQueue();
-    const currentIndex = activeQueue.findIndex((e) => e.id === entryId);
-    if (currentIndex === -1) return;
-
-    const fromPos = currentIndex + 1;
-    const entry = activeQueue[currentIndex];
-
-    // Reorder: remove from current, insert at new position
-    const reordered = [...activeQueue];
-    reordered.splice(currentIndex, 1);
-    reordered.splice(newPosition - 1, 0, entry);
-
-    // Rebuild full list: keep non-active entries in place, replace active ordering
-    const nonActive = queueEntries.filter(
-      (e) => e.status === "completed" || e.status === "cancelled" || e.status === "no-show" || e.status === "booked"
-    );
-    setQueueEntries([...reordered, ...nonActive]);
-
-    // Audit log
-    const reasonLabel = t(reason as any) || reason;
-    const logMsg = t("adjustLogMessage")
-      .replace("{queue}", entry.queueNumber)
-      .replace("{from}", String(fromPos))
-      .replace("{to}", String(newPosition))
-      .replace("{reason}", reasonLabel);
-    const fullLog = note ? `${logMsg} ${note}` : logMsg;
-    addAutomationLog(fullLog);
-
-    setAdjustDialogOpen(false);
-    toast({ title: t("adjustToast") });
   };
 
   const addAutomationLog = (action: string) => {
@@ -347,7 +330,7 @@ const Index = () => {
                   onUpdateStatus={handleUpdateStatus}
                   onRevertStatus={handleRevertStatus}
                   onVerifyArrival={handleVerifyArrival}
-                  onAdjust={handleOpenAdjust}
+                  
                 />
               </div>
 
@@ -423,14 +406,6 @@ const Index = () => {
         onBypass={handleBypass}
       />
 
-      <AdjustQueueDialog
-        open={adjustDialogOpen}
-        onOpenChange={setAdjustDialogOpen}
-        entry={adjustEntry}
-        currentPosition={adjustEntry ? getActiveQueue().findIndex((e) => e.id === adjustEntry.id) + 1 : 1}
-        totalPositions={getActiveQueue().length}
-        onSave={handleAdjustSave}
-      />
     </div>
   );
 };
