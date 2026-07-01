@@ -8,6 +8,10 @@ import { WalkinRecordsSection } from "@/components/WalkinRecordsSection";
 import { BookingChannelsPanel } from "@/components/BookingChannelsPanel";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
+import { NotificationsTable } from "@/components/NotificationsTable";
+import { ClinicOperationStatus } from "@/components/ClinicOperationStatus";
+import { getQueueVisibilityMode, type QueueVisibilityMode } from "@/components/SettingsPanel";
+import { useEffect } from "react";
 
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
 
