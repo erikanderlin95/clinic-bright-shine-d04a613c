@@ -31,9 +31,8 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
     }
   };
 
-  if (!config) return null;
-
   const config = getStatusConfig(status);
+  if (!config) return null;
 
   return (
     <Badge variant="outline" className={cn("font-medium", config.className)}>
