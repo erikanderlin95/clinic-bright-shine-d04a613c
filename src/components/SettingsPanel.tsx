@@ -314,7 +314,7 @@ const VisibilityCard = ({
     <Label
       htmlFor={`qv-${value}`}
       className={cn(
-        "relative flex cursor-pointer flex-col gap-4 rounded-xl border bg-card p-8 transition-all",
+        "relative flex cursor-pointer flex-col gap-3 rounded-xl border bg-card p-5 transition-all",
         selected
           ? "border-primary ring-2 ring-primary/20 shadow-sm"
           : "border-border/60 hover:border-border hover:bg-muted/30"
@@ -322,25 +322,25 @@ const VisibilityCard = ({
     >
       <div className="flex items-start justify-between">
         <div className={cn(
-          "flex h-11 w-11 items-center justify-center rounded-lg",
+          "flex h-9 w-9 items-center justify-center rounded-lg",
           selected ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
         )}>
-          <Icon className="h-5 w-5" />
+          <Icon className="h-4 w-4" />
         </div>
         <div className="flex items-center gap-2">
           {recommended && (
-            <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
+            <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-[10px] px-1.5 py-0">
               Recommended
             </Badge>
           )}
           <RadioGroupItem value={value} id={`qv-${value}`} />
         </div>
       </div>
-      <div className="space-y-2">
-        <div className="text-base font-semibold text-foreground">{title}</div>
-        <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+      <div className="space-y-1">
+        <div className="text-sm font-semibold text-foreground">{title}</div>
+        <p className="text-xs text-muted-foreground">{description}</p>
       </div>
-      <div className="inline-flex w-fit items-center rounded-md bg-muted px-3 py-1.5 text-xs text-muted-foreground">
+      <div className="inline-flex w-fit items-center rounded-md bg-muted px-2.5 py-1 text-[11px] text-muted-foreground">
         Patient sees:&nbsp;<span className="font-medium text-foreground">{preview}</span>
       </div>
     </Label>
