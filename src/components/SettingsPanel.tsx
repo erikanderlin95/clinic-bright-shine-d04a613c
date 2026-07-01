@@ -130,19 +130,19 @@ const GeneralSection = () => {
   ];
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6">
       {/* Summary */}
       <Card className="border-border/60 bg-card/60">
-        <CardContent className="px-8 py-7">
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+        <CardContent className="px-6 py-5">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {summaryItems.map((it) => (
               <div key={it.label} className="min-w-0">
-                <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <div className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                   {it.label}
                 </div>
-                <div className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-foreground truncate">
+                <div className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-foreground truncate">
                   {it.tone === "ok" && (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 flex-shrink-0" />
+                    <CheckCircle2 className="h-3 w-3 text-emerald-600 flex-shrink-0" />
                   )}
                   {it.value}
                 </div>
@@ -153,45 +153,42 @@ const GeneralSection = () => {
       </Card>
 
       {/* Queue Mode */}
-      <section className="space-y-6">
+      <section className="space-y-3">
         <div>
-          <h3 className="text-lg font-semibold text-foreground">Queue Mode</h3>
-          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-            Choose how patients are called from the queue. This controls the staff workflow on the dashboard.
+          <h3 className="text-base font-semibold text-foreground">Queue Mode</h3>
+          <p className="text-xs text-muted-foreground mt-1">
+            Choose how patients are called from the queue.
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           {/* Live Queue Card */}
           <button
             type="button"
             onClick={() => handleModeSwitch(false)}
             className={cn(
-              "relative flex flex-col gap-5 rounded-xl border bg-card p-8 text-left transition-all",
+              "relative flex items-center gap-4 rounded-xl border bg-card p-5 text-left transition-all",
               !isNotificationMode
                 ? "border-primary ring-2 ring-primary/20 shadow-sm"
                 : "border-border/60 hover:border-border hover:bg-muted/30"
             )}
           >
-            <div className="flex items-start justify-between">
-              <div className={cn(
-                "flex h-12 w-12 items-center justify-center rounded-xl",
-                !isNotificationMode ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-              )}>
-                <Eye className="h-6 w-6" />
+            <div className={cn(
+              "flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0",
+              !isNotificationMode ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+            )}>
+              <Eye className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <div className="text-sm font-semibold text-foreground">Live Queue</div>
+                {!isNotificationMode && (
+                  <Badge className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0">Active</Badge>
+                )}
               </div>
-              {!isNotificationMode && (
-                <Badge className="bg-primary text-primary-foreground">Active</Badge>
-              )}
-            </div>
-            <div className="space-y-2">
-              <div className="text-base font-semibold text-foreground">Live Queue</div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Patients track their real-time queue position on their own device. Staff manage arrivals and completions inside ClynicQ.
+              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                Patients track position. Staff manage arrivals & completions.
               </p>
-            </div>
-            <div className="inline-flex w-fit items-center rounded-md bg-muted px-3 py-1.5 text-xs text-muted-foreground">
-              Staff action per patient:&nbsp;<span className="font-medium text-foreground">Enter Consultation + Complete</span>
             </div>
           </button>
 
@@ -200,31 +197,28 @@ const GeneralSection = () => {
             type="button"
             onClick={() => handleModeSwitch(true)}
             className={cn(
-              "relative flex flex-col gap-5 rounded-xl border bg-card p-8 text-left transition-all",
+              "relative flex items-center gap-4 rounded-xl border bg-card p-5 text-left transition-all",
               isNotificationMode
                 ? "border-primary ring-2 ring-primary/20 shadow-sm"
                 : "border-border/60 hover:border-border hover:bg-muted/30"
             )}
           >
-            <div className="flex items-start justify-between">
-              <div className={cn(
-                "flex h-12 w-12 items-center justify-center rounded-xl",
-                isNotificationMode ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-              )}>
-                <Bell className="h-6 w-6" />
+            <div className={cn(
+              "flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0",
+              isNotificationMode ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+            )}>
+              <Bell className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <div className="text-sm font-semibold text-foreground">Notification</div>
+                {isNotificationMode && (
+                  <Badge className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0">Active</Badge>
+                )}
               </div>
-              {isNotificationMode && (
-                <Badge className="bg-primary text-primary-foreground">Active</Badge>
-              )}
-            </div>
-            <div className="space-y-2">
-              <div className="text-base font-semibold text-foreground">Notification</div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Staff send one WhatsApp when it is the patient's turn. The clinic continues managing the actual queue in their existing CMS.
+              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                One WhatsApp per patient. Clinic manages queue in CMS.
               </p>
-            </div>
-            <div className="inline-flex w-fit items-center rounded-md bg-muted px-3 py-1.5 text-xs text-muted-foreground">
-              Staff action per patient:&nbsp;<span className="font-medium text-foreground">Notify Patient only</span>
             </div>
           </button>
         </div>
@@ -234,25 +228,25 @@ const GeneralSection = () => {
       {!isNotificationMode && (
         <>
           <Separator className="bg-border/60" />
-          <section className="space-y-8">
+          <section className="space-y-3">
             <div>
-              <h3 className="text-lg font-semibold text-foreground">Queue Visibility</h3>
-              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                Choose how queue information is shown to patients when Live Queue Mode is active.
+              <h3 className="text-base font-semibold text-foreground">Queue Visibility</h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                What patients see when Live Queue is active.
               </p>
             </div>
 
             <RadioGroup
               value={visibilityMode}
               onValueChange={handleVisibilityChange}
-              className="grid gap-4 sm:grid-cols-2"
+              className="grid gap-3 sm:grid-cols-2"
             >
               <VisibilityCard
                 value="live"
                 selected={visibilityMode === "live"}
                 icon={Eye}
                 title="Live Queue View"
-                description="Patients can see their exact queue position."
+                description="Patients see exact queue position."
                 preview="7 people ahead"
               />
               <VisibilityCard
@@ -260,7 +254,7 @@ const GeneralSection = () => {
                 selected={visibilityMode === "smart"}
                 icon={Gauge}
                 title="Smart Wait Indicator"
-                description="Patients see simplified wait status instead of queue numbers."
+                description="Simplified wait status without queue numbers."
                 preview="Moderate Wait"
                 recommended
               />
@@ -268,24 +262,24 @@ const GeneralSection = () => {
 
             {/* Smart Wait info card */}
             {visibilityMode === "smart" && (
-              <div className="rounded-xl bg-muted/40 p-8">
-                <div className="flex items-center gap-2 mb-4">
+              <div className="rounded-xl bg-muted/40 p-5">
+                <div className="flex items-center gap-2 mb-3">
                   <Info className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                     Smart Wait Groups
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-3 gap-4">
                   {[
-                    { label: "Low Wait", range: "0–3 active", dot: "bg-emerald-500" },
-                    { label: "Moderate Wait", range: "4–9 active", dot: "bg-amber-500" },
-                    { label: "Busy Now", range: "10+ active", dot: "bg-rose-500" },
+                    { label: "Low", range: "0–3", dot: "bg-emerald-500" },
+                    { label: "Moderate", range: "4–9", dot: "bg-amber-500" },
+                    { label: "Busy", range: "10+", dot: "bg-rose-500" },
                   ].map((g) => (
-                    <div key={g.label} className="flex items-start gap-3">
-                      <span className={cn("mt-1.5 h-2.5 w-2.5 rounded-full flex-shrink-0", g.dot)} />
-                      <div>
-                        <div className="text-sm font-semibold text-foreground">{g.label}</div>
-                        <div className="text-xs text-muted-foreground mt-0.5">{g.range}</div>
+                    <div key={g.label} className="flex items-center gap-2">
+                      <span className={cn("h-2 w-2 rounded-full flex-shrink-0", g.dot)} />
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-semibold text-foreground">{g.label}</span>
+                        <span className="text-[11px] text-muted-foreground">{g.range}</span>
                       </div>
                     </div>
                   ))}
@@ -320,7 +314,7 @@ const VisibilityCard = ({
     <Label
       htmlFor={`qv-${value}`}
       className={cn(
-        "relative flex cursor-pointer flex-col gap-4 rounded-xl border bg-card p-8 transition-all",
+        "relative flex cursor-pointer flex-col gap-3 rounded-xl border bg-card p-5 transition-all",
         selected
           ? "border-primary ring-2 ring-primary/20 shadow-sm"
           : "border-border/60 hover:border-border hover:bg-muted/30"
@@ -328,25 +322,25 @@ const VisibilityCard = ({
     >
       <div className="flex items-start justify-between">
         <div className={cn(
-          "flex h-11 w-11 items-center justify-center rounded-lg",
+          "flex h-9 w-9 items-center justify-center rounded-lg",
           selected ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
         )}>
-          <Icon className="h-5 w-5" />
+          <Icon className="h-4 w-4" />
         </div>
         <div className="flex items-center gap-2">
           {recommended && (
-            <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
+            <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-[10px] px-1.5 py-0">
               Recommended
             </Badge>
           )}
           <RadioGroupItem value={value} id={`qv-${value}`} />
         </div>
       </div>
-      <div className="space-y-2">
-        <div className="text-base font-semibold text-foreground">{title}</div>
-        <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+      <div className="space-y-1">
+        <div className="text-sm font-semibold text-foreground">{title}</div>
+        <p className="text-xs text-muted-foreground">{description}</p>
       </div>
-      <div className="inline-flex w-fit items-center rounded-md bg-muted px-3 py-1.5 text-xs text-muted-foreground">
+      <div className="inline-flex w-fit items-center rounded-md bg-muted px-2.5 py-1 text-[11px] text-muted-foreground">
         Patient sees:&nbsp;<span className="font-medium text-foreground">{preview}</span>
       </div>
     </Label>
