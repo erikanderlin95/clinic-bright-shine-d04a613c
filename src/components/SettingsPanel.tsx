@@ -43,7 +43,7 @@ const sections: { id: SettingsSection; label: string; icon: typeof SettingsIcon 
 export const SettingsPanel = () => {
   const { toast } = useToast();
   const { isAdmin } = useAuth();
-  const [mode, setMode] = useState<QueueVisibilityMode>("live");
+  const [mode, setMode] = useState<QueueVisibilityMode>("notification");
   const [active, setActive] = useState<SettingsSection>("general");
 
   useEffect(() => {
@@ -59,7 +59,9 @@ export const SettingsPanel = () => {
       description:
         next === "live"
           ? "Patients will see exact queue position."
-          : "Patients will see simplified wait status.",
+          : next === "smart"
+          ? "Patients will see simplified wait status."
+          : "One-tap Notify Patient mode. Clinic manages queue in existing CMS.",
     });
   };
 
