@@ -186,7 +186,7 @@ const GeneralSection = () => {
                   <Badge className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0">Active</Badge>
                 )}
               </div>
-              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Patients track position. Staff manage arrivals & completions.
               </p>
             </div>
@@ -216,7 +216,7 @@ const GeneralSection = () => {
                   <Badge className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0">Active</Badge>
                 )}
               </div>
-              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 One WhatsApp per patient. Clinic manages queue in CMS.
               </p>
             </div>
