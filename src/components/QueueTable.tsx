@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
-import { CheckCircle, UserX, RotateCcw, ShieldCheck } from "lucide-react";
+import { CheckCircle, UserX, RotateCcw, ShieldCheck, Bell } from "lucide-react";
 import { useI18n } from "@/hooks/useI18n";
+import { getQueueVisibilityMode, type QueueVisibilityMode } from "./SettingsPanel";
 
 interface QueueTableProps {
   entries: QueueEntry[];
@@ -14,10 +15,19 @@ interface QueueTableProps {
   onUpdateStatus: (id: string, status: QueueEntry["status"]) => void;
   onRevertStatus: (id: string) => void;
   onVerifyArrival?: (entry: QueueEntry) => void;
+  onNotifyPatient?: (entry: QueueEntry) => void;
 }
 
-export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival }: QueueTableProps) => {
+export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival, onNotifyPatient }: QueueTableProps) => {
   const { t } = useI18n();
+  const [mode, setMode] = useState<QueueVisibilityMode>("notification");
+
+  useEffect(() => {
+    setMode(getQueueVisibilityMode());
+    const onStorage = () => setMode(getQueueVisibilityMode());
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
   const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false);
   const [completeEntryId, setCompleteEntryId] = useState<string | null>(null);
 
