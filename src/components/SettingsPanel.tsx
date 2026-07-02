@@ -26,10 +26,17 @@ import { cn } from "@/lib/utils";
 export type QueueVisibilityMode = "live" | "smart" | "notification";
 
 const STORAGE_KEY = "clynicq_queue_visibility_mode";
+export const QUEUE_MODE_EVENT = "clynicq-queue-mode-change";
 
 export const getQueueVisibilityMode = (): QueueVisibilityMode => {
   if (typeof window === "undefined") return "notification";
   return (localStorage.getItem(STORAGE_KEY) as QueueVisibilityMode) || "notification";
+};
+
+export const setQueueVisibilityModeValue = (mode: QueueVisibilityMode) => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(STORAGE_KEY, mode);
+  window.dispatchEvent(new CustomEvent(QUEUE_MODE_EVENT, { detail: mode }));
 };
 
 type SettingsSection = "general" | "team" | "billing" | "security";
