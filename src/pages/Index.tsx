@@ -44,9 +44,16 @@ const Index = () => {
 
   useEffect(() => {
     setQueueMode(getQueueVisibilityMode());
-    const onStorage = () => setQueueMode(getQueueVisibilityMode());
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    const sync = () => {
+      setQueueMode(getQueueVisibilityMode());
+      setSelectedEntry(null);
+    };
+    window.addEventListener("storage", sync);
+    window.addEventListener(QUEUE_MODE_EVENT, sync);
+    return () => {
+      window.removeEventListener("storage", sync);
+      window.removeEventListener(QUEUE_MODE_EVENT, sync);
+    };
   }, []);
 
   // Automation state
