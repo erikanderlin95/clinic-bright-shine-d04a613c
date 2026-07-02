@@ -119,7 +119,7 @@ const GeneralSection = () => {
   const handleVisibilityChange = (value: string) => {
     const next = value as "live" | "smart";
     setMode(next);
-    localStorage.setItem(STORAGE_KEY, next);
+    setQueueVisibilityModeValue(next);
     toast({
       title: "Queue visibility updated",
       description:
