@@ -10,7 +10,7 @@ import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
 import { NotificationsTable } from "@/components/NotificationsTable";
 import { ClinicOperationStatus } from "@/components/ClinicOperationStatus";
-import { getQueueVisibilityMode, type QueueVisibilityMode } from "@/components/SettingsPanel";
+import { getQueueVisibilityMode, QUEUE_MODE_EVENT, type QueueVisibilityMode } from "@/components/SettingsPanel";
 import { useEffect } from "react";
 
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
