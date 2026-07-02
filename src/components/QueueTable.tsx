@@ -6,7 +6,7 @@ import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
 import { CheckCircle, UserX, RotateCcw, ShieldCheck, Bell } from "lucide-react";
 import { useI18n } from "@/hooks/useI18n";
-import { getQueueVisibilityMode, type QueueVisibilityMode } from "./SettingsPanel";
+import { getQueueVisibilityMode, QUEUE_MODE_EVENT, type QueueVisibilityMode } from "./SettingsPanel";
 
 interface QueueTableProps {
   entries: QueueEntry[];
