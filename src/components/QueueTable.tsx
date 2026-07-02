@@ -6,7 +6,7 @@ import { StatusBadge } from "./StatusBadge";
 import type { QueueEntry } from "@/types/queue";
 import { CheckCircle, UserX, RotateCcw, ShieldCheck, Bell } from "lucide-react";
 import { useI18n } from "@/hooks/useI18n";
-import { getQueueVisibilityMode, type QueueVisibilityMode } from "./SettingsPanel";
+import { getQueueVisibilityMode, QUEUE_MODE_EVENT, type QueueVisibilityMode } from "./SettingsPanel";
 
 interface QueueTableProps {
   entries: QueueEntry[];
@@ -24,9 +24,13 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
 
   useEffect(() => {
     setMode(getQueueVisibilityMode());
-    const onStorage = () => setMode(getQueueVisibilityMode());
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    const sync = () => setMode(getQueueVisibilityMode());
+    window.addEventListener("storage", sync);
+    window.addEventListener(QUEUE_MODE_EVENT, sync);
+    return () => {
+      window.removeEventListener("storage", sync);
+      window.removeEventListener(QUEUE_MODE_EVENT, sync);
+    };
   }, []);
   const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false);
   const [completeEntryId, setCompleteEntryId] = useState<string | null>(null);
