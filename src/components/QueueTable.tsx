@@ -24,9 +24,13 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
 
   useEffect(() => {
     setMode(getQueueVisibilityMode());
-    const onStorage = () => setMode(getQueueVisibilityMode());
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    const sync = () => setMode(getQueueVisibilityMode());
+    window.addEventListener("storage", sync);
+    window.addEventListener(QUEUE_MODE_EVENT, sync);
+    return () => {
+      window.removeEventListener("storage", sync);
+      window.removeEventListener(QUEUE_MODE_EVENT, sync);
+    };
   }, []);
   const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false);
   const [completeEntryId, setCompleteEntryId] = useState<string | null>(null);
