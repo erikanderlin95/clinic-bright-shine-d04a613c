@@ -107,7 +107,7 @@ const GeneralSection = () => {
   const handleModeSwitch = (checked: boolean) => {
     const next = checked ? "notification" : "smart";
     setMode(next);
-    localStorage.setItem(STORAGE_KEY, next);
+    setQueueVisibilityModeValue(next);
     toast({
       title: checked ? "Notification Mode enabled" : "Live Queue Mode enabled",
       description: checked
