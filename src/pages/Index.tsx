@@ -10,6 +10,7 @@ import { BookingChannelsPanel } from "@/components/BookingChannelsPanel";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
 import { NotificationsTable } from "@/components/NotificationsTable";
+import { NewJoinAlertBanner } from "@/components/NewJoinAlertBanner";
 import { ClinicOperationStatus } from "@/components/ClinicOperationStatus";
 import { getQueueVisibilityMode, QUEUE_MODE_EVENT, type QueueVisibilityMode } from "@/components/SettingsPanel";
 import { useEffect } from "react";
