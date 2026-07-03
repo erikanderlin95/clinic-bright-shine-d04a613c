@@ -6,8 +6,8 @@ import {
   MessageCircle,
   CalendarCheck,
   Users,
-  Phone,
   Network,
+  CreditCard,
   Download,
 } from "lucide-react";
 
