@@ -47,6 +47,7 @@ interface ProviderCapabilities {
 }
 
 interface Metrics {
+  clinicCardImpressions: number;
   profileVisits: number;
   whatsappClicks: number;
   bookingClicks: number;
@@ -57,6 +58,7 @@ interface Metrics {
 }
 
 const EMPTY: Metrics = {
+  clinicCardImpressions: 0,
   profileVisits: 0,
   whatsappClicks: 0,
   bookingClicks: 0,
