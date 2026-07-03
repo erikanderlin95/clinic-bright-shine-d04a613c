@@ -423,7 +423,7 @@ const Index = () => {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList>
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
-              
+              <TabsTrigger value="performance">Performance</TabsTrigger>
               <TabsTrigger value="appointments">Booking Channels</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               
