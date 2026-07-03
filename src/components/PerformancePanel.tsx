@@ -24,7 +24,6 @@ interface ProviderCapabilities {
   whatsapp: boolean;
   booking: boolean;
   queue: boolean;
-  call: boolean;
 }
 
 interface Metrics {
