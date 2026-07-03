@@ -66,27 +66,10 @@ const MetricCard = ({
   </Card>
 );
 
-const Bar = ({ label, value, max }: { label: string; value: number; max: number }) => {
-  const pct = max > 0 ? Math.round((value / max) * 100) : 0;
-  return (
-    <div>
-      <div className="mb-1 flex items-center justify-between text-sm">
-        <span className="text-foreground">{label}</span>
-        <span className="text-muted-foreground">{value}</span>
-      </div>
-      <div className="h-2 w-full rounded-full bg-muted">
-        <div className="h-2 rounded-full bg-primary" style={{ width: `${pct}%` }} />
-      </div>
-    </div>
-  );
-};
-
 export const PerformancePanel = () => {
   const [range, setRange] = useState<Range>("30");
   const m = useMetrics(range);
 
-  const actionsMax = Math.max(m.whatsappClicks, m.bookingClicks, m.queueJoins, 1);
-  const hasActions = m.whatsappClicks + m.bookingClicks + m.queueJoins > 0;
   const hasSources = m.sources.length > 0;
   const hasEcosystem = m.ecosystemDiscovery > 0;
 
@@ -113,19 +96,6 @@ export const PerformancePanel = () => {
         <MetricCard icon={Users} label="Queue Joins" value={m.queueJoins} hint="Successful joins via ClynicQ" />
         <MetricCard icon={Network} label="Ecosystem Discovery" value={m.ecosystemDiscovery} hint="From other ClynicQ providers" />
       </div>
-
-      <Card className="p-5">
-        <h3 className="mb-4 text-lg font-semibold text-foreground">Patient Actions</h3>
-        {hasActions ? (
-          <div className="space-y-4">
-            <Bar label="WhatsApp Clicks" value={m.whatsappClicks} max={actionsMax} />
-            <Bar label="Booking Clicks" value={m.bookingClicks} max={actionsMax} />
-            <Bar label="Queue Joins" value={m.queueJoins} max={actionsMax} />
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">No patient actions recorded yet.</p>
-        )}
-      </Card>
 
       <Card className="p-5">
         <h3 className="mb-4 text-lg font-semibold text-foreground">How Patients Found You</h3>
