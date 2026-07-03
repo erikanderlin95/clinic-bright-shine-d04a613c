@@ -6,8 +6,8 @@ import {
   MessageCircle,
   CalendarCheck,
   Users,
-  Phone,
   Network,
+  CreditCard,
   Download,
 } from "lucide-react";
 
@@ -24,7 +24,6 @@ interface ProviderCapabilities {
   whatsapp: boolean;
   booking: boolean;
   queue: boolean;
-  call: boolean;
 }
 
 interface Metrics {
@@ -56,7 +55,6 @@ const useCapabilities = (): ProviderCapabilities => ({
   whatsapp: true,
   booking: true,
   queue: true,
-  call: true,
 });
 
 const RangeButton = ({
