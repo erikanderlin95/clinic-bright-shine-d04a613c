@@ -44,6 +44,7 @@ const Index = () => {
   const [verifyEntry, setVerifyEntry] = useState<QueueEntry | null>(null);
   const [queueMode, setQueueMode] = useState<QueueVisibilityMode>("notification");
   const [activeTab, setActiveTab] = useState<string>("queue");
+  const [pendingAlerts, setPendingAlerts] = useState<QueueEntry[]>([]);
   const knownIdsRef = useRef<Set<string> | null>(null);
   const originalTitleRef = useRef<string>(typeof document !== "undefined" ? document.title : "");
   const titleFlashRef = useRef<number | null>(null);
