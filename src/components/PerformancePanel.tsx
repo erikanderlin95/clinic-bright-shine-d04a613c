@@ -1,12 +1,12 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Eye,
-  CreditCard,
   MessageCircle,
   CalendarCheck,
   Users,
+  Phone,
   Network,
   Download,
 } from "lucide-react";
@@ -20,52 +20,31 @@ type SourceCategory =
   | "Partner / Campaign"
   | "Direct / Other";
 
-type ActivityType =
-  | "Profile Visit"
-  | "WhatsApp Click"
-  | "Booking Click"
-  | "Call Click"
-  | "Queue Join"
-  | "Ecosystem Lead";
-
-type Channel = "Profile" | "WhatsApp" | "Booking" | "Call" | "Queue";
-
-interface ActivityEvent {
-  eventId: string;
-  timestamp: string; // ISO
-  activityType: ActivityType;
-  sourceCategory: SourceCategory;
-  sourceName: string;
-  destination: string;
-  channel: Channel;
-}
-
 interface ProviderCapabilities {
   whatsapp: boolean;
   booking: boolean;
   queue: boolean;
+  call: boolean;
 }
 
 interface Metrics {
-  clinicCardImpressions: number;
   profileVisits: number;
   whatsappClicks: number;
   bookingClicks: number;
   queueJoins: number;
+  callClicks: number;
   ecosystemLeads: number;
   sources: { label: SourceCategory; count: number }[];
-  activity: ActivityEvent[];
 }
 
 const EMPTY: Metrics = {
-  clinicCardImpressions: 0,
   profileVisits: 0,
   whatsappClicks: 0,
   bookingClicks: 0,
   queueJoins: 0,
+  callClicks: 0,
   ecosystemLeads: 0,
   sources: [],
-  activity: [],
 };
 
 // Frontend hook — swap to real tracking events later.
@@ -77,6 +56,7 @@ const useCapabilities = (): ProviderCapabilities => ({
   whatsapp: true,
   booking: true,
   queue: true,
+  call: true,
 });
 
 const RangeButton = ({
@@ -129,17 +109,7 @@ const Bar = ({ label, value, max }: { label: string; value: number; max: number 
   );
 };
 
-const ACTIVITY_TYPE_OPTIONS: { value: string; label: string; match: (t: ActivityType) => boolean }[] = [
-  { value: "all", label: "All", match: () => true },
-  { value: "profile", label: "Profile Visits", match: (t) => t === "Profile Visit" },
-  { value: "whatsapp", label: "WhatsApp", match: (t) => t === "WhatsApp Click" },
-  { value: "booking", label: "Booking", match: (t) => t === "Booking Click" },
-  { value: "call", label: "Calls", match: (t) => t === "Call Click" },
-  { value: "queue", label: "Queue Joins", match: (t) => t === "Queue Join" },
-  { value: "ecosystem", label: "Ecosystem Leads", match: (t) => t === "Ecosystem Lead" },
-];
-
-const SOURCE_OPTIONS: SourceCategory[] = [
+const SOURCE_ORDER: SourceCategory[] = [
   "ClynicQ Search & Browse",
   "QR Codes",
   "ClynicQ Ecosystem",
@@ -147,78 +117,48 @@ const SOURCE_OPTIONS: SourceCategory[] = [
   "Direct / Other",
 ];
 
-const PAGE_SIZE = 10;
+const rangeLabel = (r: Range) =>
+  r === "7" ? "Last 7 Days" : r === "30" ? "Last 30 Days" : "Last 90 Days";
 
-const fmtDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
-const fmtTime = (iso: string) =>
-  new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-const toCsv = (rows: ActivityEvent[]) => {
-  const header = [
-    "Date",
-    "Time",
-    "Activity Type",
-    "Source Category",
-    "Source Name",
-    "Destination Provider",
-    "Channel",
-    "Anonymous Reference ID",
-  ];
-  const esc = (v: string) => `"${String(v).replace(/"/g, '""')}"`;
-  const body = rows.map((r) =>
-    [
-      fmtDate(r.timestamp),
-      fmtTime(r.timestamp),
-      r.activityType,
-      r.sourceCategory,
-      r.sourceName,
-      r.destination,
-      r.channel,
-      r.eventId,
-    ]
-      .map(esc)
-      .join(","),
-  );
-  return [header.map(esc).join(","), ...body].join("\n");
+const toReportCsv = (m: Metrics, caps: ProviderCapabilities, range: Range) => {
+  const esc = (v: string | number) => `"${String(v).replace(/"/g, '""')}"`;
+  const lines: string[] = [];
+  lines.push([esc("ClynicQ Performance Report"), esc(rangeLabel(range))].join(","));
+  lines.push("");
+  lines.push(esc("Performance Summary"));
+  lines.push([esc("Metric"), esc("Value")].join(","));
+  lines.push([esc("Profile Visits"), esc(m.profileVisits)].join(","));
+  if (caps.whatsapp) lines.push([esc("WhatsApp Clicks"), esc(m.whatsappClicks)].join(","));
+  if (caps.booking) lines.push([esc("Booking Clicks"), esc(m.bookingClicks)].join(","));
+  if (caps.queue) lines.push([esc("Queue Joins"), esc(m.queueJoins)].join(","));
+  if (caps.call) lines.push([esc("Call Clicks"), esc(m.callClicks)].join(","));
+  lines.push([esc("Ecosystem Leads"), esc(m.ecosystemLeads)].join(","));
+  lines.push("");
+  lines.push(esc("How Patients Found You"));
+  lines.push([esc("Source"), esc("Count")].join(","));
+  const sourceMap = new Map(m.sources.map((s) => [s.label, s.count]));
+  for (const label of SOURCE_ORDER) {
+    lines.push([esc(label), esc(sourceMap.get(label) ?? 0)].join(","));
+  }
+  return lines.join("\n");
 };
-
-const selectClass =
-  "rounded-md border border-input bg-background px-2 py-1 text-sm";
 
 export const PerformancePanel = () => {
   const [range, setRange] = useState<Range>("30");
   const m = useMetrics(range);
   const caps = useCapabilities();
 
-  const [activityFilter, setActivityFilter] = useState<string>("all");
-  const [sourceFilter, setSourceFilter] = useState<string>("all");
-  const [page, setPage] = useState(1);
-
   const hasSources = m.sources.length > 0;
   const sourceMax = Math.max(1, ...m.sources.map((s) => s.count));
 
-  const filteredActivity = useMemo(() => {
-    const af =
-      ACTIVITY_TYPE_OPTIONS.find((f) => f.value === activityFilter) ?? ACTIVITY_TYPE_OPTIONS[0];
-    return m.activity.filter(
-      (e) =>
-        af.match(e.activityType) &&
-        (sourceFilter === "all" || e.sourceCategory === sourceFilter),
-    );
-  }, [m.activity, activityFilter, sourceFilter]);
-
-  const pageCount = Math.max(1, Math.ceil(filteredActivity.length / PAGE_SIZE));
-  const pagedActivity = filteredActivity.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
   const handleDownload = () => {
-    const csv = toCsv(filteredActivity);
+    const csv = toReportCsv(m, caps, range);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     const today = new Date().toISOString().slice(0, 10);
     a.href = url;
-    a.download = `clynicq-performance-records-${today}.csv`;
+    a.download = `clynicq-performance-report-${today}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -240,19 +180,13 @@ export const PerformancePanel = () => {
           <RangeButton active={range === "90"} onClick={() => setRange("90")}>Last 90 Days</RangeButton>
           <Button size="sm" variant="secondary" onClick={handleDownload} className="gap-2">
             <Download className="h-4 w-4" />
-            Download Records
+            Download Report
           </Button>
         </div>
       </div>
 
       {/* Top performance cards — reflow auto, hidden when capability disabled */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <MetricCard
-          icon={CreditCard}
-          label="Clinic Card Impressions"
-          value={m.clinicCardImpressions}
-          hint="Times your clinic card was displayed"
-        />
         <MetricCard
           icon={Eye}
           label="Profile Visits"
@@ -283,6 +217,14 @@ export const PerformancePanel = () => {
             hint="Successful joins via ClynicQ"
           />
         )}
+        {caps.call && (
+          <MetricCard
+            icon={Phone}
+            label="Call Clicks"
+            value={m.callClicks}
+            hint="Taps on Call"
+          />
+        )}
         <MetricCard
           icon={Network}
           label="Ecosystem Leads"
@@ -302,114 +244,6 @@ export const PerformancePanel = () => {
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">No source data recorded yet.</p>
-        )}
-      </Card>
-
-      {/* Activity Log */}
-      <Card className="p-5">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold text-foreground">Activity Log</h3>
-          <div className="flex flex-wrap items-center gap-2">
-            <label className="flex items-center gap-1 text-xs text-muted-foreground">
-              Activity Type
-              <select
-                className={selectClass}
-                value={activityFilter}
-                onChange={(e) => {
-                  setActivityFilter(e.target.value);
-                  setPage(1);
-                }}
-              >
-                {ACTIVITY_TYPE_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="flex items-center gap-1 text-xs text-muted-foreground">
-              Source
-              <select
-                className={selectClass}
-                value={sourceFilter}
-                onChange={(e) => {
-                  setSourceFilter(e.target.value);
-                  setPage(1);
-                }}
-              >
-                <option value="all">All</option>
-                {SOURCE_OPTIONS.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-        </div>
-
-        {filteredActivity.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No activity recorded for this period.</p>
-        ) : (
-          <>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="text-left text-xs uppercase text-muted-foreground">
-                  <tr>
-                    <th className="px-2 py-2">Date & Time</th>
-                    <th className="px-2 py-2">Activity Type</th>
-                    <th className="px-2 py-2">Source</th>
-                    <th className="px-2 py-2">Destination</th>
-                    <th className="px-2 py-2">Channel</th>
-                    <th className="px-2 py-2">Reference ID</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {pagedActivity.map((e) => (
-                    <tr key={e.eventId}>
-                      <td className="px-2 py-2 text-foreground">
-                        {fmtDate(e.timestamp)}, {fmtTime(e.timestamp)}
-                      </td>
-                      <td className="px-2 py-2 text-foreground">{e.activityType}</td>
-                      <td className="px-2 py-2 text-muted-foreground">
-                        {e.sourceCategory}
-                        {e.sourceName && e.sourceName !== e.sourceCategory ? ` · ${e.sourceName}` : ""}
-                      </td>
-                      <td className="px-2 py-2 text-muted-foreground">{e.destination}</td>
-                      <td className="px-2 py-2 text-muted-foreground">{e.channel}</td>
-                      <td className="px-2 py-2 font-mono text-xs text-muted-foreground">{e.eventId}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {pageCount > 1 && (
-              <div className="mt-4 flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">
-                  Page {page} of {pageCount}
-                </span>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={page === 1}
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={page === pageCount}
-                    onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-                  >
-                    Next
-                  </Button>
-                </div>
-              </div>
-            )}
-          </>
         )}
       </Card>
     </div>
