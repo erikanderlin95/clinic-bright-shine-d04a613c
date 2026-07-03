@@ -201,6 +201,39 @@ const Index = () => {
     },
   ]);
 
+  useEffect(() => {
+    const currentIds = new Set(queueEntries.map((e) => e.id));
+    if (knownIdsRef.current === null) {
+      knownIdsRef.current = currentIds;
+      return;
+    }
+    const newEntries = queueEntries.filter((e) => !knownIdsRef.current!.has(e.id));
+    knownIdsRef.current = currentIds;
+    if (newEntries.length === 0) return;
+
+    const first = newEntries[0];
+    const label =
+      newEntries.length > 1
+        ? `${newEntries.length} new patients joined the queue`
+        : `New patient ${first.queueNumber} joined the queue`;
+
+    playAlertBeep();
+    flashTitle(label);
+    sonnerToast(label, {
+      description: first.name ? `${first.name} • ${first.mobile}` : first.mobile,
+      duration: 8000,
+      action: {
+        label: "Open queue",
+        onClick: () => {
+          setActiveTab("queue");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        },
+      },
+    });
+  }, [queueEntries]);
+
+
+
   const [bookingLeads, setBookingLeads] = useState<BookingLead[]>([
     {
       id: "L1",
