@@ -66,21 +66,6 @@ const MetricCard = ({
   </Card>
 );
 
-const Bar = ({ label, value, max }: { label: string; value: number; max: number }) => {
-  const pct = max > 0 ? Math.round((value / max) * 100) : 0;
-  return (
-    <div>
-      <div className="mb-1 flex items-center justify-between text-sm">
-        <span className="text-foreground">{label}</span>
-        <span className="text-muted-foreground">{value}</span>
-      </div>
-      <div className="h-2 w-full rounded-full bg-muted">
-        <div className="h-2 rounded-full bg-primary" style={{ width: `${pct}%` }} />
-      </div>
-    </div>
-  );
-};
-
 export const PerformancePanel = () => {
   const [range, setRange] = useState<Range>("30");
   const m = useMetrics(range);
