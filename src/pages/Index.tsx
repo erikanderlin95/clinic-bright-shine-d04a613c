@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
 
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
+import { PerformancePanel } from "@/components/PerformancePanel";
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { Button } from "@/components/ui/button";
