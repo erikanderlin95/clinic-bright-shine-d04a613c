@@ -134,39 +134,6 @@ export const PerformancePanel = () => {
         </p>
       </Card>
 
-      <Card className="p-5">
-        <h3 className="mb-1 text-lg font-semibold text-foreground">Ecosystem Discovery</h3>
-        <p className="mb-4 text-xs text-muted-foreground">
-          Automatic — no confirmation required. Not a confirmed referral or completed visit.
-        </p>
-        {hasEcosystem && (
-          <div className="space-y-4">
-            <div className="text-sm text-foreground">
-              <span className="text-2xl font-semibold">{m.ecosystemDiscovery}</span>{" "}
-              users discovered your profile from another ClynicQ provider
-            </div>
-            <div>
-              <div className="mb-2 text-sm font-medium text-foreground">Source breakdown</div>
-              <ul className="divide-y divide-border">
-                {m.ecosystemProviders.map((p) => (
-                  <li key={p.label} className="flex items-center justify-between py-2 text-sm">
-                    <span className="text-foreground">{p.label}</span>
-                    <span className="text-muted-foreground">{p.count}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <div className="mb-2 text-sm font-medium text-foreground">Resulting actions</div>
-              <div className="flex gap-3 text-sm text-muted-foreground">
-                <span>{m.ecosystemActions.whatsapp} WhatsApp Clicks</span>
-                <span>•</span>
-                <span>{m.ecosystemActions.booking} Booking Clicks</span>
-              </div>
-            </div>
-          </div>
-        )}
-      </Card>
     </div>
   );
 };
