@@ -114,18 +114,6 @@ export const PerformancePanel = () => {
         <MetricCard icon={Network} label="Ecosystem Discovery" value={m.ecosystemDiscovery} hint="From other ClynicQ providers" />
       </div>
 
-      <Card className="p-5">
-        <h3 className="mb-4 text-lg font-semibold text-foreground">Patient Actions</h3>
-        {hasActions ? (
-          <div className="space-y-4">
-            <Bar label="WhatsApp Clicks" value={m.whatsappClicks} max={actionsMax} />
-            <Bar label="Booking Clicks" value={m.bookingClicks} max={actionsMax} />
-            <Bar label="Queue Joins" value={m.queueJoins} max={actionsMax} />
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">No patient actions recorded yet.</p>
-        )}
-      </Card>
 
       <Card className="p-5">
         <h3 className="mb-4 text-lg font-semibold text-foreground">How Patients Found You</h3>
