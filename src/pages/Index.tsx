@@ -434,15 +434,53 @@ const Index = () => {
             </TabsList>
 
             <TabsContent value="queue" className="space-y-5 mt-5">
-              <div className="flex items-center justify-between">
+              <NewJoinAlertBanner
+                newEntries={pendingAlerts}
+                onDismiss={() => setPendingAlerts([])}
+                onOpenQueue={() => {
+                  setActiveTab("queue");
+                  setPendingAlerts([]);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              />
+              <div className="flex items-center justify-between gap-2 flex-wrap">
                 <h2 className="text-xl font-semibold text-foreground">{t("liveQueueView")}</h2>
-                <QueueControls
-                  isPaused={isPaused}
-                  isClosed={isClosed}
-                  onTogglePause={() => setIsPaused(!isPaused)}
-                  onToggleClose={() => setIsClosed(!isClosed)}
-                />
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      const nextNumber = queueEntries.length + 101;
+                      const demo: QueueEntry = {
+                        id: `demo-${Date.now()}`,
+                        queueNumber: `A${nextNumber}`,
+                        status: "waiting",
+                        joinedAt: new Date().toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                        }),
+                        name: "Demo Patient",
+                        mobile: "+65 9000 0000",
+                        queueSource: "Walk-in",
+                        patientType: "walk-in",
+                        visitCategory: "Consultation",
+                        checkInCode: generateCheckInCode(),
+                      };
+                      setQueueEntries((prev) => [...prev, demo]);
+                    }}
+                  >
+                    Simulate new join
+                  </Button>
+                  <QueueControls
+                    isPaused={isPaused}
+                    isClosed={isClosed}
+                    onTogglePause={() => setIsPaused(!isPaused)}
+                    onToggleClose={() => setIsClosed(!isClosed)}
+                  />
+                </div>
               </div>
+
 
               {queueMode === "notification" ? (
                 <>
