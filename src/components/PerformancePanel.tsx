@@ -139,7 +139,7 @@ export const PerformancePanel = () => {
         <p className="mb-4 text-xs text-muted-foreground">
           Automatic — no confirmation required. Not a confirmed referral or completed visit.
         </p>
-        {hasEcosystem ? (
+        {hasEcosystem && (
           <div className="space-y-4">
             <div className="text-sm text-foreground">
               <span className="text-2xl font-semibold">{m.ecosystemDiscovery}</span>{" "}
@@ -165,8 +165,6 @@ export const PerformancePanel = () => {
               </div>
             </div>
           </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">No ecosystem discovery activity yet.</p>
         )}
       </Card>
     </div>
