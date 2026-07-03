@@ -18,7 +18,7 @@ const App = () => (
     <I18nProvider>
       <TooltipProvider>
         <Toaster />
-        <Sonner />
+        <Sonner position="top-center" richColors expand visibleToasts={5} />
         <BrowserRouter>
           <div className="flex flex-col min-h-screen">
             <div className="flex-1">

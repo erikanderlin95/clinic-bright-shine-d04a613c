@@ -10,6 +10,7 @@ import { BookingChannelsPanel } from "@/components/BookingChannelsPanel";
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
 import { NotificationsTable } from "@/components/NotificationsTable";
+import { NewJoinAlertBanner } from "@/components/NewJoinAlertBanner";
 import { ClinicOperationStatus } from "@/components/ClinicOperationStatus";
 import { getQueueVisibilityMode, QUEUE_MODE_EVENT, type QueueVisibilityMode } from "@/components/SettingsPanel";
 import { useEffect } from "react";
@@ -43,6 +44,7 @@ const Index = () => {
   const [verifyEntry, setVerifyEntry] = useState<QueueEntry | null>(null);
   const [queueMode, setQueueMode] = useState<QueueVisibilityMode>("notification");
   const [activeTab, setActiveTab] = useState<string>("queue");
+  const [pendingAlerts, setPendingAlerts] = useState<QueueEntry[]>([]);
   const knownIdsRef = useRef<Set<string> | null>(null);
   const originalTitleRef = useRef<string>(typeof document !== "undefined" ? document.title : "");
   const titleFlashRef = useRef<number | null>(null);
@@ -219,9 +221,10 @@ const Index = () => {
 
     playAlertBeep();
     flashTitle(label);
+    setPendingAlerts((prev) => [...prev, ...newEntries]);
     sonnerToast(label, {
       description: first.name ? `${first.name} • ${first.mobile}` : first.mobile,
-      duration: 8000,
+      duration: 10000,
       action: {
         label: "Open queue",
         onClick: () => {
@@ -431,15 +434,53 @@ const Index = () => {
             </TabsList>
 
             <TabsContent value="queue" className="space-y-5 mt-5">
-              <div className="flex items-center justify-between">
+              <NewJoinAlertBanner
+                newEntries={pendingAlerts}
+                onDismiss={() => setPendingAlerts([])}
+                onOpenQueue={() => {
+                  setActiveTab("queue");
+                  setPendingAlerts([]);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              />
+              <div className="flex items-center justify-between gap-2 flex-wrap">
                 <h2 className="text-xl font-semibold text-foreground">{t("liveQueueView")}</h2>
-                <QueueControls
-                  isPaused={isPaused}
-                  isClosed={isClosed}
-                  onTogglePause={() => setIsPaused(!isPaused)}
-                  onToggleClose={() => setIsClosed(!isClosed)}
-                />
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      const nextNumber = queueEntries.length + 101;
+                      const demo: QueueEntry = {
+                        id: `demo-${Date.now()}`,
+                        queueNumber: `A${nextNumber}`,
+                        status: "waiting",
+                        joinedAt: new Date().toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                        }),
+                        name: "Demo Patient",
+                        mobile: "+65 9000 0000",
+                        queueSource: "Walk-in",
+                        patientType: "walk-in",
+                        visitCategory: "Consultation",
+                        checkInCode: generateCheckInCode(),
+                      };
+                      setQueueEntries((prev) => [...prev, demo]);
+                    }}
+                  >
+                    Simulate new join
+                  </Button>
+                  <QueueControls
+                    isPaused={isPaused}
+                    isClosed={isClosed}
+                    onTogglePause={() => setIsPaused(!isPaused)}
+                    onToggleClose={() => setIsClosed(!isClosed)}
+                  />
+                </div>
               </div>
+
 
               {queueMode === "notification" ? (
                 <>
