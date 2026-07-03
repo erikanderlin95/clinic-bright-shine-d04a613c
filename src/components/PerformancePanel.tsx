@@ -88,7 +88,7 @@ export const PerformancePanel = () => {
   const actionsMax = Math.max(m.whatsappClicks, m.bookingClicks, m.queueJoins, 1);
   const hasActions = m.whatsappClicks + m.bookingClicks + m.queueJoins > 0;
   const hasSources = m.sources.length > 0;
-  const hasEcosystem = m.ecosystemDiscovery > 0;
+  
 
   return (
     <div className="space-y-6">
