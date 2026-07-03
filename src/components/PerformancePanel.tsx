@@ -70,8 +70,6 @@ export const PerformancePanel = () => {
   const [range, setRange] = useState<Range>("30");
   const m = useMetrics(range);
 
-  const actionsMax = Math.max(m.whatsappClicks, m.bookingClicks, m.queueJoins, 1);
-  const hasActions = m.whatsappClicks + m.bookingClicks + m.queueJoins > 0;
   const hasSources = m.sources.length > 0;
   const hasEcosystem = m.ecosystemDiscovery > 0;
 
