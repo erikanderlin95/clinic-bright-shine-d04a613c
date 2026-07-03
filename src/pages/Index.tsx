@@ -221,9 +221,10 @@ const Index = () => {
 
     playAlertBeep();
     flashTitle(label);
+    setPendingAlerts((prev) => [...prev, ...newEntries]);
     sonnerToast(label, {
       description: first.name ? `${first.name} • ${first.mobile}` : first.mobile,
-      duration: 8000,
+      duration: 10000,
       action: {
         label: "Open queue",
         onClick: () => {
