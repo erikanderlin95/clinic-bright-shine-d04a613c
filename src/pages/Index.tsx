@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
 
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
+import { PerformancePanel } from "@/components/PerformancePanel";
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { Button } from "@/components/ui/button";
@@ -422,7 +423,7 @@ const Index = () => {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList>
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
-              
+              <TabsTrigger value="performance">Performance</TabsTrigger>
               <TabsTrigger value="appointments">Booking Channels</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               
@@ -526,6 +527,10 @@ const Index = () => {
 
 
 
+
+            <TabsContent value="performance" className="mt-5">
+              <PerformancePanel />
+            </TabsContent>
 
             <TabsContent value="appointments" className="mt-5">
               <BookingChannelsPanel />
