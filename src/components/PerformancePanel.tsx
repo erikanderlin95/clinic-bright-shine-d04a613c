@@ -246,7 +246,13 @@ export const PerformancePanel = () => {
       </div>
 
       {/* Top performance cards — reflow auto, hidden when capability disabled */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <MetricCard
+          icon={CreditCard}
+          label="Clinic Card Impressions"
+          value={m.clinicCardImpressions}
+          hint="Times your clinic card was displayed"
+        />
         <MetricCard
           icon={Eye}
           label="Profile Visits"
