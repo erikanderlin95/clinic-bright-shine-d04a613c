@@ -42,6 +42,64 @@ const Index = () => {
   const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
   const [verifyEntry, setVerifyEntry] = useState<QueueEntry | null>(null);
   const [queueMode, setQueueMode] = useState<QueueVisibilityMode>("notification");
+  const [activeTab, setActiveTab] = useState<string>("queue");
+  const knownIdsRef = useRef<Set<string> | null>(null);
+  const originalTitleRef = useRef<string>(typeof document !== "undefined" ? document.title : "");
+  const titleFlashRef = useRef<number | null>(null);
+
+  const playAlertBeep = () => {
+    try {
+      const AudioCtx =
+        (window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext })
+          .AudioContext ||
+        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const playTone = (freq: number, start: number, dur: number) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime + start);
+        gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + start + dur);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(ctx.currentTime + start);
+        osc.stop(ctx.currentTime + start + dur + 0.05);
+      };
+      playTone(880, 0, 0.18);
+      playTone(1175, 0.2, 0.22);
+      setTimeout(() => ctx.close().catch(() => {}), 800);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const flashTitle = (message: string) => {
+    if (typeof document === "undefined") return;
+    if (titleFlashRef.current) window.clearInterval(titleFlashRef.current);
+    const original = originalTitleRef.current || document.title;
+    let toggle = false;
+    document.title = `🔔 ${message}`;
+    titleFlashRef.current = window.setInterval(() => {
+      document.title = toggle ? original : `🔔 ${message}`;
+      toggle = !toggle;
+    }, 1200);
+    const stop = () => {
+      if (titleFlashRef.current) {
+        window.clearInterval(titleFlashRef.current);
+        titleFlashRef.current = null;
+      }
+      document.title = original;
+      window.removeEventListener("focus", stop);
+      document.removeEventListener("visibilitychange", onVis);
+    };
+    const onVis = () => {
+      if (document.visibilityState === "visible") stop();
+    };
+    window.addEventListener("focus", stop);
+    document.addEventListener("visibilitychange", onVis);
+  };
 
   useEffect(() => {
     setQueueMode(getQueueVisibilityMode());
