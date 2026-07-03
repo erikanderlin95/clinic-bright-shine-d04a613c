@@ -528,6 +528,10 @@ const Index = () => {
 
 
 
+            <TabsContent value="performance" className="mt-5">
+              <PerformancePanel />
+            </TabsContent>
+
             <TabsContent value="appointments" className="mt-5">
               <BookingChannelsPanel />
             </TabsContent>
