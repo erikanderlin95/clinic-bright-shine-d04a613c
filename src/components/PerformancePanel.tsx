@@ -8,7 +8,6 @@ import {
   Users,
   Network,
   Download,
-  Phone,
 } from "lucide-react";
 
 type Range = "7" | "30" | "90";
@@ -17,7 +16,7 @@ type SourceCategory =
   | "ClynicQ Search & Browse"
   | "QR Codes"
   | "ClynicQ Ecosystem"
-  | "Partner & Campaign Links"
+  | "Partner / Campaign"
   | "Direct / Other";
 
 type ActivityType =
@@ -35,18 +34,15 @@ interface ActivityEvent {
   timestamp: string; // ISO
   activityType: ActivityType;
   sourceCategory: SourceCategory;
-  sourceName: string; // e.g. "ClynicQ Search" or "Harmony TCM Centre"
-  destination: string; // clinic/provider name
+  sourceName: string;
+  destination: string;
   channel: Channel;
 }
 
-interface EcosystemProvider {
-  name: string;
-  actions: number;
-  whatsapp: number;
-  booking: number;
-  call: number;
-  queue: number;
+interface ProviderCapabilities {
+  whatsapp: boolean;
+  booking: boolean;
+  queue: boolean;
 }
 
 interface Metrics {
@@ -56,7 +52,6 @@ interface Metrics {
   queueJoins: number;
   ecosystemLeads: number;
   sources: { label: SourceCategory; count: number }[];
-  ecosystemProviders: EcosystemProvider[];
   activity: ActivityEvent[];
 }
 
@@ -67,13 +62,19 @@ const EMPTY: Metrics = {
   queueJoins: 0,
   ecosystemLeads: 0,
   sources: [],
-  ecosystemProviders: [],
   activity: [],
 };
 
 // Frontend hook — swap to real tracking events later.
 // Returns empty by default so no fake data is shown in production.
 const useMetrics = (_range: Range): Metrics => EMPTY;
+
+// Provider capability flags — swap to real provider config later.
+const useCapabilities = (): ProviderCapabilities => ({
+  whatsapp: true,
+  booking: true,
+  queue: true,
+});
 
 const RangeButton = ({
   active,
@@ -125,26 +126,30 @@ const Bar = ({ label, value, max }: { label: string; value: number; max: number 
   );
 };
 
-const ACTIVITY_FILTERS: { key: string; label: string; match: (t: ActivityType) => boolean }[] = [
-  { key: "all", label: "All Activity", match: () => true },
-  { key: "profile", label: "Profile Visits", match: (t) => t === "Profile Visit" },
-  { key: "whatsapp", label: "WhatsApp", match: (t) => t === "WhatsApp Click" },
-  { key: "booking", label: "Booking", match: (t) => t === "Booking Click" },
-  { key: "call", label: "Calls", match: (t) => t === "Call Click" },
-  { key: "queue", label: "Queue Joins", match: (t) => t === "Queue Join" },
-  { key: "ecosystem", label: "Ecosystem Leads", match: (t) => t === "Ecosystem Lead" },
+const ACTIVITY_TYPE_OPTIONS: { value: string; label: string; match: (t: ActivityType) => boolean }[] = [
+  { value: "all", label: "All", match: () => true },
+  { value: "profile", label: "Profile Visits", match: (t) => t === "Profile Visit" },
+  { value: "whatsapp", label: "WhatsApp", match: (t) => t === "WhatsApp Click" },
+  { value: "booking", label: "Booking", match: (t) => t === "Booking Click" },
+  { value: "call", label: "Calls", match: (t) => t === "Call Click" },
+  { value: "queue", label: "Queue Joins", match: (t) => t === "Queue Join" },
+  { value: "ecosystem", label: "Ecosystem Leads", match: (t) => t === "Ecosystem Lead" },
+];
+
+const SOURCE_OPTIONS: SourceCategory[] = [
+  "ClynicQ Search & Browse",
+  "QR Codes",
+  "ClynicQ Ecosystem",
+  "Partner / Campaign",
+  "Direct / Other",
 ];
 
 const PAGE_SIZE = 10;
 
-const fmtDate = (iso: string) => {
-  const d = new Date(iso);
-  return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
-};
-const fmtTime = (iso: string) => {
-  const d = new Date(iso);
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-};
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+const fmtTime = (iso: string) =>
+  new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
 const toCsv = (rows: ActivityEvent[]) => {
   const header = [
@@ -175,9 +180,13 @@ const toCsv = (rows: ActivityEvent[]) => {
   return [header.map(esc).join(","), ...body].join("\n");
 };
 
+const selectClass =
+  "rounded-md border border-input bg-background px-2 py-1 text-sm";
+
 export const PerformancePanel = () => {
   const [range, setRange] = useState<Range>("30");
   const m = useMetrics(range);
+  const caps = useCapabilities();
 
   const [activityFilter, setActivityFilter] = useState<string>("all");
   const [sourceFilter, setSourceFilter] = useState<string>("all");
@@ -185,12 +194,14 @@ export const PerformancePanel = () => {
 
   const hasSources = m.sources.length > 0;
   const sourceMax = Math.max(1, ...m.sources.map((s) => s.count));
-  const hasEcosystem = m.ecosystemProviders.length > 0;
 
   const filteredActivity = useMemo(() => {
-    const af = ACTIVITY_FILTERS.find((f) => f.key === activityFilter) ?? ACTIVITY_FILTERS[0];
+    const af =
+      ACTIVITY_TYPE_OPTIONS.find((f) => f.value === activityFilter) ?? ACTIVITY_TYPE_OPTIONS[0];
     return m.activity.filter(
-      (e) => af.match(e.activityType) && (sourceFilter === "all" || e.sourceCategory === sourceFilter),
+      (e) =>
+        af.match(e.activityType) &&
+        (sourceFilter === "all" || e.sourceCategory === sourceFilter),
     );
   }, [m.activity, activityFilter, sourceFilter]);
 
@@ -231,32 +242,38 @@ export const PerformancePanel = () => {
         </div>
       </div>
 
-      {/* Top performance cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      {/* Top performance cards — reflow auto, hidden when capability disabled */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <MetricCard
           icon={Eye}
           label="Profile Visits"
           value={m.profileVisits}
           hint="Visits to your full ClynicQ profile"
         />
-        <MetricCard
-          icon={MessageCircle}
-          label="WhatsApp Clicks"
-          value={m.whatsappClicks}
-          hint="Taps on WhatsApp"
-        />
-        <MetricCard
-          icon={CalendarCheck}
-          label="Booking Clicks"
-          value={m.bookingClicks}
-          hint="Taps on Book"
-        />
-        <MetricCard
-          icon={Users}
-          label="Queue Joins"
-          value={m.queueJoins}
-          hint="Successful joins via ClynicQ"
-        />
+        {caps.whatsapp && (
+          <MetricCard
+            icon={MessageCircle}
+            label="WhatsApp Clicks"
+            value={m.whatsappClicks}
+            hint="Taps on WhatsApp"
+          />
+        )}
+        {caps.booking && (
+          <MetricCard
+            icon={CalendarCheck}
+            label="Booking Clicks"
+            value={m.bookingClicks}
+            hint="Taps on Book"
+          />
+        )}
+        {caps.queue && (
+          <MetricCard
+            icon={Users}
+            label="Queue Joins"
+            value={m.queueJoins}
+            hint="Successful joins via ClynicQ"
+          />
+        )}
         <MetricCard
           icon={Network}
           label="Ecosystem Leads"
@@ -279,83 +296,47 @@ export const PerformancePanel = () => {
         )}
       </Card>
 
-      {/* Ecosystem Activity */}
-      <Card className="p-5">
-        <h3 className="mb-1 text-lg font-semibold text-foreground">Ecosystem Activity</h3>
-        <p className="mb-4 text-xs text-muted-foreground">
-          Automatic — meaningful patient actions from other ClynicQ providers. Not confirmed referrals.
-        </p>
-        {hasEcosystem ? (
-          <>
-            <p className="mb-3 text-sm text-foreground">
-              {m.ecosystemLeads} patient action{m.ecosystemLeads === 1 ? "" : "s"} came from other ClynicQ providers
-            </p>
-            <ul className="divide-y divide-border">
-              {m.ecosystemProviders.map((p) => {
-                const parts: string[] = [];
-                if (p.whatsapp) parts.push(`${p.whatsapp} WhatsApp`);
-                if (p.booking) parts.push(`${p.booking} Booking`);
-                if (p.call) parts.push(`${p.call} Call`);
-                if (p.queue) parts.push(`${p.queue} Queue Join`);
-                return (
-                  <li key={p.name} className="py-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-foreground">{p.name}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {p.actions} patient action{p.actions === 1 ? "" : "s"}
-                      </span>
-                    </div>
-                    {parts.length > 0 && (
-                      <div className="mt-1 text-xs text-muted-foreground">{parts.join(" | ")}</div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </>
-        ) : (
-          <p className="text-sm text-muted-foreground">No ecosystem activity recorded yet.</p>
-        )}
-      </Card>
-
       {/* Activity Log */}
       <Card className="p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h3 className="text-lg font-semibold text-foreground">Activity Log</h3>
           <div className="flex flex-wrap items-center gap-2">
-            <select
-              className="rounded-md border border-input bg-background px-2 py-1 text-sm"
-              value={sourceFilter}
-              onChange={(e) => {
-                setSourceFilter(e.target.value);
-                setPage(1);
-              }}
-              aria-label="Source filter"
-            >
-              <option value="all">All Sources</option>
-              <option value="ClynicQ Search & Browse">ClynicQ Search & Browse</option>
-              <option value="QR Codes">QR Codes</option>
-              <option value="ClynicQ Ecosystem">ClynicQ Ecosystem</option>
-              <option value="Partner & Campaign Links">Partner & Campaign Links</option>
-              <option value="Direct / Other">Direct / Other</option>
-            </select>
+            <label className="flex items-center gap-1 text-xs text-muted-foreground">
+              Activity Type
+              <select
+                className={selectClass}
+                value={activityFilter}
+                onChange={(e) => {
+                  setActivityFilter(e.target.value);
+                  setPage(1);
+                }}
+              >
+                {ACTIVITY_TYPE_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="flex items-center gap-1 text-xs text-muted-foreground">
+              Source
+              <select
+                className={selectClass}
+                value={sourceFilter}
+                onChange={(e) => {
+                  setSourceFilter(e.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="all">All</option>
+                {SOURCE_OPTIONS.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
-        </div>
-
-        <div className="mb-4 flex flex-wrap gap-2">
-          {ACTIVITY_FILTERS.map((f) => (
-            <Button
-              key={f.key}
-              size="sm"
-              variant={activityFilter === f.key ? "default" : "outline"}
-              onClick={() => {
-                setActivityFilter(f.key);
-                setPage(1);
-              }}
-            >
-              {f.label}
-            </Button>
-          ))}
         </div>
 
         {filteredActivity.length === 0 ? (
@@ -422,11 +403,6 @@ export const PerformancePanel = () => {
           </>
         )}
       </Card>
-
-      {/* Silence unused-import warning for Phone icon reserved for future Call CTA */}
-      <span className="hidden">
-        <Phone />
-      </span>
     </div>
   );
 };
