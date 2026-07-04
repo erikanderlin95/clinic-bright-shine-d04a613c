@@ -6,7 +6,7 @@ import { DailySummary } from "@/components/DailySummary";
 import { QueueTable } from "@/components/QueueTable";
 import { PatientDetailPanel } from "@/components/PatientDetailPanel";
 import { WalkinRecordsSection } from "@/components/WalkinRecordsSection";
-import { BookingChannelsPanel } from "@/components/BookingChannelsPanel";
+
 import { AddToQueueDialog } from "@/components/AddToQueueDialog";
 import { CheckInVerifyDialog } from "@/components/CheckInVerifyDialog";
 import { NotificationsTable } from "@/components/NotificationsTable";
