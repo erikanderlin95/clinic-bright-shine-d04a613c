@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Eye,
   MessageCircle,
@@ -9,7 +18,9 @@ import {
   Network,
   CreditCard,
   Download,
+  ExternalLink,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Range = "7" | "30" | "90";
 
@@ -26,6 +37,12 @@ interface ProviderCapabilities {
   queue: boolean;
 }
 
+interface RedirectActivity {
+  id: string;
+  channel: string;
+  time: string;
+}
+
 interface Metrics {
   clinicCardImpressions: number;
   profileVisits: number;
@@ -34,6 +51,7 @@ interface Metrics {
   queueJoins: number;
   ecosystemReferrals: number;
   sources: { label: SourceCategory; count: number }[];
+  redirectActivity: RedirectActivity[];
 }
 
 const EMPTY: Metrics = {
@@ -44,6 +62,7 @@ const EMPTY: Metrics = {
   queueJoins: 0,
   ecosystemReferrals: 0,
   sources: [],
+  redirectActivity: [],
 };
 
 // Frontend hook — swap to real tracking events later.
@@ -132,6 +151,15 @@ const toReportCsv = (m: Metrics, caps: ProviderCapabilities, range: Range) => {
   if (caps.queue) lines.push([esc("Queue Joins"), esc(m.queueJoins)].join(","));
   lines.push([esc("Ecosystem Referral"), esc(m.ecosystemReferrals)].join(","));
   lines.push("");
+  lines.push(esc("Booking Redirect Activity"));
+  lines.push([esc("Booking Channel"), esc("Redirect Time")].join(","));
+  for (const r of m.redirectActivity) {
+    lines.push([esc(r.channel), esc(r.time)].join(","));
+  }
+  if (m.redirectActivity.length === 0) {
+    lines.push([esc("No redirect activity recorded"), ""].join(","));
+  }
+  lines.push("");
   lines.push(esc("How Patients Found You"));
   lines.push([esc("Source"), esc("Count")].join(","));
   const sourceMap = new Map(m.sources.map((s) => [s.label, s.count]));
@@ -148,6 +176,7 @@ export const PerformancePanel = () => {
 
   const hasSources = m.sources.length > 0;
   const sourceMax = Math.max(1, ...m.sources.map((s) => s.count));
+  const hasRedirects = m.redirectActivity.length > 0;
 
   const handleDownload = () => {
     const csv = toReportCsv(m, caps, range);
@@ -228,6 +257,45 @@ export const PerformancePanel = () => {
           hint="Patient actions from other ClynicQ providers"
         />
       </div>
+
+      {/* Booking Redirect Activity */}
+      <Card className="p-5">
+        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-foreground">
+          <ExternalLink className="h-5 w-5" />
+          Booking Redirect Activity
+        </h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          Outbound visibility of patients routed to your booking channels. Tracks redirect intent only.
+        </p>
+        {hasRedirects ? (
+          <div className="rounded-lg border border-border bg-card shadow-sm">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50 hover:bg-muted/50 border-b-2 border-primary/20">
+                  <TableHead>Booking Channel</TableHead>
+                  <TableHead>Redirect Time</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {m.redirectActivity.map((r, i) => (
+                  <TableRow key={r.id} className={cn("hover:bg-muted/30", i % 2 === 0 ? "bg-accent/5" : "")}>
+                    <TableCell className="text-foreground">{r.channel}</TableCell>
+                    <TableCell className="text-muted-foreground">{r.time}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/20">
+                        Redirected
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">No redirect activity recorded yet.</p>
+        )}
+      </Card>
 
       {/* How Patients Found You */}
       <Card className="p-5">
