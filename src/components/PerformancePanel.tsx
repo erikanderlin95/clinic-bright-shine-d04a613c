@@ -37,6 +37,12 @@ interface ProviderCapabilities {
   queue: boolean;
 }
 
+interface RedirectActivity {
+  id: string;
+  channel: string;
+  time: string;
+}
+
 interface Metrics {
   clinicCardImpressions: number;
   profileVisits: number;
@@ -45,6 +51,7 @@ interface Metrics {
   queueJoins: number;
   ecosystemReferrals: number;
   sources: { label: SourceCategory; count: number }[];
+  redirectActivity: RedirectActivity[];
 }
 
 const EMPTY: Metrics = {
@@ -55,6 +62,7 @@ const EMPTY: Metrics = {
   queueJoins: 0,
   ecosystemReferrals: 0,
   sources: [],
+  redirectActivity: [],
 };
 
 // Frontend hook — swap to real tracking events later.
