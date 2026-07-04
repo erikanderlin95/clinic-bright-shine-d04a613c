@@ -27,12 +27,12 @@ interface ProviderCapabilities {
 }
 
 interface Metrics {
+  clinicCardImpressions: number;
   profileVisits: number;
   whatsappClicks: number;
   bookingClicks: number;
   queueJoins: number;
-  callClicks: number;
-  ecosystemLeads: number;
+  ecosystemReferrals: number;
   sources: { label: SourceCategory; count: number }[];
 }
 
