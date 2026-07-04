@@ -186,8 +186,14 @@ export const PerformancePanel = () => {
       {/* Top performance cards — reflow auto, hidden when capability disabled */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <MetricCard
+          icon={CreditCard}
+          label="Clinic Card Impressions"
+          value={m.clinicCardImpressions}
+          hint="Times your clinic card was displayed"
+        />
+        <MetricCard
           icon={Eye}
-          label="Profile Visits"
+          label="Profile Views"
           value={m.profileVisits}
           hint="Visits to your full ClynicQ profile"
         />
@@ -215,18 +221,10 @@ export const PerformancePanel = () => {
             hint="Successful joins via ClynicQ"
           />
         )}
-        {caps.call && (
-          <MetricCard
-            icon={Phone}
-            label="Call Clicks"
-            value={m.callClicks}
-            hint="Taps on Call"
-          />
-        )}
         <MetricCard
           icon={Network}
-          label="Ecosystem Leads"
-          value={m.ecosystemLeads}
+          label="Ecosystem Referral"
+          value={m.ecosystemReferrals}
           hint="Patient actions from other ClynicQ providers"
         />
       </div>
