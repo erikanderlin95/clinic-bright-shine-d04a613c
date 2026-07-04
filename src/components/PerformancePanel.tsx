@@ -176,6 +176,7 @@ export const PerformancePanel = () => {
 
   const hasSources = m.sources.length > 0;
   const sourceMax = Math.max(1, ...m.sources.map((s) => s.count));
+  const hasRedirects = m.redirectActivity.length > 0;
 
   const handleDownload = () => {
     const csv = toReportCsv(m, caps, range);
