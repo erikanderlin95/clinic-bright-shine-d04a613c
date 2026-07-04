@@ -27,22 +27,22 @@ interface ProviderCapabilities {
 }
 
 interface Metrics {
+  clinicCardImpressions: number;
   profileVisits: number;
   whatsappClicks: number;
   bookingClicks: number;
   queueJoins: number;
-  callClicks: number;
-  ecosystemLeads: number;
+  ecosystemReferrals: number;
   sources: { label: SourceCategory; count: number }[];
 }
 
 const EMPTY: Metrics = {
+  clinicCardImpressions: 0,
   profileVisits: 0,
   whatsappClicks: 0,
   bookingClicks: 0,
   queueJoins: 0,
-  callClicks: 0,
-  ecosystemLeads: 0,
+  ecosystemReferrals: 0,
   sources: [],
 };
 
@@ -125,12 +125,12 @@ const toReportCsv = (m: Metrics, caps: ProviderCapabilities, range: Range) => {
   lines.push("");
   lines.push(esc("Performance Summary"));
   lines.push([esc("Metric"), esc("Value")].join(","));
-  lines.push([esc("Profile Visits"), esc(m.profileVisits)].join(","));
+  lines.push([esc("Clinic Card Impressions"), esc(m.clinicCardImpressions)].join(","));
+  lines.push([esc("Profile Views"), esc(m.profileVisits)].join(","));
   if (caps.whatsapp) lines.push([esc("WhatsApp Clicks"), esc(m.whatsappClicks)].join(","));
   if (caps.booking) lines.push([esc("Booking Clicks"), esc(m.bookingClicks)].join(","));
   if (caps.queue) lines.push([esc("Queue Joins"), esc(m.queueJoins)].join(","));
-  if (caps.call) lines.push([esc("Call Clicks"), esc(m.callClicks)].join(","));
-  lines.push([esc("Ecosystem Leads"), esc(m.ecosystemLeads)].join(","));
+  lines.push([esc("Ecosystem Referral"), esc(m.ecosystemReferrals)].join(","));
   lines.push("");
   lines.push(esc("How Patients Found You"));
   lines.push([esc("Source"), esc("Count")].join(","));
@@ -186,8 +186,14 @@ export const PerformancePanel = () => {
       {/* Top performance cards — reflow auto, hidden when capability disabled */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <MetricCard
+          icon={CreditCard}
+          label="Clinic Card Impressions"
+          value={m.clinicCardImpressions}
+          hint="Times your clinic card was displayed"
+        />
+        <MetricCard
           icon={Eye}
-          label="Profile Visits"
+          label="Profile Views"
           value={m.profileVisits}
           hint="Visits to your full ClynicQ profile"
         />
@@ -215,18 +221,10 @@ export const PerformancePanel = () => {
             hint="Successful joins via ClynicQ"
           />
         )}
-        {caps.call && (
-          <MetricCard
-            icon={Phone}
-            label="Call Clicks"
-            value={m.callClicks}
-            hint="Taps on Call"
-          />
-        )}
         <MetricCard
           icon={Network}
-          label="Ecosystem Leads"
-          value={m.ecosystemLeads}
+          label="Ecosystem Referral"
+          value={m.ecosystemReferrals}
           hint="Patient actions from other ClynicQ providers"
         />
       </div>
