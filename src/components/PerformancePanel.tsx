@@ -151,6 +151,15 @@ const toReportCsv = (m: Metrics, caps: ProviderCapabilities, range: Range) => {
   if (caps.queue) lines.push([esc("Queue Joins"), esc(m.queueJoins)].join(","));
   lines.push([esc("Ecosystem Referral"), esc(m.ecosystemReferrals)].join(","));
   lines.push("");
+  lines.push(esc("Booking Redirect Activity"));
+  lines.push([esc("Booking Channel"), esc("Redirect Time")].join(","));
+  for (const r of m.redirectActivity) {
+    lines.push([esc(r.channel), esc(r.time)].join(","));
+  }
+  if (m.redirectActivity.length === 0) {
+    lines.push([esc("No redirect activity recorded"), ""].join(","));
+  }
+  lines.push("");
   lines.push(esc("How Patients Found You"));
   lines.push([esc("Source"), esc("Count")].join(","));
   const sourceMap = new Map(m.sources.map((s) => [s.label, s.count]));
