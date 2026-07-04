@@ -37,12 +37,12 @@ interface Metrics {
 }
 
 const EMPTY: Metrics = {
+  clinicCardImpressions: 0,
   profileVisits: 0,
   whatsappClicks: 0,
   bookingClicks: 0,
   queueJoins: 0,
-  callClicks: 0,
-  ecosystemLeads: 0,
+  ecosystemReferrals: 0,
   sources: [],
 };
 
