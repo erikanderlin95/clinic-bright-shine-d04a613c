@@ -424,7 +424,6 @@ const Index = () => {
             <TabsList>
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
               <TabsTrigger value="performance">Performance</TabsTrigger>
-              <TabsTrigger value="appointments">Booking Channels</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               
               <TabsTrigger value="profiles">{t("doctorProfiles")}</TabsTrigger>
@@ -532,9 +531,6 @@ const Index = () => {
               <PerformancePanel />
             </TabsContent>
 
-            <TabsContent value="appointments" className="mt-5">
-              <BookingChannelsPanel />
-            </TabsContent>
 
             <TabsContent value="automation" className="mt-5">
               <AutomationPanel
