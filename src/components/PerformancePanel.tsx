@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Eye,
   MessageCircle,
@@ -9,7 +18,9 @@ import {
   Network,
   CreditCard,
   Download,
+  ExternalLink,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Range = "7" | "30" | "90";
 
