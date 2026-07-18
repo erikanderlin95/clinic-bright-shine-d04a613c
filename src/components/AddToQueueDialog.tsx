@@ -13,6 +13,7 @@ interface AddToQueueDialogProps {
     name?: string;
     mobile: string;
     email?: string;
+    nric?: string;
     queueSource: "Walk-in" | "Phone Booking" | "Other";
     notes?: string;
     visitCategory?: VisitCategory;
@@ -24,16 +25,16 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
   const { toast } = useToast();
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
+  const [nric, setNric] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // No registration required — name and mobile both optional.
-    // Goal: minimize front-desk workload and reflect actual walk-in count quickly.
     onAddToQueue({
       name: name.trim() || undefined,
-      mobile: mobile.trim(), // may be empty for fully anonymous walk-ins
+      mobile: mobile.trim(),
       email: undefined,
+      nric: nric.trim() || undefined,
       queueSource: "Walk-in",
       notes: undefined,
       visitCategory: undefined,
@@ -42,6 +43,7 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
 
     setName("");
     setMobile("");
+    setNric("");
     onOpenChange(false);
 
     toast({ title: "Patient added", description: "Walk-in added to the live queue." });
@@ -80,6 +82,20 @@ export const AddToQueueDialog = ({ open, onOpenChange, onAddToQueue }: AddToQueu
               maxLength={20}
             />
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="nric">NRIC (optional)</Label>
+            <Input
+              id="nric"
+              placeholder="e.g. S1234567A"
+              value={nric}
+              onChange={(e) => setNric(e.target.value.toUpperCase())}
+              maxLength={20}
+              className="font-mono"
+            />
+          </div>
+
+
 
           <div className="flex gap-2 justify-end">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
