@@ -209,8 +209,8 @@ const GeneralSection = () => {
               </div>
             )}
           </section>
-        </>
-      )}
+      </>
+
     </div>
   );
 };
