@@ -19,7 +19,7 @@ const PatientArrival = () => {
   const { token } = useParams();
   const { toast } = useToast();
   const [arrived, setArrived] = useState(false);
-  const [mode, setMode] = useState<QueueVisibilityMode>("notification");
+  const [mode, setMode] = useState<QueueVisibilityMode>("smart");
 
   useEffect(() => {
     setMode(getQueueVisibilityMode());
