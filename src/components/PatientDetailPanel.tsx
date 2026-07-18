@@ -66,16 +66,15 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
           )}
 
           <div>
+            <Label className="text-xs text-muted-foreground">NRIC</Label>
+            <p className="text-sm font-medium text-foreground font-mono">{entry.nric || "—"}</p>
+          </div>
+
+          <div>
             <Label className="text-xs text-muted-foreground">{t("queueSource")}</Label>
             <p className="text-sm font-medium text-foreground">{entry.queueSource}</p>
           </div>
 
-          {entry.visitCategory && (
-            <div>
-              <Label className="text-xs text-muted-foreground">{t("visitCategoryCol")}</Label>
-              <p className="text-sm font-medium text-foreground">{entry.visitCategory}</p>
-            </div>
-          )}
 
           {entry.duration && (
             <div>

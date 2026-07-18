@@ -23,14 +23,15 @@ import { BillingSubscriptionPanel } from "./BillingSubscriptionPanel";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
-export type QueueVisibilityMode = "live" | "smart" | "notification";
+export type QueueVisibilityMode = "live" | "smart";
 
 const STORAGE_KEY = "clynicq_queue_visibility_mode";
 export const QUEUE_MODE_EVENT = "clynicq-queue-mode-change";
 
 export const getQueueVisibilityMode = (): QueueVisibilityMode => {
-  if (typeof window === "undefined") return "notification";
-  return (localStorage.getItem(STORAGE_KEY) as QueueVisibilityMode) || "notification";
+  if (typeof window === "undefined") return "smart";
+  const raw = localStorage.getItem(STORAGE_KEY);
+  return raw === "live" ? "live" : "smart";
 };
 
 export const setQueueVisibilityModeValue = (mode: QueueVisibilityMode) => {
@@ -101,23 +102,10 @@ const GeneralSection = () => {
   const { toast } = useToast();
   const [mode, setMode] = useState<QueueVisibilityMode>(getQueueVisibilityMode());
 
-  const isNotificationMode = mode === "notification";
-  const visibilityMode = isNotificationMode ? "live" : mode;
-
-  const handleModeSwitch = (checked: boolean) => {
-    const next = checked ? "notification" : "smart";
-    setMode(next);
-    setQueueVisibilityModeValue(next);
-    toast({
-      title: checked ? "Notification Mode enabled" : "Live Queue Mode enabled",
-      description: checked
-        ? "Staff will notify patients via WhatsApp. Clinic manages queue in existing CMS."
-        : "Patients will track their queue position in real time.",
-    });
-  };
+  const visibilityMode = mode;
 
   const handleVisibilityChange = (value: string) => {
-    const next = value as "live" | "smart";
+    const next = value as QueueVisibilityMode;
     setMode(next);
     setQueueVisibilityModeValue(next);
     toast({
@@ -159,83 +147,10 @@ const GeneralSection = () => {
         </CardContent>
       </Card>
 
-      {/* Queue Mode */}
-      <section className="space-y-3">
-        <div>
-          <h3 className="text-base font-semibold text-foreground">Queue Mode</h3>
-          <p className="text-xs text-muted-foreground mt-1">
-            Choose how patients are called from the queue.
-          </p>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          {/* Live Queue Card */}
-          <button
-            type="button"
-            onClick={() => handleModeSwitch(false)}
-            className={cn(
-              "relative flex items-center gap-4 rounded-xl border bg-card p-5 text-left transition-all",
-              !isNotificationMode
-                ? "border-primary ring-2 ring-primary/20 shadow-sm"
-                : "border-border/60 hover:border-border hover:bg-muted/30"
-            )}
-          >
-            <div className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0",
-              !isNotificationMode ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-            )}>
-              <Eye className="h-5 w-5" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <div className="text-sm font-semibold text-foreground">Live Queue</div>
-                {!isNotificationMode && (
-                  <Badge className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0">Active</Badge>
-                )}
-              </div>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Patients track position. Staff manage arrivals & completions.
-              </p>
-            </div>
-          </button>
-
-          {/* Notification Card */}
-          <button
-            type="button"
-            onClick={() => handleModeSwitch(true)}
-            className={cn(
-              "relative flex items-center gap-4 rounded-xl border bg-card p-5 text-left transition-all",
-              isNotificationMode
-                ? "border-primary ring-2 ring-primary/20 shadow-sm"
-                : "border-border/60 hover:border-border hover:bg-muted/30"
-            )}
-          >
-            <div className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0",
-              isNotificationMode ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-            )}>
-              <Bell className="h-5 w-5" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <div className="text-sm font-semibold text-foreground">Notification</div>
-                {isNotificationMode && (
-                  <Badge className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0">Active</Badge>
-                )}
-              </div>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                One WhatsApp per patient. Clinic manages queue in CMS.
-              </p>
-            </div>
-          </button>
-        </div>
-      </section>
-
-      {/* Queue Visibility — only when Live Queue */}
-      {!isNotificationMode && (
-        <>
-          <Separator className="bg-border/60" />
-          <section className="space-y-3">
+      {/* Queue Visibility */}
+      <>
+        <Separator className="bg-border/60" />
+        <section className="space-y-3">
             <div>
               <h3 className="text-base font-semibold text-foreground">Queue Visibility</h3>
               <p className="text-xs text-muted-foreground mt-1">
@@ -294,8 +209,8 @@ const GeneralSection = () => {
               </div>
             )}
           </section>
-        </>
-      )}
+      </>
+
     </div>
   );
 };
