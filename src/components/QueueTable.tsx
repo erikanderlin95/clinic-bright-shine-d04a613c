@@ -20,7 +20,7 @@ interface QueueTableProps {
 
 export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival, onNotifyPatient }: QueueTableProps) => {
   const { t } = useI18n();
-  const { t: _t } = { t: (k: string) => k };
+  
   const [mode, setMode] = useState<QueueVisibilityMode>("smart");
 
   useEffect(() => {
@@ -89,8 +89,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
           <TableRow>
             <TableHead className="w-[100px]">{t("queueNo")}</TableHead>
             <TableHead className="w-[120px]">{t("status")}</TableHead>
-            <TableHead className="w-[90px]">{t("patientTypeCol")}</TableHead>
-            <TableHead className="w-[120px]">Reason</TableHead>
+            <TableHead className="w-[140px]">NRIC</TableHead>
             <TableHead className="w-[110px]">{t("timeJoined")}</TableHead>
             <TableHead className="w-[110px]">{t("checkInCode")}</TableHead>
             <TableHead>{t("actions")}</TableHead>
