@@ -99,7 +99,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
         <TableBody>
           {entries.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+              <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                 {t("noPatients")}
               </TableCell>
             </TableRow>
@@ -113,24 +113,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
               >
                 <TableCell className="font-semibold">{entry.queueNumber || "—"}</TableCell>
                 <TableCell><StatusBadge status={entry.status} /></TableCell>
-                <TableCell className="text-sm">
-                  <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                    entry.patientType === "non-digital"
-                      ? "bg-orange-500/10 text-orange-600 border border-orange-500/20"
-                      : "bg-muted text-muted-foreground"
-                  }`}>
-                    {entry.patientType === "non-digital"
-                      ? t("typeNonDigital")
-                      : t("typeWalkIn")}
-                  </span>
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {entry.visitCategory
-                    ? entry.visitCategory === "Others" && entry.remarksDetail
-                      ? `Others: ${entry.remarksDetail}`
-                      : entry.visitCategory
-                    : "—"}
-                </TableCell>
+                <TableCell className="font-mono text-sm text-muted-foreground">{entry.nric || "—"}</TableCell>
                 <TableCell className="text-muted-foreground text-sm">{entry.joinedAt}</TableCell>
                 <TableCell className="font-mono text-sm text-muted-foreground">{entry.checkInCode || "—"}</TableCell>
                 <TableCell>{getActions(entry)}</TableCell>
