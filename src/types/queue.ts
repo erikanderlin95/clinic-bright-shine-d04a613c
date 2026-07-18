@@ -18,6 +18,7 @@ export interface QueueEntry {
   name?: string;
   mobile: string;
   email?: string;
+  nric?: string;
   queueSource: "Walk-in" | "Phone Booking" | "Other";
   notes?: string;
   duration?: number;
