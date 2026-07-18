@@ -20,7 +20,8 @@ interface QueueTableProps {
 
 export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival, onNotifyPatient }: QueueTableProps) => {
   const { t } = useI18n();
-  const [mode, setMode] = useState<QueueVisibilityMode>("notification");
+  const { t: _t } = { t: (k: string) => k };
+  const [mode, setMode] = useState<QueueVisibilityMode>("smart");
 
   useEffect(() => {
     setMode(getQueueVisibilityMode());
@@ -32,6 +33,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
       window.removeEventListener(QUEUE_MODE_EVENT, sync);
     };
   }, []);
+  void mode;
   const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false);
   const [completeEntryId, setCompleteEntryId] = useState<string | null>(null);
 
@@ -40,31 +42,6 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
       return null;
     }
 
-    if (mode === "notification") {
-      if (entry.status === "notified") {
-        return (
-          <div className="inline-flex flex-col gap-0.5">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 px-2.5 py-1 text-xs font-semibold">
-              <CheckCircle className="h-3.5 w-3.5" />
-              Notification Sent
-            </span>
-            {entry.notifiedAt && (
-              <span className="text-[11px] text-muted-foreground pl-1">Today, {entry.notifiedAt}</span>
-            )}
-          </div>
-        );
-      }
-      return (
-        <Button
-          size="sm"
-          onClick={(e) => { e.stopPropagation(); onNotifyPatient?.(entry); }}
-          className="gap-1.5 h-8 text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
-        >
-          <Bell className="h-3.5 w-3.5" />
-          Notify Patient
-        </Button>
-      );
-    }
 
 
     if (entry.status === "arrived") {
