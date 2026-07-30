@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "sdk_version": "0.25.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://cagjnhbjkqubqmbvypaq.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "clinicq-staff-dashboard",
+      "version": "0.1.0",
+      "title": "ClinicQ Staff Dashboard"
+    },
+    "tools": [
+      {
+        "name": "list_doctors",
+        "title": "List doctors",
+        "description": "List clinician profiles in the clinic roster, optionally only active ones.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "active_only": {
+              "type": "boolean",
+              "description": "Only return active doctors. Defaults to true."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_doctor_shifts",
+        "title": "List doctor shifts",
+        "description": "List the clinic's recurring doctor shifts, optionally for one day of the week.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "day_of_week": {
+              "type": "string",
+              "description": "Day of week, e.g. Monday."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_appointments",
+        "title": "List appointments",
+        "description": "List clinic appointments, optionally filtered by date (YYYY-MM-DD), status, or doctor id.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "description": "Appointment date in YYYY-MM-DD format."
+            },
+            "status": {
+              "type": "string",
+              "description": "Appointment status, e.g. scheduled or cancelled."
+            },
+            "doctor_id": {
+              "type": "string",
+              "description": "Doctor profile id to filter by."
+            },
+            "limit": {
+              "type": "integer",
+              "description": "Maximum rows to return (default 50, max 200)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_appointment",
+        "title": "Create appointment",
+        "description": "Book a new clinic appointment for a patient.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "patient_name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Patient name."
+            },
+            "patient_phone": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Patient mobile number."
+            },
+            "appointment_date": {
+              "type": "string",
+              "description": "Date in YYYY-MM-DD format."
+            },
+            "appointment_time": {
+              "type": "string",
+              "description": "Time in HH:MM (24h) format."
+            },
+            "doctor_id": {
+              "type": "string",
+              "description": "Doctor profile id."
+            },
+            "duration_minutes": {
+              "type": "integer",
+              "description": "Duration in minutes (default 30)."
+            },
+            "notes": {
+              "type": "string",
+              "description": "Operational notes for the visit."
+            }
+          },
+          "required": [
+            "patient_name",
+            "patient_phone",
+            "appointment_date",
+            "appointment_time"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
