@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import PatientArrival from "./pages/PatientArrival";
 import NotFound from "./pages/NotFound";
+import OAuthConsent from "./pages/OAuthConsent";
 import GlobalFooter from "./components/GlobalFooter";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
               <Routes>
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/arrival/:token" element={<PatientArrival />} />
+                <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
                 <Route
                   path="/"
                   element={
