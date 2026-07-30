@@ -18,8 +18,12 @@ const authSchema = z.object({
 
 type AuthFormData = z.infer<typeof authSchema>;
 
+const safeNext = (value: string | null) =>
+  value && value.startsWith("/") && !value.startsWith("//") ? value : "/";
+
 const Auth = () => {
   const navigate = useNavigate();
+  const nextPath = safeNext(new URLSearchParams(window.location.search).get("next"));
   const { isAuthenticated, isLoading, signIn, signUp } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
@@ -34,7 +38,7 @@ const Auth = () => {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      navigate("/");
+      navigate(nextPath);
     }
   }, [isAuthenticated, isLoading, navigate]);
 
@@ -44,7 +48,7 @@ const Auth = () => {
       if (activeTab === "signin") {
         const result = await signIn(data.email, data.password);
         if (!result.error) {
-          navigate("/");
+          navigate(nextPath);
         }
       } else {
         await signUp(data.email, data.password);
