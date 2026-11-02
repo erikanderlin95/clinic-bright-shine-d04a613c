@@ -1,2 +1,5 @@
 - [x] Agent integrations (MCP)
 - [x] Staff menu: Delete Account below Enable Account for disabled users
+- [ ] Show the full 30-day walk-in history without expanding
+- [ ] Remove the Performance tab
+- [ ] Set Live Queue View as recommended and default, and verify
