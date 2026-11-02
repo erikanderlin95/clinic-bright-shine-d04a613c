@@ -23,22 +23,8 @@ import { BillingSubscriptionPanel } from "./BillingSubscriptionPanel";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
-export type QueueVisibilityMode = "live" | "smart";
-
-const STORAGE_KEY = "clynicq_queue_visibility_mode";
-export const QUEUE_MODE_EVENT = "clynicq-queue-mode-change";
-
-export const getQueueVisibilityMode = (): QueueVisibilityMode => {
-  if (typeof window === "undefined") return "smart";
-  const raw = localStorage.getItem(STORAGE_KEY);
-  return raw === "live" ? "live" : "smart";
-};
-
-export const setQueueVisibilityModeValue = (mode: QueueVisibilityMode) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, mode);
-  window.dispatchEvent(new CustomEvent(QUEUE_MODE_EVENT, { detail: mode }));
-};
+import { getQueueVisibilityMode, setQueueVisibilityModeValue, type QueueVisibilityMode } from "@/lib/queue-visibility";
+export { getQueueVisibilityMode, setQueueVisibilityModeValue, QUEUE_MODE_EVENT, type QueueVisibilityMode } from "@/lib/queue-visibility";
 
 type SettingsSection = "general" | "team" | "billing" | "security";
 
@@ -164,21 +150,21 @@ const GeneralSection = () => {
               className="grid gap-3 sm:grid-cols-2"
             >
               <VisibilityCard
-                value="smart"
-                selected={visibilityMode === "smart"}
-                icon={Gauge}
-                title="Smart Wait Indicator"
-                description="Simplified wait status without queue numbers."
-                preview="Moderate Wait"
-                recommended
-              />
-              <VisibilityCard
                 value="live"
                 selected={visibilityMode === "live"}
                 icon={Eye}
                 title="Live Queue View"
                 description="Patients see exact queue position."
                 preview="7 people ahead"
+                recommended
+              />
+              <VisibilityCard
+                value="smart"
+                selected={visibilityMode === "smart"}
+                icon={Gauge}
+                title="Smart Wait Indicator"
+                description="Simplified wait status without queue numbers."
+                preview="Moderate Wait"
               />
             </RadioGroup>
 
@@ -251,7 +237,7 @@ const VisibilityCard = ({
         </div>
         <div className="flex items-center gap-2">
           {recommended && (
-            <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-[10px] px-1.5 py-0">
+            <Badge variant="secondary" className="bg-primary/10 text-primary text-[10px] px-1.5 py-0">
               Recommended
             </Badge>
           )}

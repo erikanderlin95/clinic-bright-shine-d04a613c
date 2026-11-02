@@ -1,9 +1,10 @@
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronDown, ChevronUp, Download, Users } from "lucide-react";
+import { Download, Users } from "lucide-react";
+import { format, parseISO } from "date-fns";
+import { getWalkinRecords } from "@/lib/walkin-records";
 import type { QueueEntry } from "@/types/queue";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/hooks/useI18n";
@@ -13,19 +14,18 @@ interface WalkinRecordsSectionProps {
 }
 
 export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
   const { t } = useI18n();
 
-  const walkinRecords = entries.filter(
-    (entry) =>
-      entry.status === "completed" || entry.status === "cancelled" || entry.status === "no-show"
-  );
+  const walkinRecords = getWalkinRecords(entries);
+  const visitDate = (entry: QueueEntry) => entry.visitDate
+    ? format(parseISO(entry.visitDate), "dd/MM/yyyy")
+    : format(new Date(), "dd/MM/yyyy");
 
   const handleDownloadCSV = () => {
     const headers = ["Patient Name", "Visit Date", "Queue Number", "Arrival Time", "Status", "Reason / Notes"];
     const rows = walkinRecords.map((entry) => [
       entry.name || "-",
-      new Date().toLocaleDateString(),
+      visitDate(entry),
       entry.queueNumber,
       entry.joinedAt,
       entry.status,
@@ -44,35 +44,19 @@ export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => 
   return (
     <Card className="border-primary/20 bg-gradient-to-br from-card to-card/50">
       <CardHeader className="border-b border-border/50 bg-muted/30">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
           <CardTitle className="flex items-center gap-2 text-foreground">
             <Users className="h-5 w-5" />
             {t("walkinRecordsTitle")}
           </CardTitle>
           <div className="flex items-center gap-2">
-            {isExpanded && (
               <Button variant="outline" size="sm" onClick={handleDownloadCSV} className="gap-1.5">
                 <Download className="h-4 w-4" />
                 {t("downloadCSV")}
               </Button>
-            )}
-            <Button variant="ghost" size="sm" onClick={() => setIsExpanded(!isExpanded)} className="gap-2">
-              {isExpanded ? (
-                <>
-                  <ChevronUp className="h-4 w-4" />
-                  {t("collapse")}
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="h-4 w-4" />
-                  {t("expand")}
-                </>
-              )}
-            </Button>
           </div>
         </div>
       </CardHeader>
-      {isExpanded && (
         <CardContent>
           <div className="rounded-lg border border-border bg-card shadow-sm">
             <Table>
@@ -103,7 +87,7 @@ export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => 
                       )}
                     >
                       <TableCell className="font-medium text-foreground">{entry.name || "-"}</TableCell>
-                      <TableCell className="text-foreground">{new Date().toLocaleDateString()}</TableCell>
+                      <TableCell className="text-foreground">{visitDate(entry)}</TableCell>
                       <TableCell className="font-bold text-foreground">{entry.queueNumber}</TableCell>
                       <TableCell className="text-foreground">{entry.joinedAt}</TableCell>
                       <TableCell>
@@ -126,7 +110,6 @@ export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => 
             </Table>
           </div>
         </CardContent>
-      )}
     </Card>
   );
 };
