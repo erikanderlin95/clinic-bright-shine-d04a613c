@@ -106,8 +106,8 @@ export const BroadcastAudienceTable = ({
         </div>
       )}
 
-      <div className="border rounded-md max-h-[240px] overflow-y-auto">
-        <Table>
+      <div className="border rounded-md max-h-[240px] overflow-auto">
+        <Table className="min-w-[580px]">
           <TableHeader>
             <TableRow>
               <TableHead className="w-[40px]">
@@ -173,7 +173,7 @@ export const BroadcastAudienceTable = ({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-muted-foreground">
           {selectedIds.size} of {filteredPatients.length} selected
         </p>
