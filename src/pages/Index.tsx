@@ -17,7 +17,6 @@ import { useEffect } from "react";
 
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
 
-import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { Button } from "@/components/ui/button";
@@ -425,7 +424,6 @@ const Index = () => {
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               
-              <TabsTrigger value="profiles">{t("doctorProfiles")}</TabsTrigger>
               <TabsTrigger value="settings" className="gap-1.5">
                 <Settings className="h-4 w-4" />
                 Settings
@@ -539,9 +537,6 @@ const Index = () => {
             </TabsContent>
 
 
-            <TabsContent value="profiles" className="mt-5">
-              <DoctorProfilesPanel />
-            </TabsContent>
 
 
             <TabsContent value="settings" className="mt-5">
