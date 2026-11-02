@@ -7,18 +7,18 @@ export const QueueHeader = () => {
   const { t } = useI18n();
 
   return (
-    <header className="border-b border-border bg-card px-6 py-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+    <header className="border-b border-border bg-card px-4 py-4 sm:px-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary">
             <Activity className="h-6 w-6 text-primary-foreground" />
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">{t("dashboardTitle")}</h1>
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground">{t("dashboardTitle")}</h1>
             <p className="text-sm text-muted-foreground">{t("dashboardSubtitle")}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           <LanguageToggle />
           <UserMenu />
         </div>

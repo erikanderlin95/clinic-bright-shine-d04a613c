@@ -13,11 +13,11 @@ export const QueueControls = ({ isPaused, isClosed, onTogglePause, onToggleClose
   const { t } = useI18n();
 
   return (
-    <div className="flex gap-3">
+    <div className="flex flex-wrap gap-2 sm:gap-3">
       <Button
         variant={isPaused ? "default" : "secondary"}
         onClick={onTogglePause}
-        className={`gap-2 px-5 py-2.5 font-semibold text-sm shadow-sm ${
+        className={`min-h-11 gap-2 px-3 sm:px-5 py-2.5 font-semibold text-sm shadow-sm ${
           isPaused
             ? "bg-primary text-primary-foreground hover:bg-primary/90"
             : "bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700 dark:hover:bg-amber-900/50"
@@ -39,7 +39,7 @@ export const QueueControls = ({ isPaused, isClosed, onTogglePause, onToggleClose
       <Button
         variant={isClosed ? "default" : "destructive"}
         onClick={onToggleClose}
-        className={`gap-2 px-5 py-2.5 font-semibold text-sm shadow-sm ${
+        className={`min-h-11 gap-2 px-3 sm:px-5 py-2.5 font-semibold text-sm shadow-sm ${
           isClosed
             ? "bg-primary text-primary-foreground hover:bg-primary/90"
             : "bg-destructive text-destructive-foreground hover:bg-destructive/90"

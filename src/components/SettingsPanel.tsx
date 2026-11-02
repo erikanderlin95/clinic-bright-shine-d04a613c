@@ -43,7 +43,7 @@ export const SettingsPanel = () => {
   const visibleSections = sections.filter((s) => (s.id === "billing" ? isAdmin : true));
 
   return (
-    <div className="space-y-8 px-8">
+    <div className="min-w-0 space-y-6 lg:space-y-8 lg:px-8">
       <div>
         <h2 className="text-2xl font-semibold text-foreground tracking-tight">Settings</h2>
         <p className="text-sm text-muted-foreground mt-2">
@@ -52,7 +52,7 @@ export const SettingsPanel = () => {
       </div>
 
       {/* Horizontal nav */}
-      <nav className="flex gap-2 overflow-x-auto">
+      <nav aria-label="Settings sections" className="flex gap-2 overflow-x-auto pb-2">
         {visibleSections.map((s) => {
           const Icon = s.icon;
           const isActive = active === s.id;
@@ -63,7 +63,7 @@ export const SettingsPanel = () => {
               aria-pressed={isActive}
               onClick={() => setActive(s.id)}
               className={cn(
-                "flex items-center gap-2 rounded-lg px-5 h-10 text-sm font-medium whitespace-nowrap transition-colors",
+                "flex shrink-0 items-center gap-2 rounded-lg px-3 sm:px-5 min-h-11 text-sm font-medium whitespace-nowrap transition-colors",
                 isActive
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -117,14 +117,14 @@ const GeneralSection = () => {
     <div className="space-y-6">
       {/* Summary */}
       <Card className="border-border/60 bg-card/60">
-        <CardContent className="px-6 py-5">
+        <CardContent className="px-4 py-5 sm:px-6">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {summaryItems.map((it) => (
               <div key={it.label} className="min-w-0">
                 <div className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                   {it.label}
                 </div>
-                <div className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-foreground truncate">
+                <div className="mt-1 flex items-start gap-1.5 break-words text-sm font-semibold text-foreground">
                   {it.tone === "ok" && (
                     <CheckCircle2 className="h-3 w-3 text-emerald-600 flex-shrink-0" />
                   )}
@@ -180,7 +180,7 @@ const GeneralSection = () => {
                     Smart Wait Groups
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid gap-4 sm:grid-cols-3">
                   {[
                     { label: "Low", range: "0–3", dot: "bg-emerald-500" },
                     { label: "Moderate", range: "4–9", dot: "bg-amber-500" },
@@ -251,7 +251,7 @@ const VisibilityCard = ({
         <div className="text-sm font-semibold text-foreground">{title}</div>
         <p className="text-xs text-muted-foreground">{description}</p>
       </div>
-      <div className="inline-flex w-fit items-center rounded-md bg-muted px-2.5 py-1 text-[11px] text-muted-foreground">
+      <div className="inline-flex w-fit flex-wrap items-center rounded-md bg-muted px-2.5 py-1 text-[11px] text-muted-foreground">
         Patient sees:&nbsp;<span className="font-medium text-foreground">{preview}</span>
       </div>
     </Label>
