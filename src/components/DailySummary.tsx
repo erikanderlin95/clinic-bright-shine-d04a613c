@@ -18,15 +18,15 @@ export const DailySummary = ({ summary }: DailySummaryProps) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-4">
       {stats.map((stat) => (
         <Card key={stat.title} className="min-w-0">
-          <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0 p-4 pb-2 sm:p-6 sm:pb-2">
+          <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0 p-3 pb-1 sm:p-6 sm:pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
             <stat.icon className={`h-4 w-4 shrink-0 ${stat.color}`} />
           </CardHeader>
-          <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-            <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+          <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stat.value}</div>
           </CardContent>
         </Card>
       ))}

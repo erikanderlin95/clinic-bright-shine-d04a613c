@@ -418,9 +418,9 @@ const Index = () => {
       <QueueHeader />
 
       <div className="flex">
-        <main className={`min-w-0 flex-1 p-4 sm:p-6 lg:p-8 ${selectedEntry ? "lg:mr-80" : ""} transition-all duration-300`}>
+        <main className={`min-w-0 flex-1 p-3 sm:p-6 lg:p-8 ${selectedEntry ? "lg:mr-80" : ""} transition-all duration-300`}>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="flex h-auto w-full flex-wrap justify-start sm:w-fit [&>button]:min-h-11 [&>button]:shrink-0">
+            <TabsList className="flex h-auto w-full flex-wrap justify-start sm:w-fit [&>button]:min-h-10 [&>button]:shrink-0 [&>button]:px-2 [&>button]:text-xs sm:[&>button]:min-h-11 sm:[&>button]:px-3 sm:[&>button]:text-sm">
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               
@@ -430,7 +430,7 @@ const Index = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="queue" className="space-y-5 mt-5">
+            <TabsContent value="queue" className="mt-3 space-y-3 sm:mt-5 sm:space-y-5">
               <NewJoinAlertBanner
                 newEntries={pendingAlerts}
                 onDismiss={() => setPendingAlerts([])}
@@ -441,7 +441,7 @@ const Index = () => {
                 }}
               />
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <h2 className="text-xl font-semibold text-foreground">{t("liveQueueView")}</h2>
+                <h2 className="text-lg sm:text-xl font-semibold text-foreground">{t("liveQueueView")}</h2>
                 <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
                   <Button
                     size="sm"
@@ -483,7 +483,7 @@ const Index = () => {
                 <DailySummary summary={dailySummary} />
 
                 <div>
-                  <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2 sm:mb-3 sm:gap-3">
                     <h3 className="text-lg font-semibold text-foreground">{t("liveQueueView")}</h3>
                     <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
                       <Plus className="h-4 w-4" />
@@ -511,7 +511,7 @@ const Index = () => {
 
 
 
-            <TabsContent value="automation" className="mt-5">
+            <TabsContent value="automation" className="mt-3 sm:mt-5">
               <AutomationPanel
                 businessType="healthcare"
                 onBusinessTypeChange={() => {}}
@@ -539,7 +539,7 @@ const Index = () => {
 
 
 
-            <TabsContent value="settings" className="mt-5">
+            <TabsContent value="settings" className="mt-3 sm:mt-5">
               <SettingsPanel />
             </TabsContent>
           </Tabs>

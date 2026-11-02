@@ -83,21 +83,21 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
 
   return (
     <>
-    <div className="space-y-3 md:hidden">
+    <div className="space-y-2 md:hidden">
       {entries.length === 0 ? (
         <p className="py-8 text-center text-muted-foreground">{t("noPatients")}</p>
       ) : entries.map(entry => (
-        <article key={entry.id} className={`rounded-lg border bg-card p-4 ${selectedEntry?.id === entry.id ? "border-primary" : "border-border"}`}>
-          <Button variant="ghost" onClick={() => onSelectEntry(entry)} className="h-auto w-full justify-between gap-3 whitespace-normal px-0 py-2 text-left">
-            <span className="text-lg font-semibold">{entry.queueNumber || "—"}</span>
+        <article key={entry.id} className={`rounded-lg border bg-card px-3 py-2 ${selectedEntry?.id === entry.id ? "border-primary" : "border-border"}`}>
+          <Button variant="ghost" onClick={() => onSelectEntry(entry)} className="min-h-10 h-auto w-full justify-between gap-3 whitespace-normal px-0 py-1 text-left">
+            <span className="text-base font-semibold">{entry.queueNumber || "—"}</span>
             <StatusBadge status={entry.status} />
           </Button>
-          <dl className="my-3 grid grid-cols-2 gap-3 text-sm">
+          <dl className="my-2 grid grid-cols-3 gap-2 text-xs">
             <div className="min-w-0"><dt className="text-muted-foreground">NRIC</dt><dd className="break-words font-mono">{entry.nric || "—"}</dd></div>
             <div><dt className="text-muted-foreground">{t("timeJoined")}</dt><dd>{entry.joinedAt}</dd></div>
             <div><dt className="text-muted-foreground">{t("checkInCode")}</dt><dd className="font-mono">{entry.checkInCode || "—"}</dd></div>
           </dl>
-          <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3">
+          <div className="flex flex-wrap items-center gap-2 border-t border-border pt-2">
             {getActions(entry)}
             {entry.previousStatus && <Button size="sm" variant="secondary" onClick={() => onRevertStatus(entry.id)} className="min-h-11 gap-1.5 text-xs"><RotateCcw className="h-3.5 w-3.5" />{t("undo")}</Button>}
           </div>

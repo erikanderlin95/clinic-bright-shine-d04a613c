@@ -43,16 +43,16 @@ export const SettingsPanel = () => {
   const visibleSections = sections.filter((s) => (s.id === "billing" ? isAdmin : true));
 
   return (
-    <div className="min-w-0 space-y-6 lg:space-y-8 lg:px-8">
+    <div className="min-w-0 space-y-4 sm:space-y-6 lg:space-y-8 lg:px-8">
       <div>
-        <h2 className="text-2xl font-semibold text-foreground tracking-tight">Settings</h2>
-        <p className="text-sm text-muted-foreground mt-2">
+        <h2 className="text-xl sm:text-2xl font-semibold text-foreground">Settings</h2>
+        <p className="text-sm text-muted-foreground mt-1 sm:mt-2">
           Manage your clinic, billing, payment, and activity log preferences.
         </p>
       </div>
 
       {/* Horizontal nav */}
-      <nav aria-label="Settings sections" className="flex flex-wrap gap-2 pb-2">
+      <nav aria-label="Settings sections" className="flex flex-wrap gap-1 sm:gap-2">
         {visibleSections.map((s) => {
           const Icon = s.icon;
           const isActive = active === s.id;
@@ -63,7 +63,7 @@ export const SettingsPanel = () => {
               aria-pressed={isActive}
               onClick={() => setActive(s.id)}
               className={cn(
-                "flex shrink-0 items-center gap-2 rounded-lg px-3 sm:px-5 min-h-11 text-sm font-medium whitespace-nowrap transition-colors",
+                "flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-lg px-2 sm:px-5 min-h-10 sm:min-h-11 text-xs sm:text-sm font-medium whitespace-nowrap transition-colors",
                 isActive
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -77,7 +77,7 @@ export const SettingsPanel = () => {
       </nav>
 
       {/* Content */}
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {active === "general" && <GeneralSection />}
         {active === "security" && <StaffManagementPanel view="security" activityLimit={5} />}
         {active === "billing" && isAdmin && <BillingSubscriptionPanel />}
@@ -114,10 +114,10 @@ const GeneralSection = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Summary */}
       <Card className="border-border/60 bg-card/60">
-        <CardContent className="px-4 py-5 sm:px-6">
+        <CardContent className="px-3 py-3 sm:px-6 sm:py-5">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {summaryItems.map((it) => (
               <div key={it.label} className="min-w-0">
@@ -225,7 +225,7 @@ const VisibilityCard = ({
     <Label
       htmlFor={`qv-${value}`}
       className={cn(
-        "relative flex cursor-pointer flex-col gap-3 rounded-xl border bg-card p-5 transition-all",
+        "relative flex cursor-pointer flex-col gap-2 sm:gap-3 rounded-lg sm:rounded-xl border bg-card p-3 sm:p-5 transition-all",
         selected
           ? "border-primary ring-2 ring-primary/20 shadow-sm"
           : "border-border/60 hover:border-border hover:bg-muted/30"

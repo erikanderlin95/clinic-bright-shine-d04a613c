@@ -35,14 +35,14 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
 
   return (
     <Card className="min-h-full min-w-0 border-l">
-      <CardHeader className="sticky top-0 z-10 flex flex-row items-center justify-between space-y-0 bg-card pb-4">
+      <CardHeader className="sticky top-0 z-10 flex flex-row items-center justify-between space-y-0 bg-card p-3 sm:p-6 sm:pb-4">
         <CardTitle className="text-lg">{t("patientDetails")}</CardTitle>
         <Button variant="ghost" size="icon" onClick={onClose} aria-label={lang === "zh" ? "关闭" : "Close"}>
           <X className="h-4 w-4" />
         </Button>
       </CardHeader>
-      <CardContent className="min-w-0 space-y-6 [&_p]:break-words">
-        <div className="space-y-4">
+      <CardContent className="min-w-0 p-3 pt-0 sm:p-6 sm:pt-0 space-y-4 sm:space-y-6 [&_p]:break-words">
+        <div className="space-y-2 sm:space-y-4">
           <div>
             <Label className="text-xs text-muted-foreground">{t("queueNumber")}</Label>
             <p className="text-2xl font-bold text-foreground">{entry.queueNumber}</p>
