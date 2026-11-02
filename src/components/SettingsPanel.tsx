@@ -20,19 +20,17 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { StaffManagementPanel } from "./StaffManagementPanel";
 import { BillingSubscriptionPanel } from "./BillingSubscriptionPanel";
-import { PaymentSubscriptionPanel } from "./PaymentSubscriptionPanel";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
 import { getQueueVisibilityMode, setQueueVisibilityModeValue, type QueueVisibilityMode } from "@/lib/queue-visibility";
 export { getQueueVisibilityMode, setQueueVisibilityModeValue, QUEUE_MODE_EVENT, type QueueVisibilityMode } from "@/lib/queue-visibility";
 
-type SettingsSection = "general" | "billing" | "payment" | "security";
+type SettingsSection = "general" | "billing" | "security";
 
 const sections: { id: SettingsSection; label: string; icon: typeof SettingsIcon }[] = [
   { id: "general", label: "General", icon: SettingsIcon },
-  { id: "billing", label: "Billing", icon: CreditCard },
-  { id: "payment", label: "Payment & Subscription", icon: CreditCard },
+  { id: "billing", label: "Billing & Subscription", icon: CreditCard },
   { id: "security", label: "Activity Log", icon: Activity },
 ];
 
@@ -47,7 +45,7 @@ export const SettingsPanel = () => {
       <div>
         <h2 className="text-xl sm:text-2xl font-semibold text-foreground">Settings</h2>
         <p className="text-sm text-muted-foreground mt-1 sm:mt-2">
-          Manage your clinic, billing, payment, and activity log preferences.
+          Manage your clinic, billing and subscription, and activity log preferences.
         </p>
       </div>
 
@@ -81,7 +79,6 @@ export const SettingsPanel = () => {
         {active === "general" && <GeneralSection />}
         {active === "security" && <StaffManagementPanel view="security" activityLimit={5} />}
         {active === "billing" && isAdmin && <BillingSubscriptionPanel />}
-        {active === "payment" && <PaymentSubscriptionPanel />}
       </div>
     </div>
   );
