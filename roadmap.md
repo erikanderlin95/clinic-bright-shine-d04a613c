@@ -1,2 +1,2 @@
 - [x] Agent integrations (MCP)
-- [ ] Staff menu: Delete Account below Enable Account for disabled users
+- [x] Staff menu: Delete Account below Enable Account for disabled users
