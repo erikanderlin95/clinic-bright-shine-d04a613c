@@ -3,3 +3,4 @@
 - [x] Show the full 30-day walk-in history without expanding
 - [x] Remove the Performance tab
 - [x] Set Live Queue View as recommended and default, and verify
+- [ ] Rename Payment & Subscription and add payment details plus three plan tiers
