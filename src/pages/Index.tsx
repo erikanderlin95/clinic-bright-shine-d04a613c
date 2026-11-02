@@ -420,7 +420,7 @@ const Index = () => {
       <div className="flex">
         <main className={`min-w-0 flex-1 p-4 sm:p-6 lg:p-8 ${selectedEntry ? "lg:mr-80" : ""} transition-all duration-300`}>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="flex h-auto w-full justify-start overflow-x-auto sm:w-fit [&>button]:min-h-11 [&>button]:shrink-0">
+            <TabsList className="flex h-auto w-full flex-wrap justify-start sm:w-fit [&>button]:min-h-11 [&>button]:shrink-0">
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               

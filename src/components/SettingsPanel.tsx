@@ -52,7 +52,7 @@ export const SettingsPanel = () => {
       </div>
 
       {/* Horizontal nav */}
-      <nav aria-label="Settings sections" className="flex gap-2 overflow-x-auto pb-2">
+      <nav aria-label="Settings sections" className="flex flex-wrap gap-2 pb-2">
         {visibleSections.map((s) => {
           const Icon = s.icon;
           const isActive = active === s.id;
