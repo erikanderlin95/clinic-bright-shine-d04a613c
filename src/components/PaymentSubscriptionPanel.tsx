@@ -7,8 +7,8 @@ import { useI18n } from "@/hooks/useI18n";
 import { currentSubscriptionPlan, subscriptionPlans } from "@/lib/subscription-plans";
 
 export const PaymentSubscriptionPanel = () => {
-  const { language } = useI18n();
-  const zh = language === "zh";
+  const { lang } = useI18n();
+  const zh = lang === "zh";
   const [dialog, setDialog] = useState<string | null>(null);
   const current = subscriptionPlans.find(plan => plan.id === currentSubscriptionPlan);
   return (
