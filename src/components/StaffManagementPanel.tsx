@@ -271,10 +271,6 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
   const confirmDelete = () => {
     if (!deleteTarget) return;
     // Guardrails — UI-level enforcement (server should re-check).
-    if (currentRole !== "Admin") {
-      toast({ title: "Not allowed", description: "Only an Admin can delete accounts.", variant: "destructive" });
-      return;
-    }
     if (deleteTarget.role === "Admin") {
       toast({ title: "Not allowed", description: "Admin accounts cannot be deleted.", variant: "destructive" });
       return;
@@ -379,10 +375,7 @@ export const StaffManagementPanel = ({ view = "all", activityLimit }: StaffManag
                     {(() => {
                       // Admin viewer cannot disable or delete another Admin.
                       const canDisable = !(currentRole === "Admin" && member.role === "Admin");
-                      const canDelete =
-                        currentRole === "Admin" &&
-                        !member.active &&
-                        member.role !== "Admin";
+                      const canDelete = !member.active && member.role !== "Admin";
                       return (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
