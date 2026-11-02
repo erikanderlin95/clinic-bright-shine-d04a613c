@@ -18,7 +18,6 @@ import { useEffect } from "react";
 import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPanel";
 
 import { DoctorProfilesPanel } from "@/components/DoctorProfilesPanel";
-import { PerformancePanel } from "@/components/PerformancePanel";
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { Button } from "@/components/ui/button";
@@ -43,7 +42,7 @@ const Index = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
   const [verifyEntry, setVerifyEntry] = useState<QueueEntry | null>(null);
-  const [queueMode, setQueueMode] = useState<QueueVisibilityMode>("smart");
+  const [queueMode, setQueueMode] = useState<QueueVisibilityMode>(getQueueVisibilityMode);
   const [activeTab, setActiveTab] = useState<string>("queue");
   const [pendingAlerts, setPendingAlerts] = useState<QueueEntry[]>([]);
   const knownIdsRef = useRef<Set<string> | null>(null);
@@ -325,6 +324,7 @@ const Index = () => {
         minute: "2-digit",
         hour12: false,
       }),
+      visitDate: new Date().toLocaleDateString("en-CA"),
       checkInCode: data.patientType === "non-digital" ? undefined : generateCheckInCode(),
       patientType: data.patientType || "walk-in",
       ...data,
@@ -423,7 +423,6 @@ const Index = () => {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList>
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
-              <TabsTrigger value="performance">Performance</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               
               <TabsTrigger value="profiles">{t("doctorProfiles")}</TabsTrigger>
@@ -512,9 +511,6 @@ const Index = () => {
 
 
 
-            <TabsContent value="performance" className="mt-5">
-              <PerformancePanel />
-            </TabsContent>
 
 
             <TabsContent value="automation" className="mt-5">

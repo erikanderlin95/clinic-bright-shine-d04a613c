@@ -15,6 +15,7 @@ export interface QueueEntry {
   status: QueueStatus;
   previousStatus?: QueueStatus;
   joinedAt: string;
+  visitDate?: string;
   name?: string;
   mobile: string;
   email?: string;

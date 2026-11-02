@@ -21,7 +21,7 @@ interface QueueTableProps {
 export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStatus, onRevertStatus, onVerifyArrival, onNotifyPatient }: QueueTableProps) => {
   const { t } = useI18n();
   
-  const [mode, setMode] = useState<QueueVisibilityMode>("smart");
+  const [mode, setMode] = useState<QueueVisibilityMode>(getQueueVisibilityMode);
 
   useEffect(() => {
     setMode(getQueueVisibilityMode());
