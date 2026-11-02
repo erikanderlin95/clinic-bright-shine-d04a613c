@@ -20,6 +20,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { StaffManagementPanel } from "./StaffManagementPanel";
 import { BillingSubscriptionPanel } from "./BillingSubscriptionPanel";
+import { PaymentSubscriptionPanel } from "./PaymentSubscriptionPanel";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +32,7 @@ type SettingsSection = "general" | "billing" | "payment" | "security";
 const sections: { id: SettingsSection; label: string; icon: typeof SettingsIcon }[] = [
   { id: "general", label: "General", icon: SettingsIcon },
   { id: "billing", label: "Billing", icon: CreditCard },
-  { id: "payment", label: "Payment", icon: CreditCard },
+  { id: "payment", label: "Payment & Subscription", icon: CreditCard },
   { id: "security", label: "Activity Log", icon: Activity },
 ];
 
@@ -80,15 +81,7 @@ export const SettingsPanel = () => {
         {active === "general" && <GeneralSection />}
         {active === "security" && <StaffManagementPanel view="security" activityLimit={5} />}
         {active === "billing" && isAdmin && <BillingSubscriptionPanel />}
-        {active === "payment" && (
-          <section className="space-y-6" aria-labelledby="payment-heading">
-            <h3 id="payment-heading" className="text-lg font-semibold text-foreground">Payment</h3>
-            <div className="flex items-center gap-4 border-y border-border py-8 text-muted-foreground">
-              <CreditCard className="h-6 w-6 shrink-0" />
-              <p className="text-sm">No payment details added.</p>
-            </div>
-          </section>
-        )}
+        {active === "payment" && <PaymentSubscriptionPanel />}
       </div>
     </div>
   );
@@ -115,7 +108,7 @@ const GeneralSection = () => {
 
   const summaryItems = [
     { label: "Clinic Name", value: "ClynicQ Demo Clinic", icon: Building2 },
-    { label: "Current Plan", value: "Professional" },
+    { label: "Current Plan", value: "Basic" },
     { label: "Stripe Status", value: "Active", tone: "ok" as const },
     { label: "Last Sync", value: "2 min ago" },
   ];
