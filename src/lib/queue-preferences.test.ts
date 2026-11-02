@@ -1,13 +1,14 @@
-import { describe, expect, test } from "bun:test";
+import { describe, test } from "node:test";
+import { strict as assert } from "node:assert";
 import { resolveQueueVisibilityMode } from "./queue-visibility";
 import { getWalkinRecords } from "./walkin-records";
 import type { QueueEntry } from "../types/queue";
 
 describe("Queue preferences", () => {
   test("Live Queue is the default while explicit Smart Wait is preserved", () => {
-    expect(resolveQueueVisibilityMode(null)).toBe("live");
-    expect(resolveQueueVisibilityMode("live")).toBe("live");
-    expect(resolveQueueVisibilityMode("smart")).toBe("smart");
+    assert.equal(resolveQueueVisibilityMode(null), "live");
+    assert.equal(resolveQueueVisibilityMode("live"), "live");
+    assert.equal(resolveQueueVisibilityMode("smart"), "smart");
   });
   test("all terminal records across the last 30 calendar days are included together", () => {
     const entry = (id: string, visitDate: string, status: QueueEntry["status"] = "completed"): QueueEntry => ({
@@ -21,6 +22,6 @@ describe("Queue preferences", () => {
       entry("future", "2026-11-03"),
       entry("active", "2026-11-02", "waiting"),
     ], new Date(2026, 10, 2));
-    expect(records.map(({ id }) => id)).toEqual(["today", "middle", "oldest"]);
+    assert.deepEqual(records.map(({ id }) => id), ["today", "middle", "oldest"]);
   });
 });
