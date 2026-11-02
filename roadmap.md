@@ -5,3 +5,4 @@
 - [x] Set Live Queue View as recommended and default, and verify
 - [x] Rename Payment & Subscription and add payment details plus three plan tiers
 - [x] Adapt dashboard and settings for phones and verify mobile workflows
+- [ ] Tighten mobile dashboard spacing and verify phone workflows
