@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -26,12 +27,13 @@ import { cn } from "@/lib/utils";
 import { getQueueVisibilityMode, setQueueVisibilityModeValue, type QueueVisibilityMode } from "@/lib/queue-visibility";
 export { getQueueVisibilityMode, setQueueVisibilityModeValue, QUEUE_MODE_EVENT, type QueueVisibilityMode } from "@/lib/queue-visibility";
 
-type SettingsSection = "general" | "team" | "billing" | "security";
+type SettingsSection = "general" | "team" | "billing" | "payment" | "security";
 
 const sections: { id: SettingsSection; label: string; icon: typeof SettingsIcon }[] = [
   { id: "general", label: "General", icon: SettingsIcon },
   { id: "team", label: "Team", icon: Users },
   { id: "billing", label: "Billing", icon: CreditCard },
+  { id: "payment", label: "Payment", icon: CreditCard },
   { id: "security", label: "Activity Log", icon: Activity },
 ];
 
@@ -56,8 +58,10 @@ export const SettingsPanel = () => {
           const Icon = s.icon;
           const isActive = active === s.id;
           return (
-            <button
+            <Button
               key={s.id}
+              variant={isActive ? "default" : "ghost"}
+              aria-pressed={isActive}
               onClick={() => setActive(s.id)}
               className={cn(
                 "flex items-center gap-2 rounded-lg px-5 h-10 text-sm font-medium whitespace-nowrap transition-colors",
@@ -68,7 +72,7 @@ export const SettingsPanel = () => {
             >
               <Icon className="h-4 w-4" />
               {s.label}
-            </button>
+            </Button>
           );
         })}
       </nav>
@@ -79,6 +83,15 @@ export const SettingsPanel = () => {
         {active === "team" && <StaffManagementPanel view="team" />}
         {active === "security" && <StaffManagementPanel view="security" activityLimit={5} />}
         {active === "billing" && isAdmin && <BillingSubscriptionPanel />}
+        {active === "payment" && (
+          <section className="space-y-6" aria-labelledby="payment-heading">
+            <h3 id="payment-heading" className="text-lg font-semibold text-foreground">Payment</h3>
+            <div className="flex items-center gap-4 border-y border-border py-8 text-muted-foreground">
+              <CreditCard className="h-6 w-6 shrink-0" />
+              <p className="text-sm">No payment details added.</p>
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
