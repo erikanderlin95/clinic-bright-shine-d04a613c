@@ -12,12 +12,12 @@ export const PaymentSubscriptionPanel = () => {
   const [dialog, setDialog] = useState<string | null>(null);
   const current = subscriptionPlans.find(plan => plan.id === currentSubscriptionPlan);
   return (
-    <section className="space-y-8" aria-labelledby="payment-heading">
+    <section className="space-y-4 sm:space-y-8" aria-labelledby="payment-heading">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <h3 id="payment-heading" className="text-xl font-semibold text-foreground">{zh ? "付款与订阅" : "Payment & Subscription"}</h3>
         <Badge variant="secondary">{zh ? "演示" : "Demo"}</Badge>
       </div>
-      <div className="flex items-center justify-between gap-6 flex-wrap border-y border-border py-7">
+      <div className="flex items-center justify-between gap-3 sm:gap-6 flex-wrap border-y border-border py-4 sm:py-7">
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">{zh ? "当前计划" : "Current Plan"}</p>
           <p className="text-2xl font-semibold text-foreground">{current?.name}</p>
@@ -36,13 +36,13 @@ export const PaymentSubscriptionPanel = () => {
           <CreditCard className="mr-2 h-4 w-4 shrink-0" />{zh ? "更新付款详情" : "Update Payment Details"}
         </Button>
       </div>
-      <div className="space-y-4 border-t border-border pt-7">
+      <div className="space-y-3 sm:space-y-4 border-t border-border pt-4 sm:pt-7">
         <h4 className="text-base font-semibold text-foreground">{zh ? "订阅计划" : "Subscription Plans"}</h4>
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 sm:gap-4 lg:grid-cols-3">
           {subscriptionPlans.map(plan => {
             const isCurrent = plan.id === currentSubscriptionPlan;
             return (
-              <article key={plan.id} className={`min-w-0 rounded-lg border p-4 sm:p-6 flex flex-col gap-5 ${isCurrent ? "border-primary bg-primary/5" : "border-border bg-card"}`}>
+              <article key={plan.id} className={`min-w-0 rounded-lg border p-3 sm:p-6 flex flex-col gap-3 sm:gap-5 ${isCurrent ? "border-primary bg-primary/5" : "border-border bg-card"}`}>
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <h5 className="text-lg font-semibold text-foreground">{plan.name}</h5>
                   {isCurrent && <Badge variant="secondary">{zh ? "当前" : "Current"}</Badge>}

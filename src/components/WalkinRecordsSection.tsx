@@ -43,9 +43,9 @@ export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => 
 
   return (
     <Card className="border-primary/20 bg-gradient-to-br from-card to-card/50">
-      <CardHeader className="border-b border-border/50 bg-muted/30 p-4 sm:p-6">
+      <CardHeader className="border-b border-border/50 bg-muted/30 p-3 sm:p-6">
         <div className="flex items-center justify-between gap-3 flex-wrap">
-          <CardTitle className="flex items-center gap-2 text-foreground">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-2xl text-foreground">
             <Users className="h-5 w-5" />
             {t("walkinRecordsTitle")}
           </CardTitle>
@@ -57,7 +57,7 @@ export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => 
           </div>
         </div>
       </CardHeader>
-        <CardContent className="p-4 sm:p-6">
+        <CardContent className="p-2 sm:p-6">
           <div className="rounded-lg border border-border bg-card shadow-sm">
             <Table className="min-w-[700px]">
               <TableHeader>
