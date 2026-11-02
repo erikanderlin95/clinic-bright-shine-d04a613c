@@ -50,7 +50,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
           size="sm"
           variant="outline"
           onClick={(e) => { e.stopPropagation(); setCompleteEntryId(entry.id); setCompleteConfirmOpen(true); }}
-          className="gap-1.5 h-8 text-xs"
+          className="gap-1.5 min-h-11 sm:min-h-8 text-xs"
         >
           <CheckCircle className="h-3.5 w-3.5" />
           {t("completed")}
@@ -59,11 +59,11 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
     }
 
     return (
-      <div className="flex gap-1.5">
+      <div className="flex flex-wrap gap-2 sm:gap-1.5">
         <Button
           size="sm"
           onClick={(e) => { e.stopPropagation(); onVerifyArrival?.(entry); }}
-          className="gap-1.5 h-8 text-xs"
+          className="gap-1.5 min-h-11 sm:min-h-8 text-xs"
         >
           <ShieldCheck className="h-3.5 w-3.5" />
           {t("verifyAndArrive")}
@@ -72,7 +72,7 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
           size="sm"
           variant="outline"
           onClick={(e) => { e.stopPropagation(); onUpdateStatus(entry.id, "no-show"); }}
-          className="gap-1.5 h-8 text-xs"
+          className="gap-1.5 min-h-11 sm:min-h-8 text-xs"
         >
           <UserX className="h-3.5 w-3.5" />
           {t("noShow")}
@@ -83,8 +83,29 @@ export const QueueTable = ({ entries, onSelectEntry, selectedEntry, onUpdateStat
 
   return (
     <>
-    <div className="rounded-lg border border-border bg-card">
-      <Table>
+    <div className="space-y-3 md:hidden">
+      {entries.length === 0 ? (
+        <p className="py-8 text-center text-muted-foreground">{t("noPatients")}</p>
+      ) : entries.map(entry => (
+        <article key={entry.id} className={`rounded-lg border bg-card p-4 ${selectedEntry?.id === entry.id ? "border-primary" : "border-border"}`}>
+          <Button variant="ghost" onClick={() => onSelectEntry(entry)} className="h-auto w-full justify-between gap-3 whitespace-normal px-0 py-2 text-left">
+            <span className="text-lg font-semibold">{entry.queueNumber || "—"}</span>
+            <StatusBadge status={entry.status} />
+          </Button>
+          <dl className="my-3 grid grid-cols-2 gap-3 text-sm">
+            <div className="min-w-0"><dt className="text-muted-foreground">NRIC</dt><dd className="break-words font-mono">{entry.nric || "—"}</dd></div>
+            <div><dt className="text-muted-foreground">{t("timeJoined")}</dt><dd>{entry.joinedAt}</dd></div>
+            <div><dt className="text-muted-foreground">{t("checkInCode")}</dt><dd className="font-mono">{entry.checkInCode || "—"}</dd></div>
+          </dl>
+          <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3">
+            {getActions(entry)}
+            {entry.previousStatus && <Button size="sm" variant="secondary" onClick={() => onRevertStatus(entry.id)} className="min-h-11 gap-1.5 text-xs"><RotateCcw className="h-3.5 w-3.5" />{t("undo")}</Button>}
+          </div>
+        </article>
+      ))}
+    </div>
+    <div className="hidden rounded-lg border border-border bg-card md:block">
+      <Table className="min-w-[780px]">
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">{t("queueNo")}</TableHead>

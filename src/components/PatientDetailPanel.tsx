@@ -19,7 +19,7 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
   const [notes, setNotes] = useState(entry.notes || "");
   const [messageOpen, setMessageOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   const handleSaveNotes = () => {
     onUpdateNotes(entry.id, notes);
@@ -34,14 +34,14 @@ export const PatientDetailPanel = ({ entry, onClose, onUpdateNotes }: PatientDet
 
 
   return (
-    <Card className="h-full border-l">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+    <Card className="min-h-full min-w-0 border-l">
+      <CardHeader className="sticky top-0 z-10 flex flex-row items-center justify-between space-y-0 bg-card pb-4">
         <CardTitle className="text-lg">{t("patientDetails")}</CardTitle>
-        <Button variant="ghost" size="icon" onClick={onClose}>
+        <Button variant="ghost" size="icon" onClick={onClose} aria-label={lang === "zh" ? "关闭" : "Close"}>
           <X className="h-4 w-4" />
         </Button>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="min-w-0 space-y-6 [&_p]:break-words">
         <div className="space-y-4">
           <div>
             <Label className="text-xs text-muted-foreground">{t("queueNumber")}</Label>

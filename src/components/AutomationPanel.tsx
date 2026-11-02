@@ -307,7 +307,7 @@ export const AutomationPanel = ({
   const selectedCount = selectedPatientIds.size;
 
   return (
-    <div className="max-w-[1455px] space-y-6">
+    <div className="w-full min-w-0 max-w-[1455px] space-y-6">
       {/* HERO HEADER */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 rounded-2xl bg-gradient-to-br from-teal-50 via-white to-white p-6 shadow-sm">
         <div className="space-y-1.5">
@@ -321,7 +321,7 @@ export const AutomationPanel = ({
           </p>
         </div>
         <div
-          className={`flex items-center gap-3 rounded-xl px-4 py-3 shadow-sm ${
+          className={`flex flex-wrap items-center gap-3 rounded-xl px-4 py-3 shadow-sm ${
             clinicIntegrationActive ? "bg-emerald-50" : "bg-amber-50"
           }`}
         >
@@ -350,16 +350,16 @@ export const AutomationPanel = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 items-start">
+      <div className="grid min-w-0 grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-6 items-start">
         {/* LEFT — Broadcast Message */}
-        <Card className="rounded-2xl border-0 shadow-sm">
-          <CardHeader className="px-6 pt-6 pb-2">
+        <Card className="min-w-0 rounded-2xl border-0 shadow-sm">
+          <CardHeader className="px-4 sm:px-6 pt-6 pb-2">
             <CardTitle className="text-[20px] font-semibold tracking-tight">Broadcast Message</CardTitle>
             <CardDescription className="text-[14px]">
               Select patients and send an operational update.
             </CardDescription>
           </CardHeader>
-          <CardContent className="px-6 pb-6 pt-4 space-y-6">
+          <CardContent className="px-4 sm:px-6 pb-6 pt-4 space-y-6">
             {/* Segment switcher */}
             <div className="flex flex-col sm:flex-row gap-2 rounded-xl bg-muted/50 p-1.5">
               <button
@@ -423,7 +423,7 @@ export const AutomationPanel = ({
                   </div>
                 </>
               )}
-              <div className="ml-auto flex items-center gap-2">
+              <div className="sm:ml-auto flex flex-wrap items-center gap-2">
                 {filteredAudience.length > 0 && (
                   <button
                     type="button"
@@ -471,13 +471,13 @@ export const AutomationPanel = ({
                       <button
                         type="button"
                         onClick={() => onSelectPatient?.(patient.id)}
-                        className="flex flex-1 items-center gap-3 min-w-0 text-left cursor-pointer rounded-lg -m-1 p-1 hover:bg-white/60 transition-colors"
+                        className="flex flex-1 flex-wrap items-center gap-3 min-w-0 text-left cursor-pointer rounded-lg -m-1 p-1 hover:bg-white/60 transition-colors"
                       >
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-100 text-[13px] font-semibold text-teal-700">
                           {getInitials(patient.name)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-[15px] font-semibold text-foreground truncate">
+                          <div className="text-[15px] font-semibold text-foreground break-words">
                             {patient.name || "—"}
                           </div>
                           <div className="text-[13px] text-muted-foreground">
@@ -613,11 +613,11 @@ export const AutomationPanel = ({
             </div>
 
             {/* Primary CTA */}
-            <div className="sticky bottom-0 -mx-6 -mb-6 px-6 py-4 bg-gradient-to-t from-white via-white to-white/80 backdrop-blur">
+            <div className="sticky bottom-0 -mx-4 sm:-mx-6 -mb-6 px-4 sm:px-6 py-4 bg-gradient-to-t from-white via-white to-white/80 backdrop-blur">
               <Button
                 onClick={handleSendBroadcast}
                 disabled={selectedCount === 0}
-                className="w-full gap-2 h-14 rounded-2xl text-[16px] font-semibold bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg shadow-teal-500/30 disabled:opacity-50 disabled:shadow-none"
+                className="w-full gap-2 h-auto min-h-14 whitespace-normal py-3 rounded-2xl text-[16px] font-semibold bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg shadow-teal-500/30 disabled:opacity-50 disabled:shadow-none"
               >
                 <Send className="h-5 w-5" />
                 Send Message to {selectedCount} {selectedCount === 1 ? "Patient" : "Patients"}
@@ -629,8 +629,8 @@ export const AutomationPanel = ({
         {/* RIGHT — Automation Log + Templates */}
         <div className="space-y-6">
           {/* Automation Log */}
-          <Card className="rounded-2xl border-0 shadow-sm">
-            <CardHeader className="px-6 pt-6 pb-2 flex flex-row items-start justify-between space-y-0">
+          <Card className="min-w-0 rounded-2xl border-0 shadow-sm">
+            <CardHeader className="px-4 sm:px-6 pt-6 pb-2 flex flex-row flex-wrap items-start justify-between gap-2 space-y-0">
               <div>
                 <CardTitle className="text-[18px] font-semibold tracking-tight">Automation Log</CardTitle>
                 <CardDescription className="text-[14px]">Recent automated actions</CardDescription>
@@ -639,7 +639,7 @@ export const AutomationPanel = ({
                 View All
               </Button>
             </CardHeader>
-            <CardContent className="px-6 pb-6 pt-4">
+            <CardContent className="px-4 sm:px-6 pb-6 pt-4">
               {automationLog.length === 0 ? (
                 <div className="flex flex-col items-center justify-center gap-2 rounded-xl bg-muted/30 py-10 text-center">
                   <Inbox className="h-8 w-8 text-muted-foreground/60" />
@@ -667,8 +667,8 @@ export const AutomationPanel = ({
           </Card>
 
           {/* Message Templates */}
-          <Card className="rounded-2xl border-0 shadow-sm">
-            <CardHeader className="px-6 pt-6 pb-2 flex flex-row items-start justify-between space-y-0">
+          <Card className="min-w-0 rounded-2xl border-0 shadow-sm">
+            <CardHeader className="px-4 sm:px-6 pt-6 pb-2 flex flex-row flex-wrap items-start justify-between gap-2 space-y-0">
               <div>
                 <CardTitle className="text-[18px] font-semibold tracking-tight">Message Templates</CardTitle>
                 <CardDescription className="text-[14px]">Save reusable operational messages</CardDescription>
@@ -677,7 +677,7 @@ export const AutomationPanel = ({
                 {templates.length} / {MAX_TEMPLATES} Used
               </span>
             </CardHeader>
-            <CardContent className="px-6 pb-6 pt-4 space-y-5">
+            <CardContent className="px-4 sm:px-6 pb-6 pt-4 space-y-5">
               {/* Saved templates */}
               <div className="rounded-xl bg-muted/30 p-4 space-y-3">
                 <Label className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground">
@@ -705,11 +705,11 @@ export const AutomationPanel = ({
                     </Select>
 
                     {editingId && (
-                      <div className="flex items-center gap-2 p-3 rounded-xl border bg-white">
+                      <div className="flex flex-wrap items-center gap-2 p-3 rounded-xl border bg-white">
                         <Input
                           value={editingValue}
                           onChange={(e) => setEditingValue(e.target.value)}
-                          className="flex-1 h-10 rounded-lg text-[15px]"
+                          className="w-full sm:w-auto min-w-0 flex-1 basis-full sm:basis-auto h-10 rounded-lg text-[15px]"
                           maxLength={200}
                           autoFocus
                         />
@@ -741,7 +741,7 @@ export const AutomationPanel = ({
                     </Label>
                     <span className="text-[12px] text-muted-foreground">{newTemplate.length}/200</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       placeholder="Type a new message..."
                       value={newTemplate}

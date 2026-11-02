@@ -418,9 +418,9 @@ const Index = () => {
       <QueueHeader />
 
       <div className="flex">
-        <main className={`flex-1 p-8 ${selectedEntry ? "mr-80" : ""} transition-all duration-300`}>
+        <main className={`min-w-0 flex-1 p-4 sm:p-6 lg:p-8 ${selectedEntry ? "lg:mr-80" : ""} transition-all duration-300`}>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList>
+            <TabsList className="flex h-auto w-full flex-wrap justify-start sm:w-fit [&>button]:min-h-11 [&>button]:shrink-0">
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
               <TabsTrigger value="automation">{t("automation")}</TabsTrigger>
               
@@ -442,7 +442,7 @@ const Index = () => {
               />
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 <h2 className="text-xl font-semibold text-foreground">{t("liveQueueView")}</h2>
-                <div className="flex items-center gap-2">
+                <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
                   <Button
                     size="sm"
                     variant="outline"
@@ -483,7 +483,7 @@ const Index = () => {
                 <DailySummary summary={dailySummary} />
 
                 <div>
-                  <div className="mb-3 flex items-center justify-between">
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                     <h3 className="text-lg font-semibold text-foreground">{t("liveQueueView")}</h3>
                     <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
                       <Plus className="h-4 w-4" />
@@ -546,7 +546,7 @@ const Index = () => {
         </main>
 
         {selectedEntry && (
-          <aside className="fixed right-0 top-0 h-screen w-80 overflow-y-auto bg-card">
+          <aside aria-label="Patient details" className="fixed inset-0 z-40 h-dvh w-full overflow-y-auto bg-card lg:left-auto lg:w-80">
             <PatientDetailPanel
               entry={selectedEntry}
               onClose={() => setSelectedEntry(null)}

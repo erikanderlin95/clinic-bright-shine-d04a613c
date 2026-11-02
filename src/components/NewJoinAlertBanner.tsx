@@ -17,13 +17,12 @@ export const NewJoinAlertBanner = ({ newEntries, onDismiss, onOpenQueue }: NewJo
     <div
       role="alert"
       aria-live="assertive"
-      className="sticky top-2 z-40 flex items-center gap-3 rounded-lg border-2 border-primary bg-primary/10 p-4 shadow-lg animate-pulse-slow"
-      style={{ animation: "pulse 2s ease-in-out infinite" }}
+      className="sticky top-2 z-30 flex flex-wrap items-center gap-3 rounded-lg border-2 border-primary bg-primary/10 p-4 shadow-lg motion-safe:animate-pulse"
     >
       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
         <BellRing className="h-6 w-6" />
       </div>
-      <div className="flex-1">
+      <div className="min-w-0 flex-1 break-words">
         <div className="text-base font-semibold text-foreground">
           {count === 1
             ? `New patient joined the queue — ${latest.queueNumber}`

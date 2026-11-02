@@ -42,7 +42,7 @@ export const PaymentSubscriptionPanel = () => {
           {subscriptionPlans.map(plan => {
             const isCurrent = plan.id === currentSubscriptionPlan;
             return (
-              <article key={plan.id} className={`rounded-lg border p-6 flex flex-col gap-5 ${isCurrent ? "border-primary bg-primary/5" : "border-border bg-card"}`}>
+              <article key={plan.id} className={`min-w-0 rounded-lg border p-4 sm:p-6 flex flex-col gap-5 ${isCurrent ? "border-primary bg-primary/5" : "border-border bg-card"}`}>
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <h5 className="text-lg font-semibold text-foreground">{plan.name}</h5>
                   {isCurrent && <Badge variant="secondary">{zh ? "当前" : "Current"}</Badge>}
