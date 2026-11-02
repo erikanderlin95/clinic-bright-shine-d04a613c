@@ -11,7 +11,6 @@ import {
   Gauge,
   Info,
   Settings as SettingsIcon,
-  Users,
   CreditCard,
   CheckCircle2,
   Building2,
@@ -27,11 +26,10 @@ import { cn } from "@/lib/utils";
 import { getQueueVisibilityMode, setQueueVisibilityModeValue, type QueueVisibilityMode } from "@/lib/queue-visibility";
 export { getQueueVisibilityMode, setQueueVisibilityModeValue, QUEUE_MODE_EVENT, type QueueVisibilityMode } from "@/lib/queue-visibility";
 
-type SettingsSection = "general" | "team" | "billing" | "payment" | "security";
+type SettingsSection = "general" | "billing" | "payment" | "security";
 
 const sections: { id: SettingsSection; label: string; icon: typeof SettingsIcon }[] = [
   { id: "general", label: "General", icon: SettingsIcon },
-  { id: "team", label: "Team", icon: Users },
   { id: "billing", label: "Billing", icon: CreditCard },
   { id: "payment", label: "Payment", icon: CreditCard },
   { id: "security", label: "Activity Log", icon: Activity },
@@ -48,7 +46,7 @@ export const SettingsPanel = () => {
       <div>
         <h2 className="text-2xl font-semibold text-foreground tracking-tight">Settings</h2>
         <p className="text-sm text-muted-foreground mt-2">
-          Manage your clinic, team, billing, and activity log preferences.
+          Manage your clinic, billing, payment, and activity log preferences.
         </p>
       </div>
 
@@ -80,7 +78,6 @@ export const SettingsPanel = () => {
       {/* Content */}
       <div className="space-y-6">
         {active === "general" && <GeneralSection />}
-        {active === "team" && <StaffManagementPanel view="team" />}
         {active === "security" && <StaffManagementPanel view="security" activityLimit={5} />}
         {active === "billing" && isAdmin && <BillingSubscriptionPanel />}
         {active === "payment" && (
