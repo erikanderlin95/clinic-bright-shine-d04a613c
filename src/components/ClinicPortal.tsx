@@ -142,7 +142,9 @@ export function ClinicPortal() {
       </main>
 
       <Dialog open={confirmQueue} onOpenChange={setConfirmQueue}>
-        <DialogContent className="max-w-sm"><DialogHeader><DialogTitle>{queue.closed ? text("Open Queue?", "开放队列？") : text("Close Queue?", "关闭队列？")}</DialogTitle><DialogDescription>{text("This saves the status in this browser only. The clinic’s real queue will not change.", "这仅将状态保存在此浏览器。不会更改诊所的实际队列。")}</DialogDescription></DialogHeader><DialogFooter><Button variant="outline" onClick={() => setConfirmQueue(false)}>{text("Cancel", "取消")}</Button><Button variant={queue.closed ? "default" : "destructive"} onClick={updateDemoQueue}>{text("Confirm", "确认")}</Button></DialogFooter></DialogContent>
+        <DialogContent className="max-w-sm"><DialogHeader><DialogTitle>{queue.closed ? text("Open Queue?", "开放队列？") : text("Close Queue?", "关闭队列？")}</DialogTitle><DialogDescription>{queue.closed
+              ? text("Confirming will open the queue. Patients will be able to join through the ClynicQ “Join Queue” button.", "确认后将开放队列。患者将能够通过 ClynicQ 的“加入队列”按钮排队。")
+              : text("Confirming will close the queue. The ClynicQ “Join Queue” button will be closed and patients will no longer be able to join.", "确认后将关闭队列。ClynicQ 的“加入队列”按钮将关闭，患者将无法再排队。")}</DialogDescription></DialogHeader><DialogFooter><Button variant="outline" onClick={() => setConfirmQueue(false)}>{text("Cancel", "取消")}</Button><Button variant={queue.closed ? "default" : "destructive"} onClick={updateDemoQueue}>{text("Confirm", "确认")}</Button></DialogFooter></DialogContent>
       </Dialog>
       <Dialog open={preference !== null} onOpenChange={(open) => { if (!open) setPreference(null); }}>
         <DialogContent className="max-w-md">
