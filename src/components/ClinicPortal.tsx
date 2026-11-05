@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/hooks/useI18n";
 import { buildDemoPatients, filterDemoPatients, demoPatientCsv } from "@/lib/clinic-portal-demo";
+import clynicqLogo from "@/assets/clynicq-logo.png.asset.json";
 
 type Preference = "clinic" | "language" | "account" | "billing";
 
