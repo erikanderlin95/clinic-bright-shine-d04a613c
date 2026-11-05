@@ -438,33 +438,12 @@ const Index = () => {
                     onTogglePause={() => setIsPaused(!isPaused)}
                     onToggleClose={() => setIsClosed(!isClosed)}
                   />
+                  <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
+                    <Plus className="h-4 w-4" />
+                    Add Patient (non digital)
+                  </Button>
                 </div>
               </div>
-
-
-              <>
-                <DailySummary summary={dailySummary} />
-
-                <div>
-                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2 sm:mb-3 sm:gap-3">
-                    <h3 className="text-lg font-semibold text-foreground">{t("liveQueueView")}</h3>
-                    <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
-                      <Plus className="h-4 w-4" />
-                      Add Patient (non digital)
-                    </Button>
-                  </div>
-                  <QueueTable
-                    entries={getTodaysPatientFlow()}
-                    onSelectEntry={setSelectedEntry}
-                    selectedEntry={selectedEntry}
-                    onUpdateStatus={handleUpdateStatus}
-                    onRevertStatus={handleRevertStatus}
-                    onVerifyArrival={handleVerifyArrival}
-                    onNotifyPatient={handleNotifyPatient}
-                  />
-                </div>
-              </>
-              {false && queueMode /* legacy */ && null}
 
               <WalkinRecordsSection entries={queueEntries} />
             </TabsContent>
