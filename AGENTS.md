@@ -5,4 +5,4 @@
 - Keep mobile layouts in existing components: table scrolling stays within its container, patient details fill the phone screen, and shared dialogs fit the visible viewport so workflows need no separate business logic.
 - Keep existing billing implementation hidden behind profile settings; label disconnected billing as a demo and never claim real payment changes.
 - Keep the clinic-facing two-section portal in `src/components/ClinicPortal.tsx`; preserve the legacy dashboard implementation without mounting its demo data or nonessential features.
-- Portal queue controls require a verified clinic-scoped service with established CMS precedence; unavailable integrations remain blocked rather than falling back to local state or global appointment data.
+- Real portal queue controls require a verified clinic-scoped service with established CMS precedence; explicit demo data and browser-only controls stay isolated in `src/lib/clinic-portal-demo.ts`, never using production writes or global appointment data.

@@ -9,4 +9,5 @@
 - [x] Remove Queue Visibility settings and Simulate New Join; verify phone and desktop layouts
 - [x] Simplify clinic portal to queue control and attributed records, with essential settings in the profile menu
 - [x] Verify authenticated phone, tablet and desktop portal
+- [ ] Show 30 fictional demo patients with working filters/export and a confirmed single demo queue toggle
 - [ ] Connect persistent clinic-scoped queue control and attributed CMS records — blocked: no existing services or clinic mapping
