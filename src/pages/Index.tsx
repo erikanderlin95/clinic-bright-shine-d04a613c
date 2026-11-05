@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { ClinicPortal } from "@/components/ClinicPortal";
 import { toast as sonnerToast } from "sonner";
 import { QueueHeader } from "@/components/QueueHeader";
 import { QueueControls } from "@/components/QueueControls";
@@ -69,7 +70,8 @@ const buildPastRecords = (): QueueEntry[] => {
   });
 };
 
-const Index = () => {
+// Retained legacy workflows; not mounted by the lightweight clinic portal.
+const LegacyClinicDashboard = () => {
   const { t } = useI18n();
   const { isAdmin } = useAuth();
   const { toast } = useToast();
@@ -544,4 +546,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default ClinicPortal;
