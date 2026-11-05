@@ -6,3 +6,4 @@
 - [x] Rename Payment & Subscription and add payment details plus three plan tiers
 - [x] Adapt dashboard and settings for phones and verify mobile workflows
 - [x] Tighten mobile dashboard spacing and verify phone workflows
+- [x] Remove Queue Visibility settings and Simulate New Join; verify phone and desktop layouts
