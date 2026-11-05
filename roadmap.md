@@ -7,6 +7,6 @@
 - [x] Adapt dashboard and settings for phones and verify mobile workflows
 - [x] Tighten mobile dashboard spacing and verify phone workflows
 - [x] Remove Queue Visibility settings and Simulate New Join; verify phone and desktop layouts
-- [ ] Simplify clinic portal to queue control and attributed records, with essential settings in the profile menu
-- [ ] Verify authenticated phone, tablet and desktop portal
+- [x] Simplify clinic portal to queue control and attributed records, with essential settings in the profile menu
+- [x] Verify authenticated phone, tablet and desktop portal
 - [ ] Connect persistent clinic-scoped queue control and attributed CMS records — blocked: no existing services or clinic mapping

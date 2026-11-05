@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Activity, ArrowDownToLine, Building2, CalendarDays, Check, ChevronDown, CircleHelp, CreditCard, FileSearch, Globe2, Loader2, LogOut, RefreshCw, Search, Settings2, ShieldCheck, Unplug } from "lucide-react";
+import { Activity, ArrowDownToLine, Building2, CalendarDays, Check, CircleHelp, CreditCard, FileSearch, Globe2, Loader2, LogOut, RefreshCw, Search, Settings2, ShieldCheck, Unplug } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
