@@ -17,7 +17,6 @@ import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPa
 
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { SettingsPanel } from "@/components/SettingsPanel";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
