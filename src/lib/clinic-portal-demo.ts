@@ -10,6 +10,6 @@ export function filterDemoPatients(records: DemoPatient[], search: string, days:
   return records.filter(record => record.name.toLowerCase().includes(search.trim().toLowerCase()) && record.date >= earliest);
 }
 export function demoPatientCsv(records: DemoPatient[]) {
-  const rows = [["DEMO ONLY - Fictional patient name", "Visit date", "Queue number", "Arrival time", "Status"], ...records.map(r => [r.name, r.date, r.queue, r.time, r.status])];
+  const rows = [["Sample patient name (fictional)", "Visit date", "Queue number", "Arrival time", "Status"], ...records.map(r => [r.name, r.date, r.queue, r.time, r.status])];
   return "\uFEFF" + rows.map(row => row.map(value => `"${value.replace(/"/g, '""')}"`).join(",")).join("\r\n");
 }
