@@ -28,6 +28,46 @@ const generateCheckInCode = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 };
 
+// Demo history: one record per day across the last 30 days so the
+// records table fills a full 30-row page.
+const PAST_RECORD_NAMES = [
+  "Wei Ming Tan", "Grace Chua", "Ahmad Rahman", "Mei Ling Ong", "Rajesh Nair",
+  "Pei Fen Lim", "Desmond Koh", "Siti Aminah", "Kelvin Ng", "Hui Ying Goh",
+  "Marcus Lee", "Xin Yi Chan", "Arjun Menon", "Lian Hoon Teo", "Brenda Yap",
+  "Jun Jie Wong", "Farah Begum", "Terry Seow", "Yvonne Phua", "Kai Wen Chu",
+  "Nurul Huda", "Gerald Tan", "Siok Hwa Lau", "Vikram Singh", "Celine Boo",
+  "Hao Zhe Low", "Priya Darshini", "Alan Cheong", "Zhi Hui Fang", "Melvin Peh",
+];
+
+const buildPastRecords = (): QueueEntry[] => {
+  const today = startOfDay(new Date());
+  const statuses: QueueEntry["status"][] = ["completed", "completed", "no-show", "completed", "cancelled"];
+  const categories: VisitCategory[] = ["Consultation", "Follow-up", "Others"];
+  return PAST_RECORD_NAMES.map((name, i) => {
+    const status = statuses[i % statuses.length];
+    const day = subDays(today, i + 1);
+    return {
+      id: `past-${i + 1}`,
+      queueNumber: `A${106 + (29 - i)}`,
+      status,
+      joinedAt: `${String(8 + (i % 10)).padStart(2, "0")}:${String((i * 7) % 60).padStart(2, "0")}`,
+      visitDate: format(day, "yyyy-MM-dd"),
+      name,
+      mobile: `+65 9${String(1000000 + i * 13711).slice(0, 7)}`,
+      queueSource: "Walk-in" as const,
+      patientType: "walk-in" as const,
+      visitCategory: categories[i % categories.length],
+      notes:
+        status === "no-show"
+          ? "Did not arrive"
+          : status === "cancelled"
+            ? "Left queue — Reason: Wait time too long"
+            : "Visit completed",
+      checkInCode: `C${String((i * 7919) % 900000 + 100000)}`,
+    };
+  });
+};
+
 const Index = () => {
   const { t } = useI18n();
   const { isAdmin } = useAuth();
@@ -426,9 +466,7 @@ const Index = () => {
               <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
                 <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
                   <QueueControls
-                    isPaused={isPaused}
                     isClosed={isClosed}
-                    onTogglePause={() => setIsPaused(!isPaused)}
                     onToggleClose={() => setIsClosed(!isClosed)}
                   />
                 </div>
