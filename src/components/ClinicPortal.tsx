@@ -111,7 +111,7 @@ export function ClinicPortal() {
             {feedback && <p role="status" className="mt-2 text-xs text-muted-foreground">{feedback}</p>}
           </div>
         </section>
-        <p className="text-xs text-muted-foreground px-1">
+        <p className="text-xs font-semibold text-muted-foreground px-1">
           {text("By default, your queue opens and closes automatically based on your clinic's operating hours.", "默认情况下，您的队列将根据诊所的营业时间自动开放和关闭。")}
         </p>
 
