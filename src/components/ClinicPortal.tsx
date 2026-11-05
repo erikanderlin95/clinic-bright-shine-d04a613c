@@ -130,7 +130,7 @@ export function ClinicPortal() {
           <div className="hidden grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-3 border-y bg-muted/40 px-5 py-3 text-xs font-medium text-muted-foreground md:grid">
             <span>{text("Patient name", "患者姓名")}</span><span>{text("Visit / appt. date", "就诊／预约日期")}</span><span>{text("Queue number", "队列号码")}</span><span>{text("Arrival / appt. time", "抵达／预约时间")}</span><span>{text("Status", "状态")}</span>
           </div>
-          <p className="border-b px-4 py-2 text-xs text-muted-foreground sm:px-5">{text("Sample records · Not connected to CMS", "示例记录 · 未连接 CMS")}</p>
+          <p className="border-b px-4 py-2 text-xs text-muted-foreground sm:px-5">{text("This list only shows patients from ClynicQ", "此列表仅显示来自 ClynicQ 的患者")}</p>
           <div className="divide-y">
             {records.map(record => <div key={record.id} data-demo-patient={record.id} className="px-4 py-3 sm:px-5">
               <div className="hidden grid-cols-[1.5fr_1fr_1fr_1fr_1fr] items-center gap-3 text-sm md:grid"><span className="font-medium">{record.name}</span><span>{record.date}</span><span>{record.queue}</span><span>{record.time}</span><span className={record.status === "completed" ? "text-status-arrived" : "text-muted-foreground"}>{statusLabel(record.status)}</span></div>
