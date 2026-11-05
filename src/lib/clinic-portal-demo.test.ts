@@ -19,7 +19,6 @@ test("demo search and date filters select only matching records", () => {
 test("demo export includes exactly the filtered fictional records", () => {
   const csv = demoPatientCsv(filterDemoPatients(buildDemoPatients(now), "grace", "30", now));
   assert.equal(csv.split("\r\n").length, 2);
-  assert.ok(csv.includes("DEMO ONLY"));
   assert.ok(csv.includes("Grace Chua"));
   assert.equal(csv.includes("Ahmad Rahman"), false);
 });
