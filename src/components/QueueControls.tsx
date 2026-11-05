@@ -1,41 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { Pause, Play, XCircle, RotateCw } from "lucide-react";
+import { XCircle, RotateCw } from "lucide-react";
 import { useI18n } from "@/hooks/useI18n";
 
 interface QueueControlsProps {
-  isPaused: boolean;
   isClosed: boolean;
-  onTogglePause: () => void;
   onToggleClose: () => void;
 }
 
-export const QueueControls = ({ isPaused, isClosed, onTogglePause, onToggleClose }: QueueControlsProps) => {
+export const QueueControls = ({ isClosed, onToggleClose }: QueueControlsProps) => {
   const { t } = useI18n();
 
   return (
     <div className="flex flex-wrap gap-2 sm:gap-3">
-      <Button
-        variant={isPaused ? "default" : "secondary"}
-        onClick={onTogglePause}
-        className={`min-h-11 gap-2 px-3 sm:px-5 py-2.5 font-semibold text-sm shadow-sm ${
-          isPaused
-            ? "bg-primary text-primary-foreground hover:bg-primary/90"
-            : "bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700 dark:hover:bg-amber-900/50"
-        }`}
-        disabled={isClosed}
-      >
-        {isPaused ? (
-          <>
-            <Play className="h-4 w-4" />
-            {t("resumeQueue")}
-          </>
-        ) : (
-          <>
-            <Pause className="h-4 w-4" />
-            {t("pauseQueue")}
-          </>
-        )}
-      </Button>
       <Button
         variant={isClosed ? "default" : "destructive"}
         onClick={onToggleClose}
