@@ -21,6 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/hooks/useI18n";
+import { format, startOfDay, subDays } from "date-fns";
 import { useAuth } from "@/hooks/useAuth";
 import type { QueueEntry, DailySummary as DailySummaryType, BookingLead, VisitCategory } from "@/types/queue";
 
@@ -172,7 +173,7 @@ const Index = () => {
     { id: "3", time: "11:10", action: "Delay alert sent" },
   ]);
 
-  const [queueEntries, setQueueEntries] = useState<QueueEntry[]>([
+  const [queueEntries, setQueueEntries] = useState<QueueEntry[]>(() => [
     {
       id: "1",
       queueNumber: "A103",
@@ -237,6 +238,7 @@ const Index = () => {
       checkInCode: "L9F4J2",
       patientType: "walk-in",
     },
+    ...buildPastRecords(),
   ]);
 
   useEffect(() => {
