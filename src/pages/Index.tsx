@@ -2,8 +2,6 @@ import { useState, useRef } from "react";
 import { toast as sonnerToast } from "sonner";
 import { QueueHeader } from "@/components/QueueHeader";
 import { QueueControls } from "@/components/QueueControls";
-import { DailySummary } from "@/components/DailySummary";
-import { QueueTable } from "@/components/QueueTable";
 import { PatientDetailPanel } from "@/components/PatientDetailPanel";
 import { WalkinRecordsSection } from "@/components/WalkinRecordsSection";
 
@@ -267,15 +265,6 @@ const Index = () => {
       status: "new",
     },
   ]);
-
-  const dailySummary: DailySummaryType = {
-    liveQueue: 32,
-    bookingsToday: 5,
-    arrived: 26,
-    cancelled: 4,
-    noShows: 2,
-    avgWaitTime: "23mins",
-  };
 
   const handleUpdateStatus = (id: string, status: QueueEntry["status"]) => {
     setQueueEntries((prev) =>
