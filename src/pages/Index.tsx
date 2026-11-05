@@ -73,7 +73,6 @@ const Index = () => {
   const { t } = useI18n();
   const { isAdmin } = useAuth();
   const { toast } = useToast();
-  const [isPaused, setIsPaused] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<QueueEntry | null>(null);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
