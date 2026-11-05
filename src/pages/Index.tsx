@@ -379,11 +379,6 @@ const Index = () => {
       (e) => e.status !== "completed" && e.status !== "cancelled" && e.status !== "no-show"
     );
 
-  // Today's patient flow: all active queue entries
-  const getTodaysPatientFlow = () => {
-    return getActiveQueue();
-  };
-
   const addAutomationLog = (action: string) => {
     const now = new Date();
     const timeString = now.toLocaleTimeString("en-US", {
