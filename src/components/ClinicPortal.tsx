@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/hooks/useI18n";
 import { buildDemoPatients, filterDemoPatients, demoPatientCsv } from "@/lib/clinic-portal-demo";
-import clynicqLogo from "@/assets/clynicq-logo.png.asset.json";
+import clynicqLogo from "@/assets/clynicq-logo.png";
 
 type Preference = "clinic" | "language" | "account" | "billing";
 
@@ -66,7 +66,7 @@ export function ClinicPortal() {
       <header className="border-b bg-card">
         <div className="flex max-w-[1455px] items-center justify-between gap-2 px-4 py-3 sm:px-8 sm:py-4">
           <div className="flex min-w-0 items-center gap-2.5">
-            <img src={clynicqLogo.url} alt="ClynicQ logo" className="h-9 w-9 shrink-0 rounded-lg" />
+            <img src={clynicqLogo} alt="ClynicQ logo" className="h-9 w-9 shrink-0 rounded-lg" />
             <div className="min-w-0">
               <h1 className="text-lg font-semibold leading-tight">{text("ClynicQ Portal", "ClynicQ 门户")}</h1>
             </div>
