@@ -2,8 +2,6 @@ import { useState, useRef } from "react";
 import { toast as sonnerToast } from "sonner";
 import { QueueHeader } from "@/components/QueueHeader";
 import { QueueControls } from "@/components/QueueControls";
-import { DailySummary } from "@/components/DailySummary";
-import { QueueTable } from "@/components/QueueTable";
 import { PatientDetailPanel } from "@/components/PatientDetailPanel";
 import { WalkinRecordsSection } from "@/components/WalkinRecordsSection";
 
@@ -268,15 +266,6 @@ const Index = () => {
     },
   ]);
 
-  const dailySummary: DailySummaryType = {
-    liveQueue: 32,
-    bookingsToday: 5,
-    arrived: 26,
-    cancelled: 4,
-    noShows: 2,
-    avgWaitTime: "23mins",
-  };
-
   const handleUpdateStatus = (id: string, status: QueueEntry["status"]) => {
     setQueueEntries((prev) =>
       prev.map((entry) =>
@@ -390,11 +379,6 @@ const Index = () => {
       (e) => e.status !== "completed" && e.status !== "cancelled" && e.status !== "no-show"
     );
 
-  // Today's patient flow: all active queue entries
-  const getTodaysPatientFlow = () => {
-    return getActiveQueue();
-  };
-
   const addAutomationLog = (action: string) => {
     const now = new Date();
     const timeString = now.toLocaleTimeString("en-US", {
@@ -449,33 +433,12 @@ const Index = () => {
                     onTogglePause={() => setIsPaused(!isPaused)}
                     onToggleClose={() => setIsClosed(!isClosed)}
                   />
+                  <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
+                    <Plus className="h-4 w-4" />
+                    Add Patient (non digital)
+                  </Button>
                 </div>
               </div>
-
-
-              <>
-                <DailySummary summary={dailySummary} />
-
-                <div>
-                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2 sm:mb-3 sm:gap-3">
-                    <h3 className="text-lg font-semibold text-foreground">{t("liveQueueView")}</h3>
-                    <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
-                      <Plus className="h-4 w-4" />
-                      Add Patient (non digital)
-                    </Button>
-                  </div>
-                  <QueueTable
-                    entries={getTodaysPatientFlow()}
-                    onSelectEntry={setSelectedEntry}
-                    selectedEntry={selectedEntry}
-                    onUpdateStatus={handleUpdateStatus}
-                    onRevertStatus={handleRevertStatus}
-                    onVerifyArrival={handleVerifyArrival}
-                    onNotifyPatient={handleNotifyPatient}
-                  />
-                </div>
-              </>
-              {false && queueMode /* legacy */ && null}
 
               <WalkinRecordsSection entries={queueEntries} />
             </TabsContent>
