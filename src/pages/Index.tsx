@@ -17,9 +17,8 @@ import { AutomationPanel, type MessageTemplate } from "@/components/AutomationPa
 
 import { AppointmentBookingPanel } from "@/components/AppointmentBookingPanel";
 import { SettingsPanel } from "@/components/SettingsPanel";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/hooks/useI18n";
 import { useAuth } from "@/hooks/useAuth";
@@ -425,7 +424,6 @@ const Index = () => {
                 }}
               />
               <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-                <h2 className="text-lg sm:text-xl font-semibold text-foreground">{t("liveQueueView")}</h2>
                 <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
                   <QueueControls
                     isPaused={isPaused}
@@ -433,10 +431,6 @@ const Index = () => {
                     onTogglePause={() => setIsPaused(!isPaused)}
                     onToggleClose={() => setIsClosed(!isClosed)}
                   />
-                  <Button onClick={() => setAddDialogOpen(true)} size="sm" className="gap-1.5">
-                    <Plus className="h-4 w-4" />
-                    Add Patient (non digital)
-                  </Button>
                 </div>
               </div>
 

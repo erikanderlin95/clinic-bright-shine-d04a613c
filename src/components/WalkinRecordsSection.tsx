@@ -1,13 +1,16 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Users } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { getWalkinRecords } from "@/lib/walkin-records";
 import type { QueueEntry } from "@/types/queue";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/hooks/useI18n";
+
+const ROWS_PER_PAGE = 30;
 
 interface WalkinRecordsSectionProps {
   entries: QueueEntry[];
@@ -15,8 +18,13 @@ interface WalkinRecordsSectionProps {
 
 export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => {
   const { t } = useI18n();
+  const [page, setPage] = useState(0);
 
   const walkinRecords = getWalkinRecords(entries);
+  const pageCount = Math.max(1, Math.ceil(walkinRecords.length / ROWS_PER_PAGE));
+  const safePage = Math.min(page, pageCount - 1);
+  const pageRecords = walkinRecords.slice(safePage * ROWS_PER_PAGE, (safePage + 1) * ROWS_PER_PAGE);
+
   const visitDate = (entry: QueueEntry) => entry.visitDate
     ? format(parseISO(entry.visitDate), "dd/MM/yyyy")
     : format(new Date(), "dd/MM/yyyy");
@@ -71,19 +79,19 @@ export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => 
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {walkinRecords.length === 0 ? (
+                {pageRecords.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center text-muted-foreground">
                       {t("noWalkinRecords")}
                     </TableCell>
                   </TableRow>
                 ) : (
-                  walkinRecords.map((entry, index) => (
+                  pageRecords.map((entry, index) => (
                     <TableRow
                       key={entry.id}
                       className={cn(
                         "transition-colors hover:bg-muted/30",
-                        index % 2 === 0 ? "bg-accent/5" : ""
+                        (safePage * ROWS_PER_PAGE + index) % 2 === 0 ? "bg-accent/5" : ""
                       )}
                     >
                       <TableCell className="font-medium text-foreground">{entry.name || "-"}</TableCell>
@@ -108,6 +116,39 @@ export const WalkinRecordsSection = ({ entries }: WalkinRecordsSectionProps) => 
                 )}
               </TableBody>
             </Table>
+          </div>
+
+          <div className="mt-2 flex items-center justify-between gap-2 sm:mt-3">
+            <span className="text-xs text-muted-foreground sm:text-sm">
+              {walkinRecords.length === 0
+                ? "0 records"
+                : `Showing ${safePage * ROWS_PER_PAGE + 1}–${Math.min((safePage + 1) * ROWS_PER_PAGE, walkinRecords.length)} of ${walkinRecords.length} records`}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1 px-2"
+                disabled={safePage === 0}
+                onClick={() => setPage(Math.max(0, safePage - 1))}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                <span className="hidden sm:inline">Prev</span>
+              </Button>
+              <span className="min-w-[4.5rem] text-center text-xs text-muted-foreground sm:text-sm">
+                Page {safePage + 1} of {pageCount}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1 px-2"
+                disabled={safePage >= pageCount - 1}
+                onClick={() => setPage(safePage + 1)}
+              >
+                <span className="hidden sm:inline">Next</span>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </CardContent>
     </Card>
