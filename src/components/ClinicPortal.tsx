@@ -67,8 +67,7 @@ export function ClinicPortal() {
           <div className="flex min-w-0 items-center gap-2.5">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground"><Activity className="h-5 w-5" aria-hidden="true" /></span>
             <div className="min-w-0">
-              <h1 className="text-lg font-semibold leading-tight">ClynicQ</h1>
-              <p className="text-xs text-muted-foreground">{text("Clinic Portal", "诊所门户")}</p>
+              <h1 className="text-lg font-semibold leading-tight">{text("ClynicQ Portal", "ClynicQ 门户")}</h1>
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-1">
@@ -147,7 +146,7 @@ export function ClinicPortal() {
       </Dialog>
       <Dialog open={preference !== null} onOpenChange={(open) => { if (!open) setPreference(null); }}>
         <DialogContent className="max-w-md">
-          <DialogHeader><DialogTitle>{preference ? preferenceTitle[preference] : text("Settings", "设置")}</DialogTitle><DialogDescription>{text("Clinic Portal", "诊所门户")}</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{preference ? preferenceTitle[preference] : text("Settings", "设置")}</DialogTitle><DialogDescription>{text("ClynicQ Portal", "ClynicQ 门户")}</DialogDescription></DialogHeader>
           {preference === "clinic" && <div className="space-y-3"><Label>{text("Clinic name", "诊所名称")}</Label><p className="text-sm font-medium">{text("Clinic not linked", "尚未关联诊所")}</p><p className="text-sm text-muted-foreground">{text("No verified clinic is associated with this account. Clinic information will appear once account mapping is configured.", "该账户尚未关联已验证的诊所。配置账户关联后，将显示诊所信息。")}</p></div>}
           {preference === "language" && <div className="flex gap-2">{(["en", "zh"] as const).map((value) => <Button key={value} variant={lang === value ? "default" : "outline"} aria-pressed={lang === value} onClick={() => setLang(value)} className="h-11 flex-1">{value === "en" ? "English" : "中文"}{lang === value && <Check />}</Button>)}</div>}
           {preference === "account" && <div className="space-y-4"><div><Label>{text("Email", "邮箱")}</Label><p className="mt-1 break-all text-sm">{user?.email}</p></div><Button variant="outline" className="h-11 gap-2" onClick={() => { void signOut(); }}><LogOut />{text("Sign out", "退出登录")}</Button></div>}
