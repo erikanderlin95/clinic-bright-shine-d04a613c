@@ -1,29 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
 import {
-  Eye,
-  Gauge,
-  Info,
   Settings as SettingsIcon,
   CreditCard,
   CheckCircle2,
   Building2,
   Activity,
-  Bell,
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { StaffManagementPanel } from "./StaffManagementPanel";
 import { BillingSubscriptionPanel } from "./BillingSubscriptionPanel";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
-import { getQueueVisibilityMode, setQueueVisibilityModeValue, type QueueVisibilityMode } from "@/lib/queue-visibility";
 export { getQueueVisibilityMode, setQueueVisibilityModeValue, QUEUE_MODE_EVENT, type QueueVisibilityMode } from "@/lib/queue-visibility";
 
 type SettingsSection = "general" | "billing" | "security";
@@ -85,24 +74,6 @@ export const SettingsPanel = () => {
 };
 
 const GeneralSection = () => {
-  const { toast } = useToast();
-  const [mode, setMode] = useState<QueueVisibilityMode>(getQueueVisibilityMode());
-
-  const visibilityMode = mode;
-
-  const handleVisibilityChange = (value: string) => {
-    const next = value as QueueVisibilityMode;
-    setMode(next);
-    setQueueVisibilityModeValue(next);
-    toast({
-      title: "Queue visibility updated",
-      description:
-        next === "live"
-          ? "Patients will see exact queue position."
-          : "Patients will see simplified wait status.",
-    });
-  };
-
   const summaryItems = [
     { label: "Clinic Name", value: "ClynicQ Demo Clinic", icon: Building2 },
     { label: "Current Plan", value: "Basic" },
@@ -133,124 +104,6 @@ const GeneralSection = () => {
         </CardContent>
       </Card>
 
-      {/* Queue Visibility */}
-      <>
-        <Separator className="bg-border/60" />
-        <section className="space-y-3">
-            <div>
-              <h3 className="text-base font-semibold text-foreground">Queue Visibility</h3>
-              <p className="text-xs text-muted-foreground mt-1">
-                What patients see when Live Queue is active.
-              </p>
-            </div>
-
-            <RadioGroup
-              value={visibilityMode}
-              onValueChange={handleVisibilityChange}
-              className="grid gap-3 sm:grid-cols-2"
-            >
-              <VisibilityCard
-                value="live"
-                selected={visibilityMode === "live"}
-                icon={Eye}
-                title="Live Queue View"
-                description="Patients see exact queue position."
-                preview="7 people ahead"
-                recommended
-              />
-              <VisibilityCard
-                value="smart"
-                selected={visibilityMode === "smart"}
-                icon={Gauge}
-                title="Smart Wait Indicator"
-                description="Simplified wait status without queue numbers."
-                preview="Moderate Wait"
-              />
-            </RadioGroup>
-
-            {/* Smart Wait info card */}
-            {visibilityMode === "smart" && (
-              <div className="rounded-xl bg-muted/40 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <Info className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                    Smart Wait Groups
-                  </span>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-3">
-                  {[
-                    { label: "Low", range: "0–3", dot: "bg-emerald-500" },
-                    { label: "Moderate", range: "4–9", dot: "bg-amber-500" },
-                    { label: "Busy", range: "10+", dot: "bg-rose-500" },
-                  ].map((g) => (
-                    <div key={g.label} className="flex items-center gap-2">
-                      <span className={cn("h-2 w-2 rounded-full flex-shrink-0", g.dot)} />
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-semibold text-foreground">{g.label}</span>
-                        <span className="text-[11px] text-muted-foreground">{g.range}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </section>
-      </>
-
     </div>
-  );
-};
-
-const VisibilityCard = ({
-  value,
-  selected,
-  icon: Icon,
-  title,
-  description,
-  preview,
-  recommended,
-}: {
-  value: QueueVisibilityMode;
-  selected: boolean;
-  icon: typeof Eye;
-  title: string;
-  description: string;
-  preview: string;
-  recommended?: boolean;
-}) => {
-  return (
-    <Label
-      htmlFor={`qv-${value}`}
-      className={cn(
-        "relative flex cursor-pointer flex-col gap-2 sm:gap-3 rounded-lg sm:rounded-xl border bg-card p-3 sm:p-5 transition-all",
-        selected
-          ? "border-primary ring-2 ring-primary/20 shadow-sm"
-          : "border-border/60 hover:border-border hover:bg-muted/30"
-      )}
-    >
-      <div className="flex items-start justify-between">
-        <div className={cn(
-          "flex h-9 w-9 items-center justify-center rounded-lg",
-          selected ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-        )}>
-          <Icon className="h-4 w-4" />
-        </div>
-        <div className="flex items-center gap-2">
-          {recommended && (
-            <Badge variant="secondary" className="bg-primary/10 text-primary text-[10px] px-1.5 py-0">
-              Recommended
-            </Badge>
-          )}
-          <RadioGroupItem value={value} id={`qv-${value}`} />
-        </div>
-      </div>
-      <div className="space-y-1">
-        <div className="text-sm font-semibold text-foreground">{title}</div>
-        <p className="text-xs text-muted-foreground">{description}</p>
-      </div>
-      <div className="inline-flex w-fit flex-wrap items-center rounded-md bg-muted px-2.5 py-1 text-[11px] text-muted-foreground">
-        Patient sees:&nbsp;<span className="font-medium text-foreground">{preview}</span>
-      </div>
-    </Label>
   );
 };

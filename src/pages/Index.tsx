@@ -208,7 +208,7 @@ const Index = () => {
       knownIdsRef.current = currentIds;
       return;
     }
-    const newEntries = queueEntries.filter((e) => !knownIdsRef.current!.has(e.id));
+    const newEntries = queueEntries.filter((e) => !knownIdsRef.current?.has(e.id));
     knownIdsRef.current = currentIds;
     if (newEntries.length === 0) return;
 
@@ -418,7 +418,7 @@ const Index = () => {
       <QueueHeader />
 
       <div className="flex">
-        <main className={`min-w-0 flex-1 p-3 sm:p-6 lg:p-8 ${selectedEntry ? "lg:mr-80" : ""} transition-all duration-300`}>
+        <main className={`min-w-0 max-w-[1455px] flex-1 p-3 sm:p-6 lg:p-8 ${selectedEntry ? "lg:mr-80" : ""} transition-all duration-300`}>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="flex h-auto w-full flex-wrap justify-start sm:w-fit [&>button]:min-h-10 [&>button]:shrink-0 [&>button]:px-2 [&>button]:text-xs sm:[&>button]:min-h-11 sm:[&>button]:px-3 sm:[&>button]:text-sm">
               <TabsTrigger value="queue">{t("queueManagement")}</TabsTrigger>
@@ -440,35 +440,9 @@ const Index = () => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
               />
-              <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
                 <h2 className="text-lg sm:text-xl font-semibold text-foreground">{t("liveQueueView")}</h2>
                 <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      const nextNumber = queueEntries.length + 101;
-                      const demo: QueueEntry = {
-                        id: `demo-${Date.now()}`,
-                        queueNumber: `A${nextNumber}`,
-                        status: "waiting",
-                        joinedAt: new Date().toLocaleTimeString("en-US", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                        }),
-                        name: "Demo Patient",
-                        mobile: "+65 9000 0000",
-                        queueSource: "Walk-in",
-                        patientType: "walk-in",
-                        visitCategory: "Consultation",
-                        checkInCode: generateCheckInCode(),
-                      };
-                      setQueueEntries((prev) => [...prev, demo]);
-                    }}
-                  >
-                    Simulate new join
-                  </Button>
                   <QueueControls
                     isPaused={isPaused}
                     isClosed={isClosed}
