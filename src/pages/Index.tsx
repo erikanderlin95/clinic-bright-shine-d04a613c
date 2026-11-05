@@ -424,7 +424,6 @@ const Index = () => {
                 }}
               />
               <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-                <h2 className="text-lg sm:text-xl font-semibold text-foreground">{t("liveQueueView")}</h2>
                 <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
                   <QueueControls
                     isPaused={isPaused}
