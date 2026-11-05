@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Activity, ArrowDownToLine, Building2, CalendarDays, Check, CreditCard, FileSearch, Globe2, LogOut, Power, RefreshCw, Search, Settings2, ShieldCheck } from "lucide-react";
+import { ArrowDownToLine, Building2, CalendarDays, Check, CreditCard, FileSearch, Globe2, LogOut, Power, RefreshCw, Search, Settings2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/hooks/useI18n";
 import { buildDemoPatients, filterDemoPatients, demoPatientCsv } from "@/lib/clinic-portal-demo";
+import clynicqLogo from "@/assets/clynicq-logo.png";
 
 type Preference = "clinic" | "language" | "account" | "billing";
 
@@ -65,7 +66,7 @@ export function ClinicPortal() {
       <header className="border-b bg-card">
         <div className="flex max-w-[1455px] items-center justify-between gap-2 px-4 py-3 sm:px-8 sm:py-4">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground"><Activity className="h-5 w-5" aria-hidden="true" /></span>
+            <img src={clynicqLogo} alt="ClynicQ logo" className="h-9 w-9 shrink-0 rounded-lg" />
             <div className="min-w-0">
               <h1 className="text-lg font-semibold leading-tight">{text("ClynicQ Portal", "ClynicQ 门户")}</h1>
             </div>

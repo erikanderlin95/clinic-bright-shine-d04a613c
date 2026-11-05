@@ -4,12 +4,13 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hooks/useAuth";
+import clynicqLogo from "@/assets/clynicq-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Building2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -72,9 +73,7 @@ const Auth = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-primary/10 rounded-full">
-              <Building2 className="h-8 w-8 text-primary" />
-            </div>
+            <img src={clynicqLogo} alt="ClynicQ logo" className="h-16 w-16 rounded-2xl" />
           </div>
           <CardTitle className="text-2xl">ClynicQ Staff Portal</CardTitle>
           <CardDescription>
