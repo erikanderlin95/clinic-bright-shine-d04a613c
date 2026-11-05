@@ -22,7 +22,7 @@ export function ClinicPortal() {
   const [days, setDays] = useState("30");
   const [confirmQueue, setConfirmQueue] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const demoKey = `clynicq-demo-queue:${user?.id ?? "preview"}`;
+  const demoKey = "clynicq-demo-queue";
   const [queue, setQueue] = useState<{ closed: boolean; updatedAt: string | null }>(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(demoKey) || "null");
