@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/hooks/useI18n";
-import { buildDemoPatients, filterDemoPatients, demoPatientCsv } from "@/lib/clinic-portal-demo";
+import { buildDemoPatients, filterDemoPatients, demoPatientCsv, formatMobile } from "@/lib/clinic-portal-demo";
 import clynicqLogo from "@/assets/clynicq-logo.png";
 
 type Preference = "clinic" | "language" | "account" | "billing";
@@ -127,14 +127,14 @@ export function ClinicPortal() {
               <Select value={days} onValueChange={setDays}><SelectTrigger className="h-11 w-full gap-2 text-sm sm:w-48" aria-label={text("Date filter", "日期筛选")}><CalendarDays className="h-4 w-4 shrink-0 text-muted-foreground" /><SelectValue /></SelectTrigger><SelectContent><SelectItem value="30">{text("Last 30 days", "最近30天")}</SelectItem><SelectItem value="7">{text("Last 7 days", "最近7天")}</SelectItem><SelectItem value="1">{text("Today", "今天")}</SelectItem></SelectContent></Select>
             </div>
           </div>
-          <div className="hidden grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-3 border-y bg-muted/40 px-5 py-3 text-xs font-medium text-muted-foreground md:grid">
-            <span>{text("Patient name", "患者姓名")}</span><span>{text("Visit / appt. date", "就诊／预约日期")}</span><span>{text("Queue number", "队列号码")}</span><span>{text("Arrival / appt. time", "抵达／预约时间")}</span><span>{text("Status", "状态")}</span>
+          <div className="hidden grid-cols-[1.3fr_1fr_1fr_0.8fr_0.9fr_0.9fr] gap-3 border-y bg-muted/40 px-5 py-3 text-xs font-medium text-muted-foreground md:grid">
+            <span>{text("Patient name", "患者姓名")}</span><span>{text("Mobile number", "手机号码")}</span><span>{text("Visit / appt. date", "就诊／预约日期")}</span><span>{text("Queue number", "队列号码")}</span><span>{text("Arrival / appt. time", "抵达／预约时间")}</span><span>{text("Status", "状态")}</span>
           </div>
           <p className="border-b px-4 py-2 text-xs text-muted-foreground sm:px-5">{text("This list only shows patients from ClynicQ", "此列表仅显示来自 ClynicQ 的患者")}</p>
           <div className="divide-y">
             {records.map(record => <div key={record.id} data-demo-patient={record.id} className="px-4 py-3 sm:px-5">
-              <div className="hidden grid-cols-[1.5fr_1fr_1fr_1fr_1fr] items-center gap-3 text-sm md:grid"><span className="font-medium">{record.name}</span><span>{record.date}</span><span>{record.queue}</span><span>{record.time}</span><span className={record.status === "completed" ? "text-status-arrived" : "text-muted-foreground"}>{statusLabel(record.status)}</span></div>
-              <div className="md:hidden"><div className="flex items-start justify-between gap-2"><p className="min-w-0 break-words text-sm font-medium">{record.name}</p><span className="shrink-0 text-xs text-muted-foreground">{record.queue}</span></div><div className="mt-1 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground"><span>{record.date} · {record.time}</span><span className={record.status === "completed" ? "text-status-arrived" : "text-muted-foreground"}>{statusLabel(record.status)}</span></div></div>
+              <div className="hidden grid-cols-[1.3fr_1fr_1fr_0.8fr_0.9fr_0.9fr] items-center gap-3 text-sm md:grid"><span className="font-medium">{record.name}</span><span className="tabular-nums">{formatMobile(record.mobile)}</span><span>{record.date}</span><span>{record.queue}</span><span>{record.time}</span><span className={record.status === "completed" ? "text-status-arrived" : "text-muted-foreground"}>{statusLabel(record.status)}</span></div>
+              <div className="md:hidden"><div className="flex items-start justify-between gap-2"><p className="min-w-0 break-words text-sm font-medium">{record.name}</p><span className="shrink-0 text-xs text-muted-foreground">{record.queue}</span></div><p className="mt-1 text-xs tabular-nums text-muted-foreground">{formatMobile(record.mobile)}</p><div className="mt-1 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground"><span>{record.date} · {record.time}</span><span className={record.status === "completed" ? "text-status-arrived" : "text-muted-foreground"}>{statusLabel(record.status)}</span></div></div>
             </div>)}
           </div>
           {records.length === 0 && <div className="flex flex-col items-center px-5 py-7 text-center sm:py-10">
